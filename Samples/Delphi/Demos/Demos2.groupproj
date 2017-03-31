@@ -1,0 +1,444 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{5A8CE690-CF80-440B-B35B-63A00A3FB334}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="rendering\basicsdl\basicsdl.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="collisions\boxedin\boxedin.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="specialsFX\candles\candles.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="bench\canvas\canvas.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="meshes\centering\centering.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="materials\cubemap\cubemap.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="rendering\culling\culling.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="extrusion\cutoutstar\cutoutstar.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="movements\events\events.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="interface\hfpick\hfpick.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="interface\fontcolor\fontcolor.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="rendering\fullscreen\fullscreen.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="rendering\memviewer\memviewer.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="materials\dyncubemap\dyncubemap.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="specialsFX\meshexplosion\meshexplosion.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="collisions\meshhit\meshhit.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="bench\megaglasscube\Megaglasscube.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="materials\mirror\mirror.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="materials\multipass\multipass.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="collisions\octree\octreedemo.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="graph\points\points.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="movements\pointto\pointto.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="collisions\raycast\raycast.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="meshes\skeletal\skeletal.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="specialsFX\spiral\spiral.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="meshes\synthterr\synthterr.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="specialsFX\shadowplane\shadowplane.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="specialsFX\shadows\Shadows.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="specialsFX\ShadowmappingFBO\ShadowmappingFBO.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="extrusion\tentacles\tentacles.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="materials\texanim\texanim.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="specialsFX\thor\Thor.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="rendering\tobitmap\tobitmap.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="bench\volcano\volcano.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="specialsFX\warping\warping.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="basicsdl">
+        <MSBuild Projects="rendering\basicsdl\basicsdl.dproj"/>
+    </Target>
+    <Target Name="basicsdl:Clean">
+        <MSBuild Projects="rendering\basicsdl\basicsdl.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="basicsdl:Make">
+        <MSBuild Projects="rendering\basicsdl\basicsdl.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="boxedin">
+        <MSBuild Projects="collisions\boxedin\boxedin.dproj"/>
+    </Target>
+    <Target Name="boxedin:Clean">
+        <MSBuild Projects="collisions\boxedin\boxedin.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="boxedin:Make">
+        <MSBuild Projects="collisions\boxedin\boxedin.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="candles">
+        <MSBuild Projects="specialsFX\candles\candles.dproj"/>
+    </Target>
+    <Target Name="candles:Clean">
+        <MSBuild Projects="specialsFX\candles\candles.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="candles:Make">
+        <MSBuild Projects="specialsFX\candles\candles.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="canvas">
+        <MSBuild Projects="bench\canvas\canvas.dproj"/>
+    </Target>
+    <Target Name="canvas:Clean">
+        <MSBuild Projects="bench\canvas\canvas.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="canvas:Make">
+        <MSBuild Projects="bench\canvas\canvas.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="centering">
+        <MSBuild Projects="meshes\centering\centering.dproj"/>
+    </Target>
+    <Target Name="centering:Clean">
+        <MSBuild Projects="meshes\centering\centering.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="centering:Make">
+        <MSBuild Projects="meshes\centering\centering.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="cubemap">
+        <MSBuild Projects="materials\cubemap\cubemap.dproj"/>
+    </Target>
+    <Target Name="cubemap:Clean">
+        <MSBuild Projects="materials\cubemap\cubemap.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="cubemap:Make">
+        <MSBuild Projects="materials\cubemap\cubemap.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="culling">
+        <MSBuild Projects="rendering\culling\culling.dproj"/>
+    </Target>
+    <Target Name="culling:Clean">
+        <MSBuild Projects="rendering\culling\culling.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="culling:Make">
+        <MSBuild Projects="rendering\culling\culling.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="cutoutstar">
+        <MSBuild Projects="extrusion\cutoutstar\cutoutstar.dproj"/>
+    </Target>
+    <Target Name="cutoutstar:Clean">
+        <MSBuild Projects="extrusion\cutoutstar\cutoutstar.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="cutoutstar:Make">
+        <MSBuild Projects="extrusion\cutoutstar\cutoutstar.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="events">
+        <MSBuild Projects="movements\events\events.dproj"/>
+    </Target>
+    <Target Name="events:Clean">
+        <MSBuild Projects="movements\events\events.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="events:Make">
+        <MSBuild Projects="movements\events\events.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="hfpick">
+        <MSBuild Projects="interface\hfpick\hfpick.dproj"/>
+    </Target>
+    <Target Name="hfpick:Clean">
+        <MSBuild Projects="interface\hfpick\hfpick.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="hfpick:Make">
+        <MSBuild Projects="interface\hfpick\hfpick.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="fontcolor">
+        <MSBuild Projects="interface\fontcolor\fontcolor.dproj"/>
+    </Target>
+    <Target Name="fontcolor:Clean">
+        <MSBuild Projects="interface\fontcolor\fontcolor.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="fontcolor:Make">
+        <MSBuild Projects="interface\fontcolor\fontcolor.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="fullscreen">
+        <MSBuild Projects="rendering\fullscreen\fullscreen.dproj"/>
+    </Target>
+    <Target Name="fullscreen:Clean">
+        <MSBuild Projects="rendering\fullscreen\fullscreen.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="fullscreen:Make">
+        <MSBuild Projects="rendering\fullscreen\fullscreen.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="memviewer">
+        <MSBuild Projects="rendering\memviewer\memviewer.dproj"/>
+    </Target>
+    <Target Name="memviewer:Clean">
+        <MSBuild Projects="rendering\memviewer\memviewer.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="memviewer:Make">
+        <MSBuild Projects="rendering\memviewer\memviewer.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="dyncubemap">
+        <MSBuild Projects="materials\dyncubemap\dyncubemap.dproj"/>
+    </Target>
+    <Target Name="dyncubemap:Clean">
+        <MSBuild Projects="materials\dyncubemap\dyncubemap.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="dyncubemap:Make">
+        <MSBuild Projects="materials\dyncubemap\dyncubemap.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="meshexplosion">
+        <MSBuild Projects="specialsFX\meshexplosion\meshexplosion.dproj"/>
+    </Target>
+    <Target Name="meshexplosion:Clean">
+        <MSBuild Projects="specialsFX\meshexplosion\meshexplosion.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="meshexplosion:Make">
+        <MSBuild Projects="specialsFX\meshexplosion\meshexplosion.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="meshhit">
+        <MSBuild Projects="collisions\meshhit\meshhit.dproj"/>
+    </Target>
+    <Target Name="meshhit:Clean">
+        <MSBuild Projects="collisions\meshhit\meshhit.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="meshhit:Make">
+        <MSBuild Projects="collisions\meshhit\meshhit.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Megaglasscube">
+        <MSBuild Projects="bench\megaglasscube\Megaglasscube.dproj"/>
+    </Target>
+    <Target Name="Megaglasscube:Clean">
+        <MSBuild Projects="bench\megaglasscube\Megaglasscube.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Megaglasscube:Make">
+        <MSBuild Projects="bench\megaglasscube\Megaglasscube.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="mirror">
+        <MSBuild Projects="materials\mirror\mirror.dproj"/>
+    </Target>
+    <Target Name="mirror:Clean">
+        <MSBuild Projects="materials\mirror\mirror.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="mirror:Make">
+        <MSBuild Projects="materials\mirror\mirror.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="multipass">
+        <MSBuild Projects="materials\multipass\multipass.dproj"/>
+    </Target>
+    <Target Name="multipass:Clean">
+        <MSBuild Projects="materials\multipass\multipass.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="multipass:Make">
+        <MSBuild Projects="materials\multipass\multipass.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="octreedemo">
+        <MSBuild Projects="collisions\octree\octreedemo.dproj"/>
+    </Target>
+    <Target Name="octreedemo:Clean">
+        <MSBuild Projects="collisions\octree\octreedemo.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="octreedemo:Make">
+        <MSBuild Projects="collisions\octree\octreedemo.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="points">
+        <MSBuild Projects="graph\points\points.dproj"/>
+    </Target>
+    <Target Name="points:Clean">
+        <MSBuild Projects="graph\points\points.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="points:Make">
+        <MSBuild Projects="graph\points\points.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="pointto">
+        <MSBuild Projects="movements\pointto\pointto.dproj"/>
+    </Target>
+    <Target Name="pointto:Clean">
+        <MSBuild Projects="movements\pointto\pointto.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="pointto:Make">
+        <MSBuild Projects="movements\pointto\pointto.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="raycast">
+        <MSBuild Projects="collisions\raycast\raycast.dproj"/>
+    </Target>
+    <Target Name="raycast:Clean">
+        <MSBuild Projects="collisions\raycast\raycast.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="raycast:Make">
+        <MSBuild Projects="collisions\raycast\raycast.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="skeletal">
+        <MSBuild Projects="meshes\skeletal\skeletal.dproj"/>
+    </Target>
+    <Target Name="skeletal:Clean">
+        <MSBuild Projects="meshes\skeletal\skeletal.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="skeletal:Make">
+        <MSBuild Projects="meshes\skeletal\skeletal.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="spiral">
+        <MSBuild Projects="specialsFX\spiral\spiral.dproj"/>
+    </Target>
+    <Target Name="spiral:Clean">
+        <MSBuild Projects="specialsFX\spiral\spiral.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="spiral:Make">
+        <MSBuild Projects="specialsFX\spiral\spiral.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="synthterr">
+        <MSBuild Projects="meshes\synthterr\synthterr.dproj"/>
+    </Target>
+    <Target Name="synthterr:Clean">
+        <MSBuild Projects="meshes\synthterr\synthterr.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="synthterr:Make">
+        <MSBuild Projects="meshes\synthterr\synthterr.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="shadowplane">
+        <MSBuild Projects="specialsFX\shadowplane\shadowplane.dproj"/>
+    </Target>
+    <Target Name="shadowplane:Clean">
+        <MSBuild Projects="specialsFX\shadowplane\shadowplane.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="shadowplane:Make">
+        <MSBuild Projects="specialsFX\shadowplane\shadowplane.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Shadows">
+        <MSBuild Projects="specialsFX\shadows\Shadows.dproj"/>
+    </Target>
+    <Target Name="Shadows:Clean">
+        <MSBuild Projects="specialsFX\shadows\Shadows.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Shadows:Make">
+        <MSBuild Projects="specialsFX\shadows\Shadows.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="ShadowmappingFBO">
+        <MSBuild Projects="specialsFX\ShadowmappingFBO\ShadowmappingFBO.dproj"/>
+    </Target>
+    <Target Name="ShadowmappingFBO:Clean">
+        <MSBuild Projects="specialsFX\ShadowmappingFBO\ShadowmappingFBO.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ShadowmappingFBO:Make">
+        <MSBuild Projects="specialsFX\ShadowmappingFBO\ShadowmappingFBO.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="tentacles">
+        <MSBuild Projects="extrusion\tentacles\tentacles.dproj"/>
+    </Target>
+    <Target Name="tentacles:Clean">
+        <MSBuild Projects="extrusion\tentacles\tentacles.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="tentacles:Make">
+        <MSBuild Projects="extrusion\tentacles\tentacles.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="texanim">
+        <MSBuild Projects="materials\texanim\texanim.dproj"/>
+    </Target>
+    <Target Name="texanim:Clean">
+        <MSBuild Projects="materials\texanim\texanim.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="texanim:Make">
+        <MSBuild Projects="materials\texanim\texanim.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Thor">
+        <MSBuild Projects="specialsFX\thor\Thor.dproj"/>
+    </Target>
+    <Target Name="Thor:Clean">
+        <MSBuild Projects="specialsFX\thor\Thor.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Thor:Make">
+        <MSBuild Projects="specialsFX\thor\Thor.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="tobitmap">
+        <MSBuild Projects="rendering\tobitmap\tobitmap.dproj"/>
+    </Target>
+    <Target Name="tobitmap:Clean">
+        <MSBuild Projects="rendering\tobitmap\tobitmap.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="tobitmap:Make">
+        <MSBuild Projects="rendering\tobitmap\tobitmap.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="volcano">
+        <MSBuild Projects="bench\volcano\volcano.dproj"/>
+    </Target>
+    <Target Name="volcano:Clean">
+        <MSBuild Projects="bench\volcano\volcano.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="volcano:Make">
+        <MSBuild Projects="bench\volcano\volcano.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="warping">
+        <MSBuild Projects="specialsFX\warping\warping.dproj"/>
+    </Target>
+    <Target Name="warping:Clean">
+        <MSBuild Projects="specialsFX\warping\warping.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="warping:Make">
+        <MSBuild Projects="specialsFX\warping\warping.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="basicsdl;boxedin;candles;canvas;centering;cubemap;culling;cutoutstar;events;hfpick;fontcolor;fullscreen;memviewer;dyncubemap;meshexplosion;meshhit;Megaglasscube;mirror;multipass;octreedemo;points;pointto;raycast;skeletal;spiral;synthterr;shadowplane;Shadows;ShadowmappingFBO;tentacles;texanim;Thor;tobitmap;volcano;warping"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="basicsdl:Clean;boxedin:Clean;candles:Clean;canvas:Clean;centering:Clean;cubemap:Clean;culling:Clean;cutoutstar:Clean;events:Clean;hfpick:Clean;fontcolor:Clean;fullscreen:Clean;memviewer:Clean;dyncubemap:Clean;meshexplosion:Clean;meshhit:Clean;Megaglasscube:Clean;mirror:Clean;multipass:Clean;octreedemo:Clean;points:Clean;pointto:Clean;raycast:Clean;skeletal:Clean;spiral:Clean;synthterr:Clean;shadowplane:Clean;Shadows:Clean;ShadowmappingFBO:Clean;tentacles:Clean;texanim:Clean;Thor:Clean;tobitmap:Clean;volcano:Clean;warping:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="basicsdl:Make;boxedin:Make;candles:Make;canvas:Make;centering:Make;cubemap:Make;culling:Make;cutoutstar:Make;events:Make;hfpick:Make;fontcolor:Make;fullscreen:Make;memviewer:Make;dyncubemap:Make;meshexplosion:Make;meshhit:Make;Megaglasscube:Make;mirror:Make;multipass:Make;octreedemo:Make;points:Make;pointto:Make;raycast:Make;skeletal:Make;spiral:Make;synthterr:Make;shadowplane:Make;Shadows:Make;ShadowmappingFBO:Make;tentacles:Make;texanim:Make;Thor:Make;tobitmap:Make;volcano:Make;warping:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>

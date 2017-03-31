@@ -1,0 +1,192 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{F5BF38C7-4DBA-4330-8A0B-4C369178E42E}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="interface\CameraController\CameraController.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="interface\Gizmo\Gizmo.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="interface\GizmoEx\GizmoEx.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="utilities\Language\LanguageDemo.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="utilities\joystick\JoystickDemo.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="utilities\recorder\Recorder.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="utilities\screensaver\ScreenSaverDemo.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="meshes\terrain\terrain.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="sound\3Dsound\SoundAroundDemo.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="glslshaders\BumpShader\BumpShader.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="glslshaders\DiffuseSpecularShader\DiffuseSpecularShader.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="glslshaders\GLSLShaderComponent\ShaderComponent.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="glslshaders\ocean\Ocean.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="glslshaders\PostShaders\PostShader.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="CameraController">
+        <MSBuild Projects="interface\CameraController\CameraController.dproj"/>
+    </Target>
+    <Target Name="CameraController:Clean">
+        <MSBuild Projects="interface\CameraController\CameraController.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="CameraController:Make">
+        <MSBuild Projects="interface\CameraController\CameraController.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Gizmo">
+        <MSBuild Projects="interface\Gizmo\Gizmo.dproj"/>
+    </Target>
+    <Target Name="Gizmo:Clean">
+        <MSBuild Projects="interface\Gizmo\Gizmo.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Gizmo:Make">
+        <MSBuild Projects="interface\Gizmo\Gizmo.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="GizmoEx">
+        <MSBuild Projects="interface\GizmoEx\GizmoEx.dproj"/>
+    </Target>
+    <Target Name="GizmoEx:Clean">
+        <MSBuild Projects="interface\GizmoEx\GizmoEx.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="GizmoEx:Make">
+        <MSBuild Projects="interface\GizmoEx\GizmoEx.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="LanguageDemo">
+        <MSBuild Projects="utilities\Language\LanguageDemo.dproj"/>
+    </Target>
+    <Target Name="LanguageDemo:Clean">
+        <MSBuild Projects="utilities\Language\LanguageDemo.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="LanguageDemo:Make">
+        <MSBuild Projects="utilities\Language\LanguageDemo.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="JoystickDemo">
+        <MSBuild Projects="utilities\joystick\JoystickDemo.dproj"/>
+    </Target>
+    <Target Name="JoystickDemo:Clean">
+        <MSBuild Projects="utilities\joystick\JoystickDemo.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="JoystickDemo:Make">
+        <MSBuild Projects="utilities\joystick\JoystickDemo.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Recorder">
+        <MSBuild Projects="utilities\recorder\Recorder.dproj"/>
+    </Target>
+    <Target Name="Recorder:Clean">
+        <MSBuild Projects="utilities\recorder\Recorder.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Recorder:Make">
+        <MSBuild Projects="utilities\recorder\Recorder.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="ScreenSaverDemo">
+        <MSBuild Projects="utilities\screensaver\ScreenSaverDemo.dproj"/>
+    </Target>
+    <Target Name="ScreenSaverDemo:Clean">
+        <MSBuild Projects="utilities\screensaver\ScreenSaverDemo.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ScreenSaverDemo:Make">
+        <MSBuild Projects="utilities\screensaver\ScreenSaverDemo.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="terrain">
+        <MSBuild Projects="meshes\terrain\terrain.dproj"/>
+    </Target>
+    <Target Name="terrain:Clean">
+        <MSBuild Projects="meshes\terrain\terrain.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="terrain:Make">
+        <MSBuild Projects="meshes\terrain\terrain.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="SoundAroundDemo">
+        <MSBuild Projects="sound\3Dsound\SoundAroundDemo.dproj"/>
+    </Target>
+    <Target Name="SoundAroundDemo:Clean">
+        <MSBuild Projects="sound\3Dsound\SoundAroundDemo.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="SoundAroundDemo:Make">
+        <MSBuild Projects="sound\3Dsound\SoundAroundDemo.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="BumpShader">
+        <MSBuild Projects="glslshaders\BumpShader\BumpShader.dproj"/>
+    </Target>
+    <Target Name="BumpShader:Clean">
+        <MSBuild Projects="glslshaders\BumpShader\BumpShader.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="BumpShader:Make">
+        <MSBuild Projects="glslshaders\BumpShader\BumpShader.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="DiffuseSpecularShader">
+        <MSBuild Projects="glslshaders\DiffuseSpecularShader\DiffuseSpecularShader.dproj"/>
+    </Target>
+    <Target Name="DiffuseSpecularShader:Clean">
+        <MSBuild Projects="glslshaders\DiffuseSpecularShader\DiffuseSpecularShader.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="DiffuseSpecularShader:Make">
+        <MSBuild Projects="glslshaders\DiffuseSpecularShader\DiffuseSpecularShader.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="ShaderComponent">
+        <MSBuild Projects="glslshaders\GLSLShaderComponent\ShaderComponent.dproj"/>
+    </Target>
+    <Target Name="ShaderComponent:Clean">
+        <MSBuild Projects="glslshaders\GLSLShaderComponent\ShaderComponent.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ShaderComponent:Make">
+        <MSBuild Projects="glslshaders\GLSLShaderComponent\ShaderComponent.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Ocean">
+        <MSBuild Projects="glslshaders\ocean\Ocean.dproj"/>
+    </Target>
+    <Target Name="Ocean:Clean">
+        <MSBuild Projects="glslshaders\ocean\Ocean.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Ocean:Make">
+        <MSBuild Projects="glslshaders\ocean\Ocean.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="PostShader">
+        <MSBuild Projects="glslshaders\PostShaders\PostShader.dproj"/>
+    </Target>
+    <Target Name="PostShader:Clean">
+        <MSBuild Projects="glslshaders\PostShaders\PostShader.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="PostShader:Make">
+        <MSBuild Projects="glslshaders\PostShaders\PostShader.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="CameraController;Gizmo;GizmoEx;LanguageDemo;JoystickDemo;Recorder;ScreenSaverDemo;terrain;SoundAroundDemo;BumpShader;DiffuseSpecularShader;ShaderComponent;Ocean;PostShader"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="CameraController:Clean;Gizmo:Clean;GizmoEx:Clean;LanguageDemo:Clean;JoystickDemo:Clean;Recorder:Clean;ScreenSaverDemo:Clean;terrain:Clean;SoundAroundDemo:Clean;BumpShader:Clean;DiffuseSpecularShader:Clean;ShaderComponent:Clean;Ocean:Clean;PostShader:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="CameraController:Make;Gizmo:Make;GizmoEx:Make;LanguageDemo:Make;JoystickDemo:Make;Recorder:Make;ScreenSaverDemo:Make;terrain:Make;SoundAroundDemo:Make;BumpShader:Make;DiffuseSpecularShader:Make;ShaderComponent:Make;Ocean:Make;PostShader:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>

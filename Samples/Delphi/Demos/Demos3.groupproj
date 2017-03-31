@@ -1,0 +1,276 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{2068626E-2604-45A4-BC8E-CAECD9B0A885}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="specialsFX\beer\beer.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="cgshaders\simple\CgSimple.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="cgshaders\texturing\CgTexture.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="physics\Clothify\Clothify.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="meshes\ducky\ducky.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="collisions\facevsface\facevsface.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="rendering\fog\fog.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="behaviours\FPSMovement\FPSMovement.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="materials\MaterialScript\matscript.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="specialsFX\motionblur\motionblur.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="materials\multimaterial\multimaterial.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="rendering\OctreeDemo\OctreeDemo.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="materials\procedural\procedural.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="graph\projection\projection.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="meshes\shadedterrain\shadedterrain.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="specialsFX\shadowvolumes\shadowvolumes.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="bench\smoking\smoking.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="meshes\subdivide\subdivide.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="materials\texcombine\texcombine.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="specialsFX\waterplane\waterplane.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="interface\winfont\Winfont.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="beer">
+        <MSBuild Projects="specialsFX\beer\beer.dproj"/>
+    </Target>
+    <Target Name="beer:Clean">
+        <MSBuild Projects="specialsFX\beer\beer.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="beer:Make">
+        <MSBuild Projects="specialsFX\beer\beer.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="CgSimple">
+        <MSBuild Projects="cgshaders\simple\CgSimple.dproj"/>
+    </Target>
+    <Target Name="CgSimple:Clean">
+        <MSBuild Projects="cgshaders\simple\CgSimple.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="CgSimple:Make">
+        <MSBuild Projects="cgshaders\simple\CgSimple.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="CgTexture">
+        <MSBuild Projects="cgshaders\texturing\CgTexture.dproj"/>
+    </Target>
+    <Target Name="CgTexture:Clean">
+        <MSBuild Projects="cgshaders\texturing\CgTexture.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="CgTexture:Make">
+        <MSBuild Projects="cgshaders\texturing\CgTexture.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Clothify">
+        <MSBuild Projects="physics\Clothify\Clothify.dproj"/>
+    </Target>
+    <Target Name="Clothify:Clean">
+        <MSBuild Projects="physics\Clothify\Clothify.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Clothify:Make">
+        <MSBuild Projects="physics\Clothify\Clothify.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="ducky">
+        <MSBuild Projects="meshes\ducky\ducky.dproj"/>
+    </Target>
+    <Target Name="ducky:Clean">
+        <MSBuild Projects="meshes\ducky\ducky.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ducky:Make">
+        <MSBuild Projects="meshes\ducky\ducky.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="facevsface">
+        <MSBuild Projects="collisions\facevsface\facevsface.dproj"/>
+    </Target>
+    <Target Name="facevsface:Clean">
+        <MSBuild Projects="collisions\facevsface\facevsface.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="facevsface:Make">
+        <MSBuild Projects="collisions\facevsface\facevsface.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="fog">
+        <MSBuild Projects="rendering\fog\fog.dproj"/>
+    </Target>
+    <Target Name="fog:Clean">
+        <MSBuild Projects="rendering\fog\fog.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="fog:Make">
+        <MSBuild Projects="rendering\fog\fog.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="FPSMovement">
+        <MSBuild Projects="behaviours\FPSMovement\FPSMovement.dproj"/>
+    </Target>
+    <Target Name="FPSMovement:Clean">
+        <MSBuild Projects="behaviours\FPSMovement\FPSMovement.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="FPSMovement:Make">
+        <MSBuild Projects="behaviours\FPSMovement\FPSMovement.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="matscript">
+        <MSBuild Projects="materials\MaterialScript\matscript.dproj"/>
+    </Target>
+    <Target Name="matscript:Clean">
+        <MSBuild Projects="materials\MaterialScript\matscript.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="matscript:Make">
+        <MSBuild Projects="materials\MaterialScript\matscript.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="motionblur">
+        <MSBuild Projects="specialsFX\motionblur\motionblur.dproj"/>
+    </Target>
+    <Target Name="motionblur:Clean">
+        <MSBuild Projects="specialsFX\motionblur\motionblur.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="motionblur:Make">
+        <MSBuild Projects="specialsFX\motionblur\motionblur.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="multimaterial">
+        <MSBuild Projects="materials\multimaterial\multimaterial.dproj"/>
+    </Target>
+    <Target Name="multimaterial:Clean">
+        <MSBuild Projects="materials\multimaterial\multimaterial.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="multimaterial:Make">
+        <MSBuild Projects="materials\multimaterial\multimaterial.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="OctreeDemo">
+        <MSBuild Projects="rendering\OctreeDemo\OctreeDemo.dproj"/>
+    </Target>
+    <Target Name="OctreeDemo:Clean">
+        <MSBuild Projects="rendering\OctreeDemo\OctreeDemo.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="OctreeDemo:Make">
+        <MSBuild Projects="rendering\OctreeDemo\OctreeDemo.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="procedural">
+        <MSBuild Projects="materials\procedural\procedural.dproj"/>
+    </Target>
+    <Target Name="procedural:Clean">
+        <MSBuild Projects="materials\procedural\procedural.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="procedural:Make">
+        <MSBuild Projects="materials\procedural\procedural.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="projection">
+        <MSBuild Projects="graph\projection\projection.dproj"/>
+    </Target>
+    <Target Name="projection:Clean">
+        <MSBuild Projects="graph\projection\projection.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="projection:Make">
+        <MSBuild Projects="graph\projection\projection.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="shadedterrain">
+        <MSBuild Projects="meshes\shadedterrain\shadedterrain.dproj"/>
+    </Target>
+    <Target Name="shadedterrain:Clean">
+        <MSBuild Projects="meshes\shadedterrain\shadedterrain.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="shadedterrain:Make">
+        <MSBuild Projects="meshes\shadedterrain\shadedterrain.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="shadowvolumes">
+        <MSBuild Projects="specialsFX\shadowvolumes\shadowvolumes.dproj"/>
+    </Target>
+    <Target Name="shadowvolumes:Clean">
+        <MSBuild Projects="specialsFX\shadowvolumes\shadowvolumes.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="shadowvolumes:Make">
+        <MSBuild Projects="specialsFX\shadowvolumes\shadowvolumes.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="smoking">
+        <MSBuild Projects="bench\smoking\smoking.dproj"/>
+    </Target>
+    <Target Name="smoking:Clean">
+        <MSBuild Projects="bench\smoking\smoking.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="smoking:Make">
+        <MSBuild Projects="bench\smoking\smoking.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="subdivide">
+        <MSBuild Projects="meshes\subdivide\subdivide.dproj"/>
+    </Target>
+    <Target Name="subdivide:Clean">
+        <MSBuild Projects="meshes\subdivide\subdivide.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="subdivide:Make">
+        <MSBuild Projects="meshes\subdivide\subdivide.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="texcombine">
+        <MSBuild Projects="materials\texcombine\texcombine.dproj"/>
+    </Target>
+    <Target Name="texcombine:Clean">
+        <MSBuild Projects="materials\texcombine\texcombine.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="texcombine:Make">
+        <MSBuild Projects="materials\texcombine\texcombine.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="waterplane">
+        <MSBuild Projects="specialsFX\waterplane\waterplane.dproj"/>
+    </Target>
+    <Target Name="waterplane:Clean">
+        <MSBuild Projects="specialsFX\waterplane\waterplane.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="waterplane:Make">
+        <MSBuild Projects="specialsFX\waterplane\waterplane.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Winfont">
+        <MSBuild Projects="interface\winfont\Winfont.dproj"/>
+    </Target>
+    <Target Name="Winfont:Clean">
+        <MSBuild Projects="interface\winfont\Winfont.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Winfont:Make">
+        <MSBuild Projects="interface\winfont\Winfont.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="beer;CgSimple;CgTexture;Clothify;ducky;facevsface;fog;FPSMovement;matscript;motionblur;multimaterial;OctreeDemo;procedural;projection;shadedterrain;shadowvolumes;smoking;subdivide;texcombine;waterplane;Winfont"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="beer:Clean;CgSimple:Clean;CgTexture:Clean;Clothify:Clean;ducky:Clean;facevsface:Clean;fog:Clean;FPSMovement:Clean;matscript:Clean;motionblur:Clean;multimaterial:Clean;OctreeDemo:Clean;procedural:Clean;projection:Clean;shadedterrain:Clean;shadowvolumes:Clean;smoking:Clean;subdivide:Clean;texcombine:Clean;waterplane:Clean;Winfont:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="beer:Make;CgSimple:Make;CgTexture:Make;Clothify:Make;ducky:Make;facevsface:Make;fog:Make;FPSMovement:Make;matscript:Make;motionblur:Make;multimaterial:Make;OctreeDemo:Make;procedural:Make;projection:Make;shadedterrain:Make;shadowvolumes:Make;smoking:Make;subdivide:Make;texcombine:Make;waterplane:Make;Winfont:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>

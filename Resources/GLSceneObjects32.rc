@@ -1,0 +1,114 @@
+gls_camera BITMAP objects\gls_camera32.bmp
+gls_lights BITMAP objects\gls_lights32.bmp
+gls_objects BITMAP objects\gls_objects32.bmp
+gls_root BITMAP objects\gls_root32.bmp
+gls_cross BITMAP objects\gls_cross32.bmp
+
+TGLCamera BITMAP objects\TGLCamera32.bmp
+TGLDirectOpenGL BITMAP objects\TGLDirectOpenGL32.bmp
+TGLDummyCube BITMAP objects\TGLDummyCube32.bmp
+TGLLightSource BITMAP objects\TGLLightSource32.bmp
+
+TGLFeedback BITMAP objects\TGLFeedback32.bmp
+TGLImposter BITMAP objects\TGLImposter32.bmp
+TGLRenderPoint BITMAP objects\TGLRenderPoint32.bmp
+TGLFBORenderer BITMAP objects\TGLFBORenderer32.bmp
+
+TGLHUDSprite BITMAP objects\hud_objects\TGLHUDSprite32.bmp
+TGLHUDText BITMAP objects\hud_objects\TGLHUDText32.bmp
+TGLResolutionIndependantHUDText BITMAP objects\hud_objects\TGLResolutionIndependantHUDText32.bmp
+TGLAbsoluteHUDText BITMAP objects\hud_objects\TGLAbsoluteHUDText32.bmp
+TGLConsole BITMAP objects\hud_objects\TGLConsole32.bmp
+TGLGameMenu BITMAP objects\hud_objects\TGLGameMenu32.bmp
+
+TGLAdvancedLabel BITMAP objects\gui_objects\TGLAdvancedLabel32.bmp
+TGLBaseControl BITMAP objects\gui_objects\TGLBaseControl32.bmp
+TGLButton BITMAP objects\gui_objects\TGLButton32.bmp
+TGLCheckBox BITMAP objects\gui_objects\TGLCheckBox32.bmp
+TGLCustomControl BITMAP objects\gui_objects\TGLCustomControl32.bmp
+TGLEdit BITMAP objects\gui_objects\TGLEdit32.bmp
+TGLForm BITMAP objects\gui_objects\TGLForm32.bmp
+TGLLabel BITMAP objects\gui_objects\TGLLabel32.bmp
+TGLPanel BITMAP objects\gui_objects\TGLPanel32.bmp
+TGLPopupMenu BITMAP objects\gui_objects\TGLPopupMenu32.bmp
+TGLScrollBar BITMAP objects\gui_objects\TGLScrollBar32.bmp
+TGLStringGrid BITMAP objects\gui_objects\TGLStringGrid32.bmp
+
+TGLCone BITMAP objects\basic_geometry\TGLCone32.bmp
+TGLCube BITMAP objects\basic_geometry\TGLCube32.bmp
+TGLCylinder BITMAP objects\basic_geometry\TGLCylinder32.bmp
+TGLDisk BITMAP objects\basic_geometry\TGLDisk32.bmp
+TGLDodecahedron BITMAP objects\basic_geometry\TGLDodecahedron32.bmp
+TGLFrustrum BITMAP objects\basic_geometry\TGLFrustrum32.bmp
+TGLHexahedron BITMAP objects\basic_geometry\TGLHexahedron32.bmp
+TGLIcosahedron BITMAP objects\basic_geometry\TGLIcosahedron32.bmp
+TGLTetrahedron BITMAP objects\basic_geometry\TGLTetrahedron32.bmp
+TGLOctahedron BITMAP objects\basic_geometry\TGLOctahedron32.bmp
+TGLLines BITMAP objects\basic_geometry\TGLLines32.bmp
+TGLPlane BITMAP objects\basic_geometry\TGLPlane32.bmp
+TGLPoints BITMAP objects\basic_geometry\TGLPoints32.bmp
+TGLPolygon BITMAP objects\basic_geometry\TGLPolygon32.bmp
+TGLSphere BITMAP objects\basic_geometry\TGLSphere32.bmp
+TGLSprite BITMAP objects\basic_geometry\TGLSprite32.bmp
+TGLCapsule BITMAP objects\basic_geometry\TGLCapsule32.bmp
+TGLSuperellipsoid BITMAP objects\basic_geometry\TGLSuperellipsoid32.bmp
+
+TGLAnimatedSprite BITMAP objects\advanced_geometry\TGLAnimatedSprite32.bmp
+TGLAnnulus BITMAP objects\advanced_geometry\TGLAnnulus32.bmp
+TGLArrowLine BITMAP objects\advanced_geometry\TGLArrowLine32.bmp
+TGLArrowArc BITMAP objects\advanced_geometry\TGLArrowArc32.bmp
+TGLExtrusionSolid BITMAP objects\advanced_geometry\TGLExtrusionSolid32.bmp
+TGLMultiPolygon BITMAP objects\advanced_geometry\TGLMultiPolygon32.bmp
+TGLPipe BITMAP objects\advanced_geometry\TGLPipe32.bmp
+TGLRevolutionSolid BITMAP objects\advanced_geometry\TGLRevolutionSolid32.bmp
+TGLTorus BITMAP objects\advanced_geometry\TGLTorus32.bmp
+TGLGeoSphere BITMAP objects\advanced_geometry\TGLGeoSphere32.bmp
+
+TGLActor BITMAP objects\mesh_objects\TGLActor32.bmp
+TGLFreeForm BITMAP objects\mesh_objects\TGLFreeForm32.bmp
+TGLMesh BITMAP objects\mesh_objects\TGLMesh32.bmp
+TGLPortal BITMAP objects\mesh_objects\TGLPortal32.bmp
+TGLTerrainRenderer BITMAP objects\mesh_objects\TGLTerrainRenderer32.bmp
+TGLTilePlane BITMAP objects\mesh_objects\TGLTilePlane32.bmp
+
+TGLFlatText BITMAP objects\graph_plotting_objects\TGLFlatText32.bmp
+TGLHeightfield BITMAP objects\graph_plotting_objects\TGLHeightfield32.bmp
+TGLXYZGrid BITMAP objects\graph_plotting_objects\TGLXYZGrid32.bmp
+
+TGLParticleFXRenderer BITMAP objects\particle_systems\TGLParticleFXRenderer32.bmp
+TGLParticles BITMAP objects\particle_systems\TGLParticles32.bmp
+
+TGLEarthSkyDome BITMAP objects\environment_objects\TGLEarthSkyDome32.bmp
+TGLSkyDome BITMAP objects\environment_objects\TGLSkyDome32.bmp
+TGLAtmosphere BITMAP objects\environment_objects\TGLAtmosphere32.bmp
+TGLSkyBox BITMAP objects\environment_objects\TGLSkyBox32.bmp
+
+TGLSpaceText BITMAP objects\doodad_objects\TGLSpaceText32.bmp
+TGLTeapot BITMAP objects\doodad_objects\TGLTeapot32.bmp
+TGLTree BITMAP objects\doodad_objects\TGLTree32.bmp
+TGLWaterplane BITMAP objects\doodad_objects\TGLWaterplane32.bmp
+
+TGLBlur BITMAP objects\special_objects\TGLBlur32.bmp
+TGLMotionBlur BITMAP objects\special_objects\TGLMotionBlur32.bmp
+TGLLensflare BITMAP objects\special_objects\TGLLensflare32.bmp
+TGLMirror BITMAP objects\special_objects\TGLMirror32.bmp
+TGLShadowPlane BITMAP objects\special_objects\TGLShadowPlane32.bmp
+TGLShadowVolume BITMAP objects\special_objects\TGLShadowVolume32.bmp
+TGLZShadows BITMAP objects\special_objects\TGLZShadows32.bmp
+TGLTrail BITMAP objects\special_objects\TGLTrail32.bmp
+TGLTextureLensFlare BITMAP objects\special_objects\TGLTextureLensFlare32.bmp
+TGLTextureEmitter BITMAP objects\special_objects\TGLTextureEmitter32.bmp
+TGLSLTextureEmitter BITMAP objects\special_objects\TGLSLTextureEmitter32.bmp
+TGLProjectedTextures BITMAP objects\special_objects\TGLProjectedTextures32.bmp
+TGLSLProjectedTextures BITMAP objects\special_objects\TGLSLProjectedTextures32.bmp
+TGLPostShaderHolder BITMAP objects\special_objects\TGLPostShaderHolder32.bmp
+TGLPostEffect BITMAP objects\special_objects\TGLPostEffect32.bmp
+
+TGLActorProxy BITMAP objects\proxy_objects\TGLActorProxy32.bmp
+TGLColorProxy BITMAP objects\proxy_objects\TGLColorProxy32.bmp
+TGLFreeFormProxy BITMAP objects\proxy_objects\TGLFreeFormProxy32.bmp
+TGLMaterialProxy BITMAP objects\proxy_objects\TGLMaterialProxy32.bmp
+TGLMaterialMultiProxy BITMAP objects\proxy_objects\TGLMaterialMultiProxy32.bmp
+TGLMultiProxy BITMAP objects\proxy_objects\TGLMultiProxy32.bmp
+TGLProxyObject BITMAP objects\proxy_objects\TGLProxyObject32.bmp
+

@@ -1,0 +1,4 @@
+OmniLightTexture RCDATA gls\OmniLightTexture.dds
+ParallelLightTexture RCDATA gls\ParallelLightTexture.dds
+ParallelSpotLightTexture RCDATA gls\ParallelSpotLightTexture.dds
+SpotLightTexture RCDATA gls\SpotLightTexture.dds

@@ -1,0 +1,4 @@
+TGLAsyncTimer BITMAP gls\TGLAsyncTimer.bmp
+TGLJoystick BITMAP gls\TGLJoystick.bmp
+TGLAVIRecorder BITMAP gls\TGLAVIRecorder.bmp
+TGLScreenSaver BITMAP gls\TGLScreenSaver.bmp

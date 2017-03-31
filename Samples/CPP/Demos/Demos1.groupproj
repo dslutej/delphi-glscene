@@ -1,0 +1,612 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{A3213364-6485-4ED8-B8F3-F842CB4C21F0}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="meshes\actor\Actor.cbproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="meshes\actorms3d\ActorMS3D.cbproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="meshes\actorproxy\Actorproxy.cbproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="meshes\actortwocam\Actortwocam.cbproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="extrusion\bendingcyl\BendingCyl.cbproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="collisions\boxedin\boxedin.cbproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="collisions\BoxSphere\BoxSphere.cbproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="glslshaders\BumpShader\BumpShader.cbproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="bench\canvas\Canvas.cbproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="cgshaders\celshading\Celshading.cbproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="meshes\centering\Centering.cbproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="cgshaders\CGBombShader\CGBombShader.cbproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="cgshaders\simple\CgSimple.cbproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="meshes\CSG\CSG.cbproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="extrusion\cutoutstar\Cutoutstar.cbproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="behaviours\DCEDemo\dceDemo.cbproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="meshes\ducky\ducky.cbproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="meshes\expolygon\Expolygon.cbproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="collisions\facevsface\Facevsface.cbproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="meshes\feedback\Feedback.cbproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="meshes\formula\Formula.cbproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="behaviours\FPSMovement\FPSMovement.cbproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="bench\megacube\MegaCube.cbproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="bench\megaglasscube\MegaGlassCube.cbproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="collisions\meshhit\Meshhit.cbproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="meshes\mushroom\Mushroom.cbproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="extrusion\nutsnbolts\Nutsnbolts.cbproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="collisions\OcclusionQuery\OcclusionQuery.cbproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="collisions\octree\octreedemo.cbproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="behaviours\PathControl\PathControl.cbproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="meshes\portal\Portal.cbproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="extrusion\pawn\Pawn.cbproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="collisions\RayBox\RayBox.cbproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="collisions\Raycast\Raycast.cbproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="meshes\shadedterrain\shadedterrain.cbproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="meshes\skeletal\Skeletal.cbproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="bench\smoking\Smoking.cbproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="collisions\sphere\Sphere.cbproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="meshes\subdivide\Subdivide.cbproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="meshes\synthterr\Synthterr.cbproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="extrusion\tentacles\Tentacles.cbproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="meshes\terrain\terrain.cbproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="cgshaders\texturing\Texturing.cbproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="meshes\tiles\tiles.cbproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="behaviours\Torque\Torque.cbproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="meshes\tree\tree.cbproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="collisions\TriangleBox\TriangleBox.cbproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="bench\volcano\Volcano.cbproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="bench\whirlwind\Whirlwind.cbproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="Actor">
+        <MSBuild Projects="meshes\actor\Actor.cbproj"/>
+    </Target>
+    <Target Name="Actor:Clean">
+        <MSBuild Projects="meshes\actor\Actor.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Actor:Make">
+        <MSBuild Projects="meshes\actor\Actor.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="ActorMS3D">
+        <MSBuild Projects="meshes\actorms3d\ActorMS3D.cbproj"/>
+    </Target>
+    <Target Name="ActorMS3D:Clean">
+        <MSBuild Projects="meshes\actorms3d\ActorMS3D.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ActorMS3D:Make">
+        <MSBuild Projects="meshes\actorms3d\ActorMS3D.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="Actorproxy">
+        <MSBuild Projects="meshes\actorproxy\Actorproxy.cbproj"/>
+    </Target>
+    <Target Name="Actorproxy:Clean">
+        <MSBuild Projects="meshes\actorproxy\Actorproxy.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Actorproxy:Make">
+        <MSBuild Projects="meshes\actorproxy\Actorproxy.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="Actortwocam">
+        <MSBuild Projects="meshes\actortwocam\Actortwocam.cbproj"/>
+    </Target>
+    <Target Name="Actortwocam:Clean">
+        <MSBuild Projects="meshes\actortwocam\Actortwocam.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Actortwocam:Make">
+        <MSBuild Projects="meshes\actortwocam\Actortwocam.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="BendingCyl">
+        <MSBuild Projects="extrusion\bendingcyl\BendingCyl.cbproj"/>
+    </Target>
+    <Target Name="BendingCyl:Clean">
+        <MSBuild Projects="extrusion\bendingcyl\BendingCyl.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="BendingCyl:Make">
+        <MSBuild Projects="extrusion\bendingcyl\BendingCyl.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="boxedin">
+        <MSBuild Projects="collisions\boxedin\boxedin.cbproj"/>
+    </Target>
+    <Target Name="boxedin:Clean">
+        <MSBuild Projects="collisions\boxedin\boxedin.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="boxedin:Make">
+        <MSBuild Projects="collisions\boxedin\boxedin.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="BoxSphere">
+        <MSBuild Projects="collisions\BoxSphere\BoxSphere.cbproj"/>
+    </Target>
+    <Target Name="BoxSphere:Clean">
+        <MSBuild Projects="collisions\BoxSphere\BoxSphere.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="BoxSphere:Make">
+        <MSBuild Projects="collisions\BoxSphere\BoxSphere.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="BumpShader">
+        <MSBuild Projects="glslshaders\BumpShader\BumpShader.cbproj"/>
+    </Target>
+    <Target Name="BumpShader:Clean">
+        <MSBuild Projects="glslshaders\BumpShader\BumpShader.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="BumpShader:Make">
+        <MSBuild Projects="glslshaders\BumpShader\BumpShader.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="Canvas">
+        <MSBuild Projects="bench\canvas\Canvas.cbproj"/>
+    </Target>
+    <Target Name="Canvas:Clean">
+        <MSBuild Projects="bench\canvas\Canvas.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Canvas:Make">
+        <MSBuild Projects="bench\canvas\Canvas.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="Celshading">
+        <MSBuild Projects="cgshaders\celshading\Celshading.cbproj"/>
+    </Target>
+    <Target Name="Celshading:Clean">
+        <MSBuild Projects="cgshaders\celshading\Celshading.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Celshading:Make">
+        <MSBuild Projects="cgshaders\celshading\Celshading.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="Centering">
+        <MSBuild Projects="meshes\centering\Centering.cbproj"/>
+    </Target>
+    <Target Name="Centering:Clean">
+        <MSBuild Projects="meshes\centering\Centering.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Centering:Make">
+        <MSBuild Projects="meshes\centering\Centering.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="CGBombShader">
+        <MSBuild Projects="cgshaders\CGBombShader\CGBombShader.cbproj"/>
+    </Target>
+    <Target Name="CGBombShader:Clean">
+        <MSBuild Projects="cgshaders\CGBombShader\CGBombShader.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="CGBombShader:Make">
+        <MSBuild Projects="cgshaders\CGBombShader\CGBombShader.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="CgSimple">
+        <MSBuild Projects="cgshaders\simple\CgSimple.cbproj"/>
+    </Target>
+    <Target Name="CgSimple:Clean">
+        <MSBuild Projects="cgshaders\simple\CgSimple.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="CgSimple:Make">
+        <MSBuild Projects="cgshaders\simple\CgSimple.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="CSG">
+        <MSBuild Projects="meshes\CSG\CSG.cbproj"/>
+    </Target>
+    <Target Name="CSG:Clean">
+        <MSBuild Projects="meshes\CSG\CSG.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="CSG:Make">
+        <MSBuild Projects="meshes\CSG\CSG.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="Cutoutstar">
+        <MSBuild Projects="extrusion\cutoutstar\Cutoutstar.cbproj"/>
+    </Target>
+    <Target Name="Cutoutstar:Clean">
+        <MSBuild Projects="extrusion\cutoutstar\Cutoutstar.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Cutoutstar:Make">
+        <MSBuild Projects="extrusion\cutoutstar\Cutoutstar.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="dceDemo">
+        <MSBuild Projects="behaviours\DCEDemo\dceDemo.cbproj"/>
+    </Target>
+    <Target Name="dceDemo:Clean">
+        <MSBuild Projects="behaviours\DCEDemo\dceDemo.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="dceDemo:Make">
+        <MSBuild Projects="behaviours\DCEDemo\dceDemo.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="ducky">
+        <MSBuild Projects="meshes\ducky\ducky.cbproj"/>
+    </Target>
+    <Target Name="ducky:Clean">
+        <MSBuild Projects="meshes\ducky\ducky.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ducky:Make">
+        <MSBuild Projects="meshes\ducky\ducky.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="Expolygon">
+        <MSBuild Projects="meshes\expolygon\Expolygon.cbproj"/>
+    </Target>
+    <Target Name="Expolygon:Clean">
+        <MSBuild Projects="meshes\expolygon\Expolygon.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Expolygon:Make">
+        <MSBuild Projects="meshes\expolygon\Expolygon.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="Facevsface">
+        <MSBuild Projects="collisions\facevsface\Facevsface.cbproj"/>
+    </Target>
+    <Target Name="Facevsface:Clean">
+        <MSBuild Projects="collisions\facevsface\Facevsface.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Facevsface:Make">
+        <MSBuild Projects="collisions\facevsface\Facevsface.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="Feedback">
+        <MSBuild Projects="meshes\feedback\Feedback.cbproj"/>
+    </Target>
+    <Target Name="Feedback:Clean">
+        <MSBuild Projects="meshes\feedback\Feedback.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Feedback:Make">
+        <MSBuild Projects="meshes\feedback\Feedback.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="Formula">
+        <MSBuild Projects="meshes\formula\Formula.cbproj"/>
+    </Target>
+    <Target Name="Formula:Clean">
+        <MSBuild Projects="meshes\formula\Formula.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Formula:Make">
+        <MSBuild Projects="meshes\formula\Formula.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="FPSMovement">
+        <MSBuild Projects="behaviours\FPSMovement\FPSMovement.cbproj"/>
+    </Target>
+    <Target Name="FPSMovement:Clean">
+        <MSBuild Projects="behaviours\FPSMovement\FPSMovement.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="FPSMovement:Make">
+        <MSBuild Projects="behaviours\FPSMovement\FPSMovement.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="MegaCube">
+        <MSBuild Projects="bench\megacube\MegaCube.cbproj"/>
+    </Target>
+    <Target Name="MegaCube:Clean">
+        <MSBuild Projects="bench\megacube\MegaCube.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="MegaCube:Make">
+        <MSBuild Projects="bench\megacube\MegaCube.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="MegaGlassCube">
+        <MSBuild Projects="bench\megaglasscube\MegaGlassCube.cbproj"/>
+    </Target>
+    <Target Name="MegaGlassCube:Clean">
+        <MSBuild Projects="bench\megaglasscube\MegaGlassCube.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="MegaGlassCube:Make">
+        <MSBuild Projects="bench\megaglasscube\MegaGlassCube.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="Meshhit">
+        <MSBuild Projects="collisions\meshhit\Meshhit.cbproj"/>
+    </Target>
+    <Target Name="Meshhit:Clean">
+        <MSBuild Projects="collisions\meshhit\Meshhit.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Meshhit:Make">
+        <MSBuild Projects="collisions\meshhit\Meshhit.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="Mushroom">
+        <MSBuild Projects="meshes\mushroom\Mushroom.cbproj"/>
+    </Target>
+    <Target Name="Mushroom:Clean">
+        <MSBuild Projects="meshes\mushroom\Mushroom.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Mushroom:Make">
+        <MSBuild Projects="meshes\mushroom\Mushroom.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="Nutsnbolts">
+        <MSBuild Projects="extrusion\nutsnbolts\Nutsnbolts.cbproj"/>
+    </Target>
+    <Target Name="Nutsnbolts:Clean">
+        <MSBuild Projects="extrusion\nutsnbolts\Nutsnbolts.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Nutsnbolts:Make">
+        <MSBuild Projects="extrusion\nutsnbolts\Nutsnbolts.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="OcclusionQuery">
+        <MSBuild Projects="collisions\OcclusionQuery\OcclusionQuery.cbproj"/>
+    </Target>
+    <Target Name="OcclusionQuery:Clean">
+        <MSBuild Projects="collisions\OcclusionQuery\OcclusionQuery.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="OcclusionQuery:Make">
+        <MSBuild Projects="collisions\OcclusionQuery\OcclusionQuery.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="octreedemo">
+        <MSBuild Projects="collisions\octree\octreedemo.cbproj"/>
+    </Target>
+    <Target Name="octreedemo:Clean">
+        <MSBuild Projects="collisions\octree\octreedemo.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="octreedemo:Make">
+        <MSBuild Projects="collisions\octree\octreedemo.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="PathControl">
+        <MSBuild Projects="behaviours\PathControl\PathControl.cbproj"/>
+    </Target>
+    <Target Name="PathControl:Clean">
+        <MSBuild Projects="behaviours\PathControl\PathControl.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="PathControl:Make">
+        <MSBuild Projects="behaviours\PathControl\PathControl.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="Portal">
+        <MSBuild Projects="meshes\portal\Portal.cbproj"/>
+    </Target>
+    <Target Name="Portal:Clean">
+        <MSBuild Projects="meshes\portal\Portal.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Portal:Make">
+        <MSBuild Projects="meshes\portal\Portal.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="Pawn">
+        <MSBuild Projects="extrusion\pawn\Pawn.cbproj"/>
+    </Target>
+    <Target Name="Pawn:Clean">
+        <MSBuild Projects="extrusion\pawn\Pawn.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Pawn:Make">
+        <MSBuild Projects="extrusion\pawn\Pawn.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="RayBox">
+        <MSBuild Projects="collisions\RayBox\RayBox.cbproj"/>
+    </Target>
+    <Target Name="RayBox:Clean">
+        <MSBuild Projects="collisions\RayBox\RayBox.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="RayBox:Make">
+        <MSBuild Projects="collisions\RayBox\RayBox.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="Raycast">
+        <MSBuild Projects="collisions\Raycast\Raycast.cbproj"/>
+    </Target>
+    <Target Name="Raycast:Clean">
+        <MSBuild Projects="collisions\Raycast\Raycast.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Raycast:Make">
+        <MSBuild Projects="collisions\Raycast\Raycast.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="shadedterrain">
+        <MSBuild Projects="meshes\shadedterrain\shadedterrain.cbproj"/>
+    </Target>
+    <Target Name="shadedterrain:Clean">
+        <MSBuild Projects="meshes\shadedterrain\shadedterrain.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="shadedterrain:Make">
+        <MSBuild Projects="meshes\shadedterrain\shadedterrain.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="Skeletal">
+        <MSBuild Projects="meshes\skeletal\Skeletal.cbproj"/>
+    </Target>
+    <Target Name="Skeletal:Clean">
+        <MSBuild Projects="meshes\skeletal\Skeletal.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Skeletal:Make">
+        <MSBuild Projects="meshes\skeletal\Skeletal.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="Smoking">
+        <MSBuild Projects="bench\smoking\Smoking.cbproj"/>
+    </Target>
+    <Target Name="Smoking:Clean">
+        <MSBuild Projects="bench\smoking\Smoking.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Smoking:Make">
+        <MSBuild Projects="bench\smoking\Smoking.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="Sphere">
+        <MSBuild Projects="collisions\sphere\Sphere.cbproj"/>
+    </Target>
+    <Target Name="Sphere:Clean">
+        <MSBuild Projects="collisions\sphere\Sphere.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Sphere:Make">
+        <MSBuild Projects="collisions\sphere\Sphere.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="Subdivide">
+        <MSBuild Projects="meshes\subdivide\Subdivide.cbproj"/>
+    </Target>
+    <Target Name="Subdivide:Clean">
+        <MSBuild Projects="meshes\subdivide\Subdivide.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Subdivide:Make">
+        <MSBuild Projects="meshes\subdivide\Subdivide.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="Synthterr">
+        <MSBuild Projects="meshes\synthterr\Synthterr.cbproj"/>
+    </Target>
+    <Target Name="Synthterr:Clean">
+        <MSBuild Projects="meshes\synthterr\Synthterr.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Synthterr:Make">
+        <MSBuild Projects="meshes\synthterr\Synthterr.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="Tentacles">
+        <MSBuild Projects="extrusion\tentacles\Tentacles.cbproj"/>
+    </Target>
+    <Target Name="Tentacles:Clean">
+        <MSBuild Projects="extrusion\tentacles\Tentacles.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Tentacles:Make">
+        <MSBuild Projects="extrusion\tentacles\Tentacles.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="terrain">
+        <MSBuild Projects="meshes\terrain\terrain.cbproj"/>
+    </Target>
+    <Target Name="terrain:Clean">
+        <MSBuild Projects="meshes\terrain\terrain.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="terrain:Make">
+        <MSBuild Projects="meshes\terrain\terrain.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="Texturing">
+        <MSBuild Projects="cgshaders\texturing\Texturing.cbproj"/>
+    </Target>
+    <Target Name="Texturing:Clean">
+        <MSBuild Projects="cgshaders\texturing\Texturing.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Texturing:Make">
+        <MSBuild Projects="cgshaders\texturing\Texturing.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="tiles">
+        <MSBuild Projects="meshes\tiles\tiles.cbproj"/>
+    </Target>
+    <Target Name="tiles:Clean">
+        <MSBuild Projects="meshes\tiles\tiles.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="tiles:Make">
+        <MSBuild Projects="meshes\tiles\tiles.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="Torque">
+        <MSBuild Projects="behaviours\Torque\Torque.cbproj"/>
+    </Target>
+    <Target Name="Torque:Clean">
+        <MSBuild Projects="behaviours\Torque\Torque.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Torque:Make">
+        <MSBuild Projects="behaviours\Torque\Torque.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="tree">
+        <MSBuild Projects="meshes\tree\tree.cbproj"/>
+    </Target>
+    <Target Name="tree:Clean">
+        <MSBuild Projects="meshes\tree\tree.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="tree:Make">
+        <MSBuild Projects="meshes\tree\tree.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="TriangleBox">
+        <MSBuild Projects="collisions\TriangleBox\TriangleBox.cbproj"/>
+    </Target>
+    <Target Name="TriangleBox:Clean">
+        <MSBuild Projects="collisions\TriangleBox\TriangleBox.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="TriangleBox:Make">
+        <MSBuild Projects="collisions\TriangleBox\TriangleBox.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="Volcano">
+        <MSBuild Projects="bench\volcano\Volcano.cbproj"/>
+    </Target>
+    <Target Name="Volcano:Clean">
+        <MSBuild Projects="bench\volcano\Volcano.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Volcano:Make">
+        <MSBuild Projects="bench\volcano\Volcano.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="Whirlwind">
+        <MSBuild Projects="bench\whirlwind\Whirlwind.cbproj"/>
+    </Target>
+    <Target Name="Whirlwind:Clean">
+        <MSBuild Projects="bench\whirlwind\Whirlwind.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Whirlwind:Make">
+        <MSBuild Projects="bench\whirlwind\Whirlwind.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="Actor;ActorMS3D;Actorproxy;Actortwocam;BendingCyl;boxedin;BoxSphere;BumpShader;Canvas;Celshading;Centering;CGBombShader;CgSimple;CSG;Cutoutstar;dceDemo;ducky;Expolygon;Facevsface;Feedback;Formula;FPSMovement;MegaCube;MegaGlassCube;Meshhit;Mushroom;Nutsnbolts;OcclusionQuery;octreedemo;PathControl;Portal;Pawn;RayBox;Raycast;shadedterrain;Skeletal;Smoking;Sphere;Subdivide;Synthterr;Tentacles;terrain;Texturing;tiles;Torque;tree;TriangleBox;Volcano;Whirlwind"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="Actor:Clean;ActorMS3D:Clean;Actorproxy:Clean;Actortwocam:Clean;BendingCyl:Clean;boxedin:Clean;BoxSphere:Clean;BumpShader:Clean;Canvas:Clean;Celshading:Clean;Centering:Clean;CGBombShader:Clean;CgSimple:Clean;CSG:Clean;Cutoutstar:Clean;dceDemo:Clean;ducky:Clean;Expolygon:Clean;Facevsface:Clean;Feedback:Clean;Formula:Clean;FPSMovement:Clean;MegaCube:Clean;MegaGlassCube:Clean;Meshhit:Clean;Mushroom:Clean;Nutsnbolts:Clean;OcclusionQuery:Clean;octreedemo:Clean;PathControl:Clean;Portal:Clean;Pawn:Clean;RayBox:Clean;Raycast:Clean;shadedterrain:Clean;Skeletal:Clean;Smoking:Clean;Sphere:Clean;Subdivide:Clean;Synthterr:Clean;Tentacles:Clean;terrain:Clean;Texturing:Clean;tiles:Clean;Torque:Clean;tree:Clean;TriangleBox:Clean;Volcano:Clean;Whirlwind:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="Actor:Make;ActorMS3D:Make;Actorproxy:Make;Actortwocam:Make;BendingCyl:Make;boxedin:Make;BoxSphere:Make;BumpShader:Make;Canvas:Make;Celshading:Make;Centering:Make;CGBombShader:Make;CgSimple:Make;CSG:Make;Cutoutstar:Make;dceDemo:Make;ducky:Make;Expolygon:Make;Facevsface:Make;Feedback:Make;Formula:Make;FPSMovement:Make;MegaCube:Make;MegaGlassCube:Make;Meshhit:Make;Mushroom:Make;Nutsnbolts:Make;OcclusionQuery:Make;octreedemo:Make;PathControl:Make;Portal:Make;Pawn:Make;RayBox:Make;Raycast:Make;shadedterrain:Make;Skeletal:Make;Smoking:Make;Sphere:Make;Subdivide:Make;Synthterr:Make;Tentacles:Make;terrain:Make;Texturing:Make;tiles:Make;Torque:Make;tree:Make;TriangleBox:Make;Volcano:Make;Whirlwind:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>

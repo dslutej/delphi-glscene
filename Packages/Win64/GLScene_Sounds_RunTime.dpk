@@ -1,0 +1,49 @@
+package GLScene_Sounds_RunTime;
+
+{$R *.res}
+{$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO OFF}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION OFF}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES ON}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DEFINE DEBUG}
+{$ENDIF IMPLICITBUILDING}
+{$DESCRIPTION 'GLScene Sound Managers'}
+{$RUNONLY}
+{$IMPLICITBUILD ON}
+
+requires
+  vcl,
+  rtl,
+  GLScene_RunTime;
+
+contains
+  Bass in '..\..\Source\SoundVideoAPIs\Bass.pas',
+  fmod in '..\..\Source\SoundVideoAPIs\fmod.pas',
+  fmodpresets in '..\..\Source\SoundVideoAPIs\fmodpresets.pas',
+  fmodtypes in '..\..\Source\SoundVideoAPIs\fmodtypes.pas',
+  fmoderrors in '..\..\Source\SoundVideoAPIs\fmoderrors.pas',
+  openal in '..\..\Source\SoundVideoAPIs\openal.pas',
+  GLSMBASS in '..\..\Source\SoundVideoAPIs\GLSMBASS.pas',
+  GLSMFMOD in '..\..\Source\SoundVideoAPIs\GLSMFMOD.pas',
+  GLSMOpenAL in '..\..\Source\SoundVideoAPIs\GLSMOpenAL.pas',
+  GLSMWaveOut in '..\..\Source\SoundVideoAPIs\GLSMWaveOut.pas';
+
+end.

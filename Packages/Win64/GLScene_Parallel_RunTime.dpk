@@ -1,0 +1,57 @@
+package GLScene_Parallel_RunTime;
+
+{$R *.res}
+{$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO OFF}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION OFF}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES ON}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DEFINE DEBUG}
+{$ENDIF IMPLICITBUILDING}
+{$DESCRIPTION 'GLScene GPU Computing'}
+{$RUNONLY}
+{$IMPLICITBUILD ON}
+
+requires
+  rtl,
+  vclimg,
+  vcl,
+  xmlrtl,
+  GLScene_RunTime;
+
+contains
+  GLSCUDARuntime in '..\..\Source\ParallelAPIs\GLSCUDARuntime.pas',
+  GLSCUDAFourierTransform in '..\..\Source\ParallelAPIs\GLSCUDAFourierTransform.pas',
+  GLSCUDACompiler in '..\..\Source\ParallelAPIs\GLSCUDACompiler.pas',
+  GLSCUDAContext in '..\..\Source\ParallelAPIs\GLSCUDAContext.pas',
+  GLSCUDAFFTPlan in '..\..\Source\ParallelAPIs\GLSCUDAFFTPlan.pas',
+  GLSCUDAGraphics in '..\..\Source\ParallelAPIs\GLSCUDAGraphics.pas',
+  GLSCUDAParser in '..\..\Source\ParallelAPIs\GLSCUDAParser.pas',
+  GLSCUDADataAccess in '..\..\Source\ParallelAPIs\GLSCUDADataAccess.pas',
+  GLSCUDAParallelPrimitives in '..\..\Source\ParallelAPIs\GLSCUDAParallelPrimitives.pas',
+  GLSCUDA in '..\..\Source\ParallelAPIs\GLSCUDA.pas',
+  GLSCUDAApi in '..\..\Source\ParallelAPIs\GLSCUDAApi.pas',
+  GLFilePGM in '..\..\Source\FileFormats\GLFilePGM.pas',
+  CL in '..\..\Source\ParallelAPIs\CL.pas',
+  CL_GL in '..\..\Source\ParallelAPIs\CL_GL.pas',
+  CL_Platform in '..\..\Source\ParallelAPIs\CL_Platform.pas';
+
+end.
+

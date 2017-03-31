@@ -1,0 +1,1422 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{FF5C6F40-3539-4BED-A8D1-48D0318022DF}</ProjectGuid>
+        <ProjectVersion>18.2</ProjectVersion>
+        <FrameworkType>VCL</FrameworkType>
+        <MainSource>GLScene_RunTime.cpp</MainSource>
+        <Base>True</Base>
+        <Config Condition="'$(Config)'==''">Debug</Config>
+        <Platform Condition="'$(Platform)'==''">Win32</Platform>
+        <TargetedPlatforms>1</TargetedPlatforms>
+        <AppType>Package</AppType>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='Android' and '$(Base)'=='true') or '$(Base_Android)'!=''">
+        <Base_Android>true</Base_Android>
+        <CfgParent>Base</CfgParent>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='iOSDevice32' and '$(Base)'=='true') or '$(Base_iOSDevice32)'!=''">
+        <Base_iOSDevice32>true</Base_iOSDevice32>
+        <CfgParent>Base</CfgParent>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='iOSDevice64' and '$(Base)'=='true') or '$(Base_iOSDevice64)'!=''">
+        <Base_iOSDevice64>true</Base_iOSDevice64>
+        <CfgParent>Base</CfgParent>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='OSX32' and '$(Base)'=='true') or '$(Base_OSX32)'!=''">
+        <Base_OSX32>true</Base_OSX32>
+        <CfgParent>Base</CfgParent>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Base)'=='true') or '$(Base_Win32)'!=''">
+        <Base_Win32>true</Base_Win32>
+        <CfgParent>Base</CfgParent>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='Win64' and '$(Base)'=='true') or '$(Base_Win64)'!=''">
+        <Base_Win64>true</Base_Win64>
+        <CfgParent>Base</CfgParent>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Debug' or '$(Cfg_1)'!=''">
+        <Cfg_1>true</Cfg_1>
+        <CfgParent>Base</CfgParent>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Cfg_1)'=='true') or '$(Cfg_1_Win32)'!=''">
+        <Cfg_1_Win32>true</Cfg_1_Win32>
+        <CfgParent>Cfg_1</CfgParent>
+        <Cfg_1>true</Cfg_1>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Release' or '$(Cfg_2)'!=''">
+        <Cfg_2>true</Cfg_2>
+        <CfgParent>Base</CfgParent>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Base)'!=''">
+        <RuntimeOnlyPackage>true</RuntimeOnlyPackage>
+        <_TCHARMapping>char</_TCHARMapping>
+        <IncludePath>..\..\Source\ScriptingAPIs\;..\..\Source\SoundVideoAPIs\;..\..\Source\Basis\;..\..\Source\FileFormats\;..\..\Source\;..\..\Source\Shaders\;..\..\Source\GameAPIs\;..\..\Source;..\..\Source\Basis;..\..\Source\FileFormats;..\..\Source\GameAPIs;..\..\Source\ScriptingAPIs;..\..\Source\Shaders;..\..\Source\SoundVideoAPIs;$(GLSCENEDIR)\PackagesCPP\Win32;$(IncludePath)</IncludePath>
+        <ILINK_LibraryPath>..\..\Source\ScriptingAPIs\;..\..\Source\GameAPIs\;..\..\Source\Shaders\;..\..\Source\SoundVideoAPIs\;..\..\Source\FileFormats\;..\..\Source\Basis\;..\..\Source\;$(ILINK_LibraryPath)</ILINK_LibraryPath>
+        <ProjectType>CppPackage</ProjectType>
+        <ILINK_GenerateImportLibrary>true</ILINK_GenerateImportLibrary>
+        <Multithreaded>true</Multithreaded>
+        <SanitizedProjectName>GLScene_RunTime</SanitizedProjectName>
+        <ILINK_GenerateLibFile>true</ILINK_GenerateLibFile>
+        <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
+        <DCC_CBuilderOutput>JPHNE</DCC_CBuilderOutput>
+        <DynamicRTL>true</DynamicRTL>
+        <UsePackages>true</UsePackages>
+        <IntermediateOutputDir>.\$(GLSCENEDIR)\bpl\$(Platform)\$(Config)</IntermediateOutputDir>
+        <BCC_wpar>false</BCC_wpar>
+        <BCC_OptimizeForSpeed>true</BCC_OptimizeForSpeed>
+        <BCC_ExtendedErrorInfo>true</BCC_ExtendedErrorInfo>
+        <ILINK_TranslatedLibraryPath>$(BDSLIB)\$(PLATFORM)\release\$(LANGDIR);$(ILINK_TranslatedLibraryPath)</ILINK_TranslatedLibraryPath>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Base_Android)'!=''">
+        <EnabledSysJars>android-support-v4.dex.jar;cloud-messaging.dex.jar;fmx.dex.jar;google-analytics-v2.dex.jar;google-play-billing.dex.jar;google-play-licensing.dex.jar;google-play-services.dex.jar</EnabledSysJars>
+        <PackageImports>bindcomp;bindcompdbx;bindcompfmx;bindengine;CloudService;CustomIPTransport;DataSnapClient;DataSnapCommon;DataSnapFireDAC;DataSnapNativeClient;DataSnapProviderClient;dbexpress;dbrtl;dbxcds;DbxClientDriver;DbxCommonDriver;DBXInterBaseDriver;DBXSqliteDriver;dsnap;dsnapxml;emsclient;emsclientfiredac;FireDAC;FireDACCommon;FireDACCommonDriver;FireDACDBXDriver;FireDACDSDriver;FireDACIBDriver;FireDACSqliteDriver;fmx;fmxFireDAC;FMXTee;FmxTeeUI;ibmonitor;ibxbindings;ibxpress;IndyCore;IndyIPClient;IndyIPCommon;IndyIPServer;IndyProtocols;IndySystem;inet;RESTBackendComponents;RESTComponents;rtl;soapmidas;soaprtl;soapserver;tethering;xmlrtl;$(PackageImports)</PackageImports>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Base_iOSDevice32)'!=''">
+        <PackageImports>bindcomp;bindcompdbx;bindcompfmx;bindengine;CloudService;CustomIPTransport;DataSnapClient;DataSnapCommon;DataSnapFireDAC;DataSnapNativeClient;DataSnapProviderClient;dbexpress;dbrtl;dbxcds;DbxClientDriver;DbxCommonDriver;DBXInterBaseDriver;DBXSqliteDriver;dsnap;dsnapxml;emsclient;emsclientfiredac;FireDAC;FireDACCommon;FireDACCommonDriver;FireDACDBXDriver;FireDACDSDriver;FireDACIBDriver;FireDACSqliteDriver;fmx;fmxase;fmxFireDAC;FMXTee;FmxTeeUI;ibmonitor;ibxbindings;ibxpress;IndyCore;IndyIPClient;IndyIPCommon;IndyIPServer;IndyProtocols;IndySystem;inet;RESTBackendComponents;RESTComponents;rtl;soapmidas;soaprtl;soapserver;tethering;xmlrtl;$(PackageImports)</PackageImports>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Base_iOSDevice64)'!=''">
+        <PackageImports>bindcomp;bindcompdbx;bindcompfmx;bindengine;CloudService;CustomIPTransport;DataSnapClient;DataSnapCommon;DataSnapFireDAC;DataSnapNativeClient;DataSnapProviderClient;dbexpress;dbrtl;dbxcds;DbxClientDriver;DbxCommonDriver;DBXInterBaseDriver;DBXSqliteDriver;dsnap;dsnapxml;emsclient;emsclientfiredac;FireDAC;FireDACCommon;FireDACCommonDriver;FireDACDBXDriver;FireDACDSDriver;FireDACIBDriver;FireDACSqliteDriver;fmx;fmxase;fmxFireDAC;FMXTee;FmxTeeUI;ibmonitor;ibxbindings;ibxpress;IndyCore;IndyIPClient;IndyIPCommon;IndyIPServer;IndyProtocols;IndySystem;inet;RESTBackendComponents;RESTComponents;rtl;soapmidas;soaprtl;soapserver;tethering;xmlrtl;$(PackageImports)</PackageImports>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Base_OSX32)'!=''">
+        <PackageImports>bindcomp;bindcompdbx;bindcompfmx;bindengine;CloudService;CustomIPTransport;DataSnapClient;DataSnapCommon;DataSnapFireDAC;DataSnapIndy10ServerTransport;DataSnapNativeClient;DataSnapProviderClient;DataSnapServer;DataSnapServerMidas;dbexpress;dbrtl;dbxcds;DbxClientDriver;DbxCommonDriver;DBXFirebirdDriver;DBXInformixDriver;DBXInterBaseDriver;DBXMySQLDriver;DBXOracleDriver;DBXSqliteDriver;DBXSybaseASADriver;dsnap;dsnapxml;emsclient;emsclientfiredac;emsedge;emshosting;FireDAC;FireDACASADriver;FireDACCommon;FireDACCommonDriver;FireDACCommonODBC;FireDACDBXDriver;FireDACDSDriver;FireDACIBDriver;FireDACMongoDBDriver;FireDACMSSQLDriver;FireDACMySQLDriver;FireDACODBCDriver;FireDACOracleDriver;FireDACPgDriver;FireDACSqliteDriver;FireDACTDataDriver;fmx;fmxase;fmxdae;fmxFireDAC;fmxobj;FMXTee;FmxTeeUI;ibmonitor;ibxbindings;ibxpress;IndyCore;IndyIPClient;IndyIPCommon;IndyIPServer;IndyProtocols;IndySystem;inet;inetdb;inetdbxpress;RESTBackendComponents;RESTComponents;rtl;soapmidas;soaprtl;soapserver;tethering;xmlrtl;$(PackageImports)</PackageImports>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Base_Win32)'!=''">
+        <IncludePath>$(BDSINCLUDE)\windows\vcl;$(IncludePath)</IncludePath>
+        <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_Locale>1033</VerInfo_Locale>
+        <BT_BuildType>Debug</BT_BuildType>
+        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+        <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
+        <PackageImports>adortl;appanalytics;bcbie;bcbsmp;bindcomp;bindcompdbx;bindcompfmx;bindcompvcl;bindengine;CloudService;CustomIPTransport;DataSnapClient;DataSnapCommon;DataSnapConnectors;DatasnapConnectorsFreePascal;DataSnapFireDAC;DataSnapIndy10ServerTransport;DataSnapNativeClient;DataSnapProviderClient;DataSnapServer;DataSnapServerMidas;dbexpress;dbrtl;dbxcds;DbxClientDriver;DbxCommonDriver;DBXDb2Driver;DBXFirebirdDriver;DBXInformixDriver;DBXInterBaseDriver;DBXMSSQLDriver;DBXMySQLDriver;DBXOdbcDriver;DBXOracleDriver;DBXSqliteDriver;DBXSybaseASADriver;DBXSybaseASEDriver;dsnap;dsnapcon;dsnapxml;emsclient;emsclientfiredac;emsedge;emshosting;FireDAC;FireDACADSDriver;FireDACASADriver;FireDACCommon;FireDACCommonDriver;FireDACCommonODBC;FireDACDb2Driver;FireDACDBXDriver;FireDACDSDriver;FireDACIBDriver;FireDACInfxDriver;FireDACMongoDBDriver;FireDACMSAccDriver;FireDACMSSQLDriver;FireDACMySQLDriver;FireDACODBCDriver;FireDACOracleDriver;FireDACPgDriver;FireDACSqliteDriver;FireDACTDataDriver;fmx;fmxase;fmxdae;fmxFireDAC;fmxobj;FMXTee;FmxTeeUI;frx24;frxDB24;frxe24;frxTee24;ibmonitor;ibxbindings;ibxpress;IndyCore;IndyIPClient;IndyIPCommon;IndyIPServer;IndyProtocols;IndySystem;inet;inetdb;inetdbxpress;Intraweb;RESTBackendComponents;RESTComponents;rtl;soapmidas;soaprtl;soapserver;svn;Tee;TeeDB;TeeUI;tethering;vcl;vclactnband;vcldb;vcldsnap;vclFireDAC;vclib;vclie;vclimg;VCLRESTComponents;VclSmp;vcltouch;vclwinx;vclx;xmlrtl;$(PackageImports)</PackageImports>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Base_Win64)'!=''">
+        <IncludePath>$(BDSINCLUDE)\windows\vcl;$(IncludePath)</IncludePath>
+        <PackageImports>adortl;appanalytics;bindcomp;bindcompdbx;bindcompfmx;bindcompvcl;bindengine;CloudService;CustomIPTransport;DataSnapClient;DataSnapCommon;DataSnapConnectors;DatasnapConnectorsFreePascal;DataSnapFireDAC;DataSnapIndy10ServerTransport;DataSnapNativeClient;DataSnapProviderClient;DataSnapServer;DataSnapServerMidas;dbexpress;dbrtl;dbxcds;DbxClientDriver;DbxCommonDriver;DBXDb2Driver;DBXFirebirdDriver;DBXInformixDriver;DBXInterBaseDriver;DBXMSSQLDriver;DBXMySQLDriver;DBXOdbcDriver;DBXOracleDriver;DBXSqliteDriver;DBXSybaseASADriver;DBXSybaseASEDriver;dsnap;dsnapcon;dsnapxml;emsclient;emsclientfiredac;emsedge;emshosting;FireDAC;FireDACADSDriver;FireDACASADriver;FireDACCommon;FireDACCommonDriver;FireDACCommonODBC;FireDACDb2Driver;FireDACDBXDriver;FireDACDSDriver;FireDACIBDriver;FireDACInfxDriver;FireDACMongoDBDriver;FireDACMSAccDriver;FireDACMSSQLDriver;FireDACMySQLDriver;FireDACODBCDriver;FireDACOracleDriver;FireDACPgDriver;FireDACSqliteDriver;FireDACTDataDriver;fmx;fmxase;fmxdae;fmxFireDAC;fmxobj;FMXTee;FmxTeeUI;ibmonitor;ibxbindings;ibxpress;IndyCore;IndyIPClient;IndyIPCommon;IndyIPServer;IndyProtocols;IndySystem;inet;inetdb;inetdbxpress;Intraweb;RESTBackendComponents;RESTComponents;rtl;soapmidas;soaprtl;soapserver;Tee;TeeDB;TeeUI;tethering;vcl;vclactnband;vcldb;vcldsnap;vclFireDAC;vclib;vclie;vclimg;VCLRESTComponents;VclSmp;vcltouch;vclwinx;vclx;xmlrtl;$(PackageImports)</PackageImports>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Cfg_1)'!=''">
+        <BCC_OptimizeForSpeed>false</BCC_OptimizeForSpeed>
+        <BCC_DisableOptimizations>true</BCC_DisableOptimizations>
+        <DCC_Optimize>false</DCC_Optimize>
+        <DCC_DebugInfoInExe>true</DCC_DebugInfoInExe>
+        <Defines>_DEBUG;$(Defines)</Defines>
+        <BCC_InlineFunctionExpansion>false</BCC_InlineFunctionExpansion>
+        <BCC_UseRegisterVariables>None</BCC_UseRegisterVariables>
+        <DCC_Define>DEBUG</DCC_Define>
+        <BCC_DebugLineNumbers>true</BCC_DebugLineNumbers>
+        <TASM_DisplaySourceLines>true</TASM_DisplaySourceLines>
+        <BCC_StackFrames>true</BCC_StackFrames>
+        <ILINK_FullDebugInfo>true</ILINK_FullDebugInfo>
+        <TASM_Debugging>Full</TASM_Debugging>
+        <BCC_SourceDebuggingOn>true</BCC_SourceDebuggingOn>
+        <BCC_EnableCPPExceptions>true</BCC_EnableCPPExceptions>
+        <BCC_DisableFramePtrElimOpt>true</BCC_DisableFramePtrElimOpt>
+        <BCC_DisableSpellChecking>true</BCC_DisableSpellChecking>
+        <CLANG_UnwindTables>true</CLANG_UnwindTables>
+        <ILINK_LibraryPath>$(BDSLIB)\$(PLATFORM)\debug;$(ILINK_LibraryPath)</ILINK_LibraryPath>
+        <ILINK_TranslatedLibraryPath>$(BDSLIB)\$(PLATFORM)\debug\$(LANGDIR);$(ILINK_TranslatedLibraryPath)</ILINK_TranslatedLibraryPath>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
+        <DCC_UnitSearchPath>$(GLSCENEDIR)\Source;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.4.2.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.4.2.0;Comments=</VerInfo_Keys>
+        <VerInfo_Release>2</VerInfo_Release>
+        <VerInfo_MinorVer>4</VerInfo_MinorVer>
+        <FinalOutputDir>$(GLSCENEDIR)\bpl\Win32\</FinalOutputDir>
+        <IntermediateOutputDir>$(GLSCENEDIR)\bpl\Win32\</IntermediateOutputDir>
+        <DCC_ObjOutput>$(GLSCENEDIR)\lib\Win32</DCC_ObjOutput>
+        <DCC_BpiOutput>$(GLSCENEDIR)\lib\Win32</DCC_BpiOutput>
+        <BPILibOutputDir>$(GLSCENEDIR)\lib\Win32\</BPILibOutputDir>
+        <DCC_HppOutput>$(GLSCENEDIR)\include\Win32</DCC_HppOutput>
+        <BCC_DontUnderscoreExportedSymbolNames>true</BCC_DontUnderscoreExportedSymbolNames>
+        <DCC_CBuilderOutput>All</DCC_CBuilderOutput>
+        <VerInfo_Locale>1033</VerInfo_Locale>
+        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Cfg_2)'!=''">
+        <Defines>NDEBUG;$(Defines)</Defines>
+        <TASM_Debugging>None</TASM_Debugging>
+    </PropertyGroup>
+    <ItemGroup>
+        <CppCompile Include="GLScene_RunTime.cpp">
+            <BuildOrder>0</BuildOrder>
+        </CppCompile>
+        <PackageImport Include="rtl.bpi">
+            <BuildOrder>1</BuildOrder>
+        </PackageImport>
+        <PackageImport Include="vcl.bpi">
+            <BuildOrder>9</BuildOrder>
+        </PackageImport>
+        <PackageImport Include="vclimg.bpi">
+            <BuildOrder>8</BuildOrder>
+        </PackageImport>
+        <PackageImport Include="xmlrtl.bpi">
+            <BuildOrder>7</BuildOrder>
+        </PackageImport>
+        <DelphiCompile Include="..\..\Source\Basis\GLApplicationFileIO.pas">
+            <BuildOrder>257</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Basis\GLAsyncTimer.pas">
+            <BuildOrder>10</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Basis\GLBaseClasses.pas">
+            <BuildOrder>11</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Basis\GLBaseMeshSilhouette.pas">
+            <BuildOrder>12</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Basis\GLCanvas.pas">
+            <BuildOrder>13</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Basis\GLCoordinates.pas">
+            <BuildOrder>259</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Basis\GLGeometryBB.pas">
+            <BuildOrder>14</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Basis\GLGeometryCoordinates.pas">
+            <BuildOrder>15</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Basis\GLGeomObjects.pas">
+            <BuildOrder>16</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Basis\GLJoystick.pas">
+            <BuildOrder>17</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Basis\GLKeyboard.pas">
+            <BuildOrder>18</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Basis\GLObjectManager.pas">
+            <BuildOrder>258</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Basis\GLObjects.pas">
+            <BuildOrder>259</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Basis\GLOctree.pas">
+            <BuildOrder>19</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Basis\GLPersistentClasses.pas">
+            <BuildOrder>9</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Basis\GLPolyhedron.pas">
+            <BuildOrder>20</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Basis\GLPolynomials.pas">
+            <BuildOrder>21</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Basis\GLSpacePartition.pas">
+            <BuildOrder>22</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Basis\GLSpatialPartitioning.pas">
+            <BuildOrder>23</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Basis\GLSpline.pas">
+            <BuildOrder>24</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Basis\GLState.pas">
+            <BuildOrder>25</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Basis\GLTeapot.pas">
+            <BuildOrder>26</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Basis\GLTypes.pas">
+            <BuildOrder>6</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Basis\GLUtils.pas">
+            <BuildOrder>27</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Basis\GLVectorFileObjects.pas">
+            <BuildOrder>32</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Basis\GLVectorGeometry.pas">
+            <BuildOrder>6</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Basis\GLVectorLists.pas">
+            <BuildOrder>7</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Basis\GLVectorTypes.pas">
+            <BuildOrder>8</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Basis\GLVerletClasses.pas">
+            <BuildOrder>254</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Basis\GLVerletClothify.pas">
+            <BuildOrder>255</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Basis\GLVerletHairClasses.pas">
+            <BuildOrder>256</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Basis\GLVerletSkeletonColliders.pas">
+            <BuildOrder>257</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Basis\GLVerletTypes.pas">
+            <BuildOrder>258</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Basis\GLXCollection.pas">
+            <BuildOrder>259</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Basis\OpenGL1x.pas">
+            <BuildOrder>29</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Basis\OpenGLAdapter.pas">
+            <BuildOrder>30</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Basis\OpenGLTokens.pas">
+            <BuildOrder>31</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Basis\XOpenGL.pas">
+            <BuildOrder>32</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\FileFormats\Const3DS.pas">
+            <BuildOrder>33</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\FileFormats\DDSImage.pas">
+            <BuildOrder>34</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\FileFormats\DXTC.pas">
+            <BuildOrder>35</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\FileFormats\File3DS.pas">
+            <BuildOrder>36</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\FileFormats\FileB3D.pas">
+            <BuildOrder>37</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\FileFormats\FileGL2.pas">
+            <BuildOrder>38</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\FileFormats\FileMD2.pas">
+            <BuildOrder>39</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\FileFormats\FileMD3.pas">
+            <BuildOrder>40</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\FileFormats\FileOCT.pas">
+            <BuildOrder>41</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\FileFormats\FileTGA.pas">
+            <BuildOrder>42</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\FileFormats\FileX.pas">
+            <BuildOrder>43</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\FileFormats\GLFile3DS.pas">
+            <BuildOrder>44</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\FileFormats\GLFile3DSSceneObjects.pas">
+            <BuildOrder>45</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\FileFormats\GLFileASE.pas">
+            <BuildOrder>46</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\FileFormats\GLFileB3D.pas">
+            <BuildOrder>47</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\FileFormats\GLFileBMP.pas">
+            <BuildOrder>48</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\FileFormats\GLFileDDS.pas">
+            <BuildOrder>50</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\FileFormats\GLFileDXF.pas">
+            <BuildOrder>51</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\FileFormats\GLFileGL2.pas">
+            <BuildOrder>52</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\FileFormats\GLFileGRD.pas">
+            <BuildOrder>53</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\FileFormats\GLFileGTS.pas">
+            <BuildOrder>54</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\FileFormats\GLFileHDR.pas">
+            <BuildOrder>55</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\FileFormats\GLFileJPEG.pas">
+            <BuildOrder>56</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\FileFormats\GLFileLMTS.pas">
+            <BuildOrder>57</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\FileFormats\GLFileLWO.pas">
+            <BuildOrder>58</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\FileFormats\GLFileMD2.pas">
+            <BuildOrder>59</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\FileFormats\GLFileMD3.pas">
+            <BuildOrder>60</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\FileFormats\GLFileMD5.pas">
+            <BuildOrder>61</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\FileFormats\GLFileMDC.pas">
+            <BuildOrder>62</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\FileFormats\GLFileMP3.pas">
+            <BuildOrder>63</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\FileFormats\GLFileMS3D.pas">
+            <BuildOrder>64</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\FileFormats\GLFileNMF.pas">
+            <BuildOrder>65</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\FileFormats\GLFileNurbs.pas">
+            <BuildOrder>66</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\FileFormats\GLFileO3TC.pas">
+            <BuildOrder>67</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\FileFormats\GLFileOBJ.pas">
+            <BuildOrder>68</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\FileFormats\GLFileOCT.pas">
+            <BuildOrder>69</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\FileFormats\GLFilePAK.pas">
+            <BuildOrder>70</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\FileFormats\GLFilePLY.pas">
+            <BuildOrder>72</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\FileFormats\GLFilePNG.pas">
+            <BuildOrder>73</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\FileFormats\GLFileQ3BSP.pas">
+            <BuildOrder>74</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\FileFormats\GLFileSMD.pas">
+            <BuildOrder>75</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\FileFormats\GLFileSTL.pas">
+            <BuildOrder>76</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\FileFormats\GLFileTGA.pas">
+            <BuildOrder>77</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\FileFormats\GLFileTIN.pas">
+            <BuildOrder>78</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\FileFormats\GLFileVRML.pas">
+            <BuildOrder>79</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\FileFormats\GLFileWAV.pas">
+            <BuildOrder>80</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\FileFormats\GLFileX.pas">
+            <BuildOrder>81</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\FileFormats\GLFileZLIB.pas">
+            <BuildOrder>82</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\FileFormats\GLVfsPAK.pas">
+            <BuildOrder>83</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\FileFormats\HDRImage.pas">
+            <BuildOrder>84</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\FileFormats\LWObjects.pas">
+            <BuildOrder>85</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\FileFormats\O3TCImage.pas">
+            <BuildOrder>86</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\FileFormats\Q3BSP.pas">
+            <BuildOrder>87</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\FileFormats\Q3MD3.pas">
+            <BuildOrder>88</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\FileFormats\Types3DS.pas">
+            <BuildOrder>89</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\FileFormats\Utils3DS.pas">
+            <BuildOrder>90</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\FileFormats\VRMLParser.pas">
+            <BuildOrder>91</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GameAPIs\GLGameMenu.pas">
+            <BuildOrder>250</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLAnimatedSprite.pas">
+            <BuildOrder>260</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLAsyncHDS.pas">
+            <BuildOrder>92</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLAtmosphere.pas">
+            <BuildOrder>93</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLBehaviours.pas">
+            <BuildOrder>94</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLBitmapFont.pas">
+            <BuildOrder>95</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLBlur.pas">
+            <BuildOrder>96</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLBSP.pas">
+            <BuildOrder>97</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLBumpmapHDS.pas">
+            <BuildOrder>98</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLBumpMapping.pas">
+            <BuildOrder>99</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLCadencer.pas">
+            <BuildOrder>100</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLCameraController.pas">
+            <BuildOrder>101</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLCollision.pas">
+            <BuildOrder>102</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLColor.pas">
+            <BuildOrder>103</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLCompositeImage.pas">
+            <BuildOrder>104</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLConsole.pas">
+            <BuildOrder>105</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLContext.pas">
+            <BuildOrder>106</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLContouring.pas">
+            <BuildOrder>107</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLCrossPlatform.pas">
+            <BuildOrder>109</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLCurvesAndSurfaces.pas">
+            <BuildOrder>110</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLDCE.pas">
+            <BuildOrder>112</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLDCEMisc.pas">
+            <BuildOrder>113</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLDynamicTexture.pas">
+            <BuildOrder>114</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLEllipseCollision.pas">
+            <BuildOrder>115</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLEParticleMasksManager.pas">
+            <BuildOrder>116</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLExplosionFx.pas">
+            <BuildOrder>117</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLExtrusion.pas">
+            <BuildOrder>118</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLFBO.pas">
+            <BuildOrder>119</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLFBORenderer.pas">
+            <BuildOrder>120</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLFeedback.pas">
+            <BuildOrder>121</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLFireFX.pas">
+            <BuildOrder>122</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLFPSMovement.pas">
+            <BuildOrder>123</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLFullScreenViewer.pas">
+            <BuildOrder>124</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLGizmo.pas">
+            <BuildOrder>125</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLGizmoEx.pas">
+            <BuildOrder>126</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLGLUTesselation.pas">
+            <BuildOrder>127</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLGnuGettext.pas">
+            <BuildOrder>128</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLGraph.pas">
+            <BuildOrder>129</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLGraphics.pas">
+            <BuildOrder>130</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLGui.pas">
+            <BuildOrder>131</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLHeightData.pas">
+            <BuildOrder>132</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLHeightTileFile.pas">
+            <BuildOrder>133</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLHeightTileFileHDS.pas">
+            <BuildOrder>134</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLHUDObjects.pas">
+            <BuildOrder>136</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLImageUtils.pas">
+            <BuildOrder>137</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLImposter.pas">
+            <BuildOrder>138</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLIsosurface.pas">
+            <BuildOrder>139</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLLensFlare.pas">
+            <BuildOrder>140</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLLinePFX.pas">
+            <BuildOrder>141</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLManager.pas">
+            <BuildOrder>142</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLMaterial.pas">
+            <BuildOrder>143</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLMaterialEx.pas">
+            <BuildOrder>144</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLMaterialMultiProxy.pas">
+            <BuildOrder>145</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLMaterialScript.pas">
+            <BuildOrder>146</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLMesh.pas">
+            <BuildOrder>147</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLMeshBuilder.pas">
+            <BuildOrder>148</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLMeshCSG.pas">
+            <BuildOrder>149</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLMeshLines.pas">
+            <BuildOrder>150</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLMeshOptimizer.pas">
+            <BuildOrder>151</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLMeshUtils.pas">
+            <BuildOrder>152</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLMirror.pas">
+            <BuildOrder>153</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLMovement.pas">
+            <BuildOrder>154</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLMultiPolygon.pas">
+            <BuildOrder>156</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLMultiProxy.pas">
+            <BuildOrder>157</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLMultisampleImage.pas">
+            <BuildOrder>158</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLNavigator.pas">
+            <BuildOrder>159</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLNodes.pas">
+            <BuildOrder>160</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLParametricSurfaces.pas">
+            <BuildOrder>163</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLParticleFX.pas">
+            <BuildOrder>164</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLParticles.pas">
+            <BuildOrder>165</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLPerlin.pas">
+            <BuildOrder>166</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLPerlinBase.pas">
+            <BuildOrder>167</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLPerlinNoise3D.pas">
+            <BuildOrder>168</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLPerlinPFX.pas">
+            <BuildOrder>169</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLPictureRegisteredFormats.pas">
+            <BuildOrder>171</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLPipelineTransformation.pas">
+            <BuildOrder>172</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLPlugInIntf.pas">
+            <BuildOrder>173</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLPlugInManager.pas">
+            <BuildOrder>174</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLPortal.pas">
+            <BuildOrder>175</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLPostEffects.pas">
+            <BuildOrder>176</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLProcTextures.pas">
+            <BuildOrder>177</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLProjectedTextures.pas">
+            <BuildOrder>178</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLProxyObjects.pas">
+            <BuildOrder>179</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLRagdoll.pas">
+            <BuildOrder>180</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLRenderContextInfo.pas">
+            <BuildOrder>181</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLROAMPatch.pas">
+            <BuildOrder>182</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLSArchiveManager.pas">
+            <BuildOrder>183</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLScene.pas">
+            <BuildOrder>184</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLSceneForm.pas">
+            <BuildOrder>250</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLScreen.pas">
+            <BuildOrder>187</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLScreenSaver.pas">
+            <BuildOrder>188</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLSCrossXML.pas">
+            <BuildOrder>189</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLSelection.pas">
+            <BuildOrder>190</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLSGenerics.pas">
+            <BuildOrder>191</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLShadowHDS.pas">
+            <BuildOrder>192</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLShadowPlane.pas">
+            <BuildOrder>193</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLShadowVolume.pas">
+            <BuildOrder>194</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLSilhouette.pas">
+            <BuildOrder>195</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLSimpleNavigation.pas">
+            <BuildOrder>196</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLSkyBox.pas">
+            <BuildOrder>197</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLSkydome.pas">
+            <BuildOrder>198</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLSLanguage.pas">
+            <BuildOrder>199</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLSLog.pas">
+            <BuildOrder>200</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLSMemo.pas">
+            <BuildOrder>201</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLSmoothNavigator.pas">
+            <BuildOrder>202</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLSpaceText.pas">
+            <BuildOrder>203</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLSRedBlackTree.pas">
+            <BuildOrder>204</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLSRGBE.pas">
+            <BuildOrder>205</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLStarRecord.pas">
+            <BuildOrder>206</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLStrings.pas">
+            <BuildOrder>207</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLTerrainRenderer.pas">
+            <BuildOrder>208</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLTexLensFlare.pas">
+            <BuildOrder>209</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLTexture.pas">
+            <BuildOrder>210</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLTextureCombiners.pas">
+            <BuildOrder>211</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLTexturedHDS.pas">
+            <BuildOrder>212</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLTextureFormat.pas">
+            <BuildOrder>213</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLTextureImageEditors.pas">
+            <BuildOrder>214</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLThorFX.pas">
+            <BuildOrder>215</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLTilePlane.pas">
+            <BuildOrder>216</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLTimeEventsMgr.pas">
+            <BuildOrder>217</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLTrail.pas">
+            <BuildOrder>218</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLTree.pas">
+            <BuildOrder>219</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLTriangulation.pas">
+            <BuildOrder>220</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLWaterPlane.pas">
+            <BuildOrder>226</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLWin32Context.pas">
+            <BuildOrder>227</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLWin32Viewer.pas">
+            <BuildOrder>228</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLWindows.pas">
+            <BuildOrder>229</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLWindowsFont.pas">
+            <BuildOrder>230</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\GLzBuffer.pas">
+            <BuildOrder>232</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\ScriptingAPIs\GLScriptBase.pas">
+            <BuildOrder>258</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Shaders\GLAsmShader.pas">
+            <BuildOrder>255</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Shaders\GLBumpShader.pas">
+            <BuildOrder>253</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Shaders\GLCelShader.pas">
+            <BuildOrder>254</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Shaders\GLCustomShader.pas">
+            <BuildOrder>256</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Shaders\GLHiddenLineShader.pas">
+            <BuildOrder>257</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Shaders\GLMultiMaterialShader.pas">
+            <BuildOrder>258</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Shaders\GLOutlineShader.pas">
+            <BuildOrder>255</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Shaders\GLPhongShader.pas">
+            <BuildOrder>259</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Shaders\GLShaderCombiner.pas">
+            <BuildOrder>257</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Shaders\GLSLBumpShader.pas">
+            <BuildOrder>233</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Shaders\GLSLDiffuseSpecularShader.pas">
+            <BuildOrder>234</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Shaders\GLSLErosionShader.pas">
+            <BuildOrder>235</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Shaders\GLSLFurShader.pas">
+            <BuildOrder>236</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Shaders\GLSLGlassShader.pas">
+            <BuildOrder>237</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Shaders\GLSLGoochShader.pas">
+            <BuildOrder>238</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Shaders\GLSLIvoryShader.pas">
+            <BuildOrder>239</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Shaders\GLSLLatticeShader.pas">
+            <BuildOrder>240</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Shaders\GLSLParameter.pas">
+            <BuildOrder>241</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Shaders\GLSLPostShaders.pas">
+            <BuildOrder>242</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Shaders\GLSLProjectedTextures.pas">
+            <BuildOrder>243</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Shaders\GLSLSemShader.pas">
+            <BuildOrder>244</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Shaders\GLSLShader.pas">
+            <BuildOrder>245</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Shaders\GLSLToonShader.pas">
+            <BuildOrder>246</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Shaders\GLSLVertexDisplacementShader.pas">
+            <BuildOrder>247</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Shaders\GLTexCombineShader.pas">
+            <BuildOrder>255</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Shaders\GLTextureSharingShader.pas">
+            <BuildOrder>249</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\Shaders\GLUserShader.pas">
+            <BuildOrder>250</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\SoundVideoAPIs\GLAVIRecorder.pas">
+            <BuildOrder>251</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\SoundVideoAPIs\GLSound.pas">
+            <BuildOrder>256</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\SoundVideoAPIs\GLSoundFileObjects.pas">
+            <BuildOrder>233</BuildOrder>
+        </DelphiCompile>
+        <DelphiCompile Include="..\..\Source\SoundVideoAPIs\GLSVfw.pas">
+            <BuildOrder>252</BuildOrder>
+        </DelphiCompile>
+        <BuildConfiguration Include="Release">
+            <Key>Cfg_2</Key>
+            <CfgParent>Base</CfgParent>
+        </BuildConfiguration>
+        <BuildConfiguration Include="Base">
+            <Key>Base</Key>
+        </BuildConfiguration>
+        <BuildConfiguration Include="Debug">
+            <Key>Cfg_1</Key>
+            <CfgParent>Base</CfgParent>
+        </BuildConfiguration>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>CPlusPlusBuilder.Personality.12</Borland.Personality>
+        <Borland.ProjectType>CppPackage</Borland.ProjectType>
+        <BorlandProject>
+            <CPlusPlusBuilder.Personality>
+                <Source>
+                    <Source Name="MainSource">GLScene_RunTime.cpp</Source>
+                </Source>
+                <ProjectProperties>
+                    <ProjectProperties Name="AutoShowDeps">False</ProjectProperties>
+                    <ProjectProperties Name="ManagePaths">True</ProjectProperties>
+                    <ProjectProperties Name="VerifyPackages">True</ProjectProperties>
+                    <ProjectProperties Name="IndexFiles">False</ProjectProperties>
+                </ProjectProperties>
+                <Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\bcboffice2k240.bpl">Embarcadero C++Builder Office 2000 Servers Package</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\bcbofficexp240.bpl">Embarcadero C++Builder Office XP Servers Package</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k240.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp240.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+                </Excluded_Packages>
+            </CPlusPlusBuilder.Personality>
+            <Deployment Version="3">
+                <DeployFile Condition="'$(DynamicRTL)'=='true' And '$(Multithreaded)'=='true'" LocalName="$(BDS)\bin\cc32c240mt.dll" Class="DependencyModule">
+                    <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile Condition="'$(DynamicRTL)'=='true'" LocalName="$(BDS)\Redist\osx32\libcgcrtl.dylib" Class="DependencyModule">
+                    <Platform Name="OSX32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile Condition="'$(UsingDelphiRTL)'=='true'" LocalName="$(BDS)\bin64\borlndmm.dll" Class="DependencyModule">
+                    <Platform Name="Win64">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile Condition="'$(UsingDelphiRTL)'=='true'" LocalName="$(BDS)\bin\borlndmm.dll" Class="DependencyModule">
+                    <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile Condition="'$(DynamicRTL)'=='true'" LocalName="$(BDS)\Redist\osx32\libcgstl.dylib" Class="DependencyModule">
+                    <Platform Name="OSX32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\iossimulator\libcgunwind.1.0.dylib" Class="DependencyModule">
+                    <Platform Name="iOSSimulator">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\osx32\libcgsqlite3.dylib" Class="DependencyModule">
+                    <Platform Name="OSX32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile Condition="'$(DynamicRTL)'=='true' And '$(Multithreaded)'=='true'" LocalName="$(BDS)\bin\cc32240mt.dll" Class="DependencyModule">
+                    <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\osx32\libcgunwind.1.0.dylib" Class="DependencyModule">
+                    <Platform Name="OSX32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile Condition="'$(DynamicRTL)'=='true' And '$(Multithreaded)'!='true'" LocalName="$(BDS)\bin\cc32240.dll" Class="DependencyModule">
+                    <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile Condition="'$(DynamicRTL)'=='true' And '$(Multithreaded)'!='true'" LocalName="$(BDS)\bin64\cc64240.dll" Class="DependencyModule">
+                    <Platform Name="Win64">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\bpl\Win32\GLScene_RunTime.tds" Configuration="Debug" Class="DebugSymbols">
+                    <Platform Name="Win32">
+                        <RemoteName>GLScene_RunTime.tds</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile Condition="'$(DynamicRTL)'=='true' And '$(Multithreaded)'=='true'" LocalName="$(BDS)\bin64\cc64240mt.dll" Class="DependencyModule">
+                    <Platform Name="Win64">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\bpl\Win32\GLScene_RunTime.bpl" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="Win32">
+                        <RemoteName>GLScene_RunTime.bpl</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\iossimulator\libPCRE.dylib" Class="DependencyModule">
+                    <Platform Name="iOSSimulator">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile Condition="'$(DynamicRTL)'=='true' And '$(Multithreaded)'!='true'" LocalName="$(BDS)\bin\cc32c240.dll" Class="DependencyModule">
+                    <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployClass Name="DependencyModule">
+                    <Platform Name="Win32">
+                        <Operation>0</Operation>
+                        <Extensions>.dll;.bpl</Extensions>
+                    </Platform>
+                    <Platform Name="OSX32">
+                        <Operation>1</Operation>
+                        <Extensions>.dylib</Extensions>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="ProjectOSXResource">
+                    <Platform Name="OSX32">
+                        <RemoteDir>Contents\Resources</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="AndroidClassesDexFile">
+                    <Platform Name="Android">
+                        <RemoteDir>classes</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="AdditionalDebugSymbols">
+                    <Platform Name="Win32">
+                        <RemoteDir>Contents\MacOS</RemoteDir>
+                        <Operation>0</Operation>
+                    </Platform>
+                    <Platform Name="OSX32">
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="iPad_Launch768">
+                    <Platform Name="iOSSimulator">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSDevice64">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSDevice32">
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="Android_LauncherIcon144">
+                    <Platform Name="Android">
+                        <RemoteDir>res\drawable-xxhdpi</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="AndroidLibnativeMipsFile">
+                    <Platform Name="Android">
+                        <RemoteDir>library\lib\mips</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Required="true" Name="ProjectOutput">
+                    <Platform Name="iOSDevice64">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSDevice32">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="Win32">
+                        <Operation>0</Operation>
+                    </Platform>
+                    <Platform Name="Linux64">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="OSX32">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="Android">
+                        <RemoteDir>library\lib\armeabi-v7a</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSSimulator">
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="DependencyFramework">
+                    <Platform Name="Win32">
+                        <Operation>0</Operation>
+                    </Platform>
+                    <Platform Name="OSX32">
+                        <Operation>1</Operation>
+                        <Extensions>.framework</Extensions>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="ProjectUWPManifest">
+                    <Platform Name="Win32">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="Win64">
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="iPhone_Launch640">
+                    <Platform Name="iOSSimulator">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSDevice64">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSDevice32">
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="iPad_Launch1024">
+                    <Platform Name="iOSSimulator">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSDevice64">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSDevice32">
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="ProjectiOSDeviceDebug">
+                    <Platform Name="iOSDevice64">
+                        <RemoteDir>..\$(PROJECTNAME).app.dSYM\Contents\Resources\DWARF</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSDevice32">
+                        <RemoteDir>..\$(PROJECTNAME).app.dSYM\Contents\Resources\DWARF</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="iPhone_Launch320">
+                    <Platform Name="iOSSimulator">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSDevice64">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSDevice32">
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="ProjectiOSInfoPList"/>
+                <DeployClass Name="AndroidLibnativeArmeabiFile">
+                    <Platform Name="Android">
+                        <RemoteDir>library\lib\armeabi</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="DebugSymbols">
+                    <Platform Name="Win32">
+                        <Operation>0</Operation>
+                    </Platform>
+                    <Platform Name="iOSSimulator">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="OSX32">
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="iPad_Launch1536">
+                    <Platform Name="iOSSimulator">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSDevice64">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSDevice32">
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="Android_SplashImage470">
+                    <Platform Name="Android">
+                        <RemoteDir>res\drawable-normal</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="Android_LauncherIcon96">
+                    <Platform Name="Android">
+                        <RemoteDir>res\drawable-xhdpi</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="Android_SplashImage640">
+                    <Platform Name="Android">
+                        <RemoteDir>res\drawable-large</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="iPhone_Launch640x1136">
+                    <Platform Name="iOSSimulator">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSDevice64">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSDevice32">
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="ProjectiOSEntitlements"/>
+                <DeployClass Name="Android_LauncherIcon72">
+                    <Platform Name="Android">
+                        <RemoteDir>res\drawable-hdpi</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="AndroidGDBServer">
+                    <Platform Name="Android">
+                        <RemoteDir>library\lib\armeabi-v7a</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="ProjectOSXInfoPList"/>
+                <DeployClass Name="ProjectOSXEntitlements"/>
+                <DeployClass Name="UWP_CppLogo150">
+                    <Platform Name="Win32">
+                        <RemoteDir>Assets</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="Win64">
+                        <RemoteDir>Assets</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="iPad_Launch2048">
+                    <Platform Name="iOSSimulator">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSDevice64">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSDevice32">
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="AndroidSplashStyles">
+                    <Platform Name="Android">
+                        <RemoteDir>res\values</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="Android_SplashImage426">
+                    <Platform Name="Android">
+                        <RemoteDir>res\drawable-small</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="AndroidSplashImageDef">
+                    <Platform Name="Android">
+                        <RemoteDir>res\drawable</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="ProjectiOSResource">
+                    <Platform Name="iOSSimulator">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSDevice64">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSDevice32">
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="ProjectAndroidManifest">
+                    <Platform Name="Android">
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="Android_DefaultAppIcon">
+                    <Platform Name="Android">
+                        <RemoteDir>res\drawable</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="UWP_CppLogo44">
+                    <Platform Name="Win32">
+                        <RemoteDir>Assets</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="Win64">
+                        <RemoteDir>Assets</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="File">
+                    <Platform Name="Win32">
+                        <Operation>0</Operation>
+                    </Platform>
+                    <Platform Name="iOSDevice64">
+                        <Operation>0</Operation>
+                    </Platform>
+                    <Platform Name="OSX32">
+                        <Operation>0</Operation>
+                    </Platform>
+                    <Platform Name="iOSDevice32">
+                        <Operation>0</Operation>
+                    </Platform>
+                    <Platform Name="Android">
+                        <Operation>0</Operation>
+                    </Platform>
+                    <Platform Name="iOSSimulator">
+                        <Operation>0</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="AndroidServiceOutput">
+                    <Platform Name="Android">
+                        <RemoteDir>library\lib\armeabi-v7a</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Required="true" Name="DependencyPackage">
+                    <Platform Name="Win32">
+                        <Operation>0</Operation>
+                        <Extensions>.bpl</Extensions>
+                    </Platform>
+                    <Platform Name="iOSDevice64">
+                        <Operation>1</Operation>
+                        <Extensions>.dylib</Extensions>
+                    </Platform>
+                    <Platform Name="OSX32">
+                        <Operation>1</Operation>
+                        <Extensions>.dylib</Extensions>
+                    </Platform>
+                    <Platform Name="iOSDevice32">
+                        <Operation>1</Operation>
+                        <Extensions>.dylib</Extensions>
+                    </Platform>
+                    <Platform Name="iOSSimulator">
+                        <Operation>1</Operation>
+                        <Extensions>.dylib</Extensions>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="Android_LauncherIcon48">
+                    <Platform Name="Android">
+                        <RemoteDir>res\drawable-mdpi</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="Android_SplashImage960">
+                    <Platform Name="Android">
+                        <RemoteDir>res\drawable-xlarge</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="Android_LauncherIcon36">
+                    <Platform Name="Android">
+                        <RemoteDir>res\drawable-ldpi</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="ProjectiOSDeviceResourceRules"/>
+                <ProjectRoot Platform="iOSDevice64" Name="$(PROJECTNAME).app"/>
+                <ProjectRoot Platform="Win64" Name="$(PROJECTNAME)"/>
+                <ProjectRoot Platform="iOSDevice32" Name="$(PROJECTNAME).app"/>
+                <ProjectRoot Platform="Linux64" Name="$(PROJECTNAME)"/>
+                <ProjectRoot Platform="Win32" Name="$(PROJECTNAME)"/>
+                <ProjectRoot Platform="OSX32" Name="$(PROJECTNAME)"/>
+                <ProjectRoot Platform="Android" Name="$(PROJECTNAME)"/>
+                <ProjectRoot Platform="iOSSimulator" Name="$(PROJECTNAME).app"/>
+            </Deployment>
+            <Platforms>
+                <Platform value="Android">False</Platform>
+                <Platform value="iOSDevice32">False</Platform>
+                <Platform value="iOSDevice64">False</Platform>
+                <Platform value="OSX32">False</Platform>
+                <Platform value="Win32">True</Platform>
+                <Platform value="Win64">False</Platform>
+            </Platforms>
+        </BorlandProject>
+        <ProjectFileVersion>12</ProjectFileVersion>
+    </ProjectExtensions>
+    <Import Project="$(BDS)\Bin\CodeGear.Cpp.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Cpp.Targets')"/>
+    <Import Project="$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj" Condition="Exists('$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj')"/>
+    <Import Project="$(MSBuildProjectName).deployproj" Condition="Exists('$(MSBuildProjectName).deployproj')"/>
+</Project>

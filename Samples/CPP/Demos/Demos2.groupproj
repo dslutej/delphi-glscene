@@ -1,0 +1,132 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{9DFB6EE7-DB5B-482B-9FB6-E593374D549A}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="physics\NewtonDensity\NewtonDensity.cbproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="physics\NewtonMaterial\NewtonMaterial.cbproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="physics\NewtonSimpleSpawn\NewtonSimpleSpawn.cbproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="physics\OdeConveyor\OdeConveyor.cbproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="physics\OdeFurball\OdeFurball.cbproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="physics\OdeMachine\OdeMachine.cbproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="physics\OdeRagdoll\OdeRagdoll.cbproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="physics\OdeSimple\OdeSimple.cbproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="physics\OdeTerrain\OdeTerrain.cbproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="NewtonDensity">
+        <MSBuild Projects="physics\NewtonDensity\NewtonDensity.cbproj"/>
+    </Target>
+    <Target Name="NewtonDensity:Clean">
+        <MSBuild Projects="physics\NewtonDensity\NewtonDensity.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="NewtonDensity:Make">
+        <MSBuild Projects="physics\NewtonDensity\NewtonDensity.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="NewtonMaterial">
+        <MSBuild Projects="physics\NewtonMaterial\NewtonMaterial.cbproj"/>
+    </Target>
+    <Target Name="NewtonMaterial:Clean">
+        <MSBuild Projects="physics\NewtonMaterial\NewtonMaterial.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="NewtonMaterial:Make">
+        <MSBuild Projects="physics\NewtonMaterial\NewtonMaterial.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="NewtonSimpleSpawn">
+        <MSBuild Projects="physics\NewtonSimpleSpawn\NewtonSimpleSpawn.cbproj"/>
+    </Target>
+    <Target Name="NewtonSimpleSpawn:Clean">
+        <MSBuild Projects="physics\NewtonSimpleSpawn\NewtonSimpleSpawn.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="NewtonSimpleSpawn:Make">
+        <MSBuild Projects="physics\NewtonSimpleSpawn\NewtonSimpleSpawn.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="OdeConveyor">
+        <MSBuild Projects="physics\OdeConveyor\OdeConveyor.cbproj"/>
+    </Target>
+    <Target Name="OdeConveyor:Clean">
+        <MSBuild Projects="physics\OdeConveyor\OdeConveyor.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="OdeConveyor:Make">
+        <MSBuild Projects="physics\OdeConveyor\OdeConveyor.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="OdeFurball">
+        <MSBuild Projects="physics\OdeFurball\OdeFurball.cbproj"/>
+    </Target>
+    <Target Name="OdeFurball:Clean">
+        <MSBuild Projects="physics\OdeFurball\OdeFurball.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="OdeFurball:Make">
+        <MSBuild Projects="physics\OdeFurball\OdeFurball.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="OdeMachine">
+        <MSBuild Projects="physics\OdeMachine\OdeMachine.cbproj"/>
+    </Target>
+    <Target Name="OdeMachine:Clean">
+        <MSBuild Projects="physics\OdeMachine\OdeMachine.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="OdeMachine:Make">
+        <MSBuild Projects="physics\OdeMachine\OdeMachine.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="OdeRagdoll">
+        <MSBuild Projects="physics\OdeRagdoll\OdeRagdoll.cbproj"/>
+    </Target>
+    <Target Name="OdeRagdoll:Clean">
+        <MSBuild Projects="physics\OdeRagdoll\OdeRagdoll.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="OdeRagdoll:Make">
+        <MSBuild Projects="physics\OdeRagdoll\OdeRagdoll.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="OdeSimple">
+        <MSBuild Projects="physics\OdeSimple\OdeSimple.cbproj"/>
+    </Target>
+    <Target Name="OdeSimple:Clean">
+        <MSBuild Projects="physics\OdeSimple\OdeSimple.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="OdeSimple:Make">
+        <MSBuild Projects="physics\OdeSimple\OdeSimple.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="OdeTerrain">
+        <MSBuild Projects="physics\OdeTerrain\OdeTerrain.cbproj"/>
+    </Target>
+    <Target Name="OdeTerrain:Clean">
+        <MSBuild Projects="physics\OdeTerrain\OdeTerrain.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="OdeTerrain:Make">
+        <MSBuild Projects="physics\OdeTerrain\OdeTerrain.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="NewtonDensity;NewtonMaterial;NewtonSimpleSpawn;OdeConveyor;OdeFurball;OdeMachine;OdeRagdoll;OdeSimple;OdeTerrain"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="NewtonDensity:Clean;NewtonMaterial:Clean;NewtonSimpleSpawn:Clean;OdeConveyor:Clean;OdeFurball:Clean;OdeMachine:Clean;OdeRagdoll:Clean;OdeSimple:Clean;OdeTerrain:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="NewtonDensity:Make;NewtonMaterial:Make;NewtonSimpleSpawn:Make;OdeConveyor:Make;OdeFurball:Make;OdeMachine:Make;OdeRagdoll:Make;OdeSimple:Make;OdeTerrain:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>

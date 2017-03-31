@@ -1,0 +1,204 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{26E6A5DE-7E8C-42B3-AD21-433BCFD2D695}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="meshes\actorms3d\Actorms3d.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="physics\Clothactor\Clothactor.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="physics\Clothify\Clothify.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="meshes\mushroom\Mushroom.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="physics\NewtonDensity\NewtonDensity.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="physics\NewtonMaterial\NewtonMaterial.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="physics\NewtonSimpleSpawn\NewtonSimpleSpawn.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="physics\NewtonWalkCarryShoot\NewtonWalkCarryShoot.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="physics\OdeConveyor\OdeConveyor.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="physics\OdeFurball\OdeFurBall.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="physics\OdeMachine\OdeMachine.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="physics\OdeRagdoll\OdeRagdoll.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="physics\OdeTerrain\OdeTerrain.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="meshes\portal\portal.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="meshes\tree\tree.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="Actorms3d">
+        <MSBuild Projects="meshes\actorms3d\Actorms3d.dproj"/>
+    </Target>
+    <Target Name="Actorms3d:Clean">
+        <MSBuild Projects="meshes\actorms3d\Actorms3d.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Actorms3d:Make">
+        <MSBuild Projects="meshes\actorms3d\Actorms3d.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Clothactor">
+        <MSBuild Projects="physics\Clothactor\Clothactor.dproj"/>
+    </Target>
+    <Target Name="Clothactor:Clean">
+        <MSBuild Projects="physics\Clothactor\Clothactor.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Clothactor:Make">
+        <MSBuild Projects="physics\Clothactor\Clothactor.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Clothify">
+        <MSBuild Projects="physics\Clothify\Clothify.dproj"/>
+    </Target>
+    <Target Name="Clothify:Clean">
+        <MSBuild Projects="physics\Clothify\Clothify.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Clothify:Make">
+        <MSBuild Projects="physics\Clothify\Clothify.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Mushroom">
+        <MSBuild Projects="meshes\mushroom\Mushroom.dproj"/>
+    </Target>
+    <Target Name="Mushroom:Clean">
+        <MSBuild Projects="meshes\mushroom\Mushroom.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Mushroom:Make">
+        <MSBuild Projects="meshes\mushroom\Mushroom.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="NewtonDensity">
+        <MSBuild Projects="physics\NewtonDensity\NewtonDensity.dproj"/>
+    </Target>
+    <Target Name="NewtonDensity:Clean">
+        <MSBuild Projects="physics\NewtonDensity\NewtonDensity.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="NewtonDensity:Make">
+        <MSBuild Projects="physics\NewtonDensity\NewtonDensity.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="NewtonMaterial">
+        <MSBuild Projects="physics\NewtonMaterial\NewtonMaterial.dproj"/>
+    </Target>
+    <Target Name="NewtonMaterial:Clean">
+        <MSBuild Projects="physics\NewtonMaterial\NewtonMaterial.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="NewtonMaterial:Make">
+        <MSBuild Projects="physics\NewtonMaterial\NewtonMaterial.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="NewtonSimpleSpawn">
+        <MSBuild Projects="physics\NewtonSimpleSpawn\NewtonSimpleSpawn.dproj"/>
+    </Target>
+    <Target Name="NewtonSimpleSpawn:Clean">
+        <MSBuild Projects="physics\NewtonSimpleSpawn\NewtonSimpleSpawn.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="NewtonSimpleSpawn:Make">
+        <MSBuild Projects="physics\NewtonSimpleSpawn\NewtonSimpleSpawn.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="NewtonWalkCarryShoot">
+        <MSBuild Projects="physics\NewtonWalkCarryShoot\NewtonWalkCarryShoot.dproj"/>
+    </Target>
+    <Target Name="NewtonWalkCarryShoot:Clean">
+        <MSBuild Projects="physics\NewtonWalkCarryShoot\NewtonWalkCarryShoot.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="NewtonWalkCarryShoot:Make">
+        <MSBuild Projects="physics\NewtonWalkCarryShoot\NewtonWalkCarryShoot.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="OdeConveyor">
+        <MSBuild Projects="physics\OdeConveyor\OdeConveyor.dproj"/>
+    </Target>
+    <Target Name="OdeConveyor:Clean">
+        <MSBuild Projects="physics\OdeConveyor\OdeConveyor.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="OdeConveyor:Make">
+        <MSBuild Projects="physics\OdeConveyor\OdeConveyor.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="OdeFurBall">
+        <MSBuild Projects="physics\OdeFurball\OdeFurBall.dproj"/>
+    </Target>
+    <Target Name="OdeFurBall:Clean">
+        <MSBuild Projects="physics\OdeFurball\OdeFurBall.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="OdeFurBall:Make">
+        <MSBuild Projects="physics\OdeFurball\OdeFurBall.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="OdeMachine">
+        <MSBuild Projects="physics\OdeMachine\OdeMachine.dproj"/>
+    </Target>
+    <Target Name="OdeMachine:Clean">
+        <MSBuild Projects="physics\OdeMachine\OdeMachine.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="OdeMachine:Make">
+        <MSBuild Projects="physics\OdeMachine\OdeMachine.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="OdeRagdoll">
+        <MSBuild Projects="physics\OdeRagdoll\OdeRagdoll.dproj"/>
+    </Target>
+    <Target Name="OdeRagdoll:Clean">
+        <MSBuild Projects="physics\OdeRagdoll\OdeRagdoll.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="OdeRagdoll:Make">
+        <MSBuild Projects="physics\OdeRagdoll\OdeRagdoll.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="OdeTerrain">
+        <MSBuild Projects="physics\OdeTerrain\OdeTerrain.dproj"/>
+    </Target>
+    <Target Name="OdeTerrain:Clean">
+        <MSBuild Projects="physics\OdeTerrain\OdeTerrain.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="OdeTerrain:Make">
+        <MSBuild Projects="physics\OdeTerrain\OdeTerrain.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="portal">
+        <MSBuild Projects="meshes\portal\portal.dproj"/>
+    </Target>
+    <Target Name="portal:Clean">
+        <MSBuild Projects="meshes\portal\portal.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="portal:Make">
+        <MSBuild Projects="meshes\portal\portal.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="tree">
+        <MSBuild Projects="meshes\tree\tree.dproj"/>
+    </Target>
+    <Target Name="tree:Clean">
+        <MSBuild Projects="meshes\tree\tree.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="tree:Make">
+        <MSBuild Projects="meshes\tree\tree.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="Actorms3d;Clothactor;Clothify;Mushroom;NewtonDensity;NewtonMaterial;NewtonSimpleSpawn;NewtonWalkCarryShoot;OdeConveyor;OdeFurBall;OdeMachine;OdeRagdoll;OdeTerrain;portal;tree"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="Actorms3d:Clean;Clothactor:Clean;Clothify:Clean;Mushroom:Clean;NewtonDensity:Clean;NewtonMaterial:Clean;NewtonSimpleSpawn:Clean;NewtonWalkCarryShoot:Clean;OdeConveyor:Clean;OdeFurBall:Clean;OdeMachine:Clean;OdeRagdoll:Clean;OdeTerrain:Clean;portal:Clean;tree:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="Actorms3d:Make;Clothactor:Make;Clothify:Make;Mushroom:Make;NewtonDensity:Make;NewtonMaterial:Make;NewtonSimpleSpawn:Make;NewtonWalkCarryShoot:Make;OdeConveyor:Make;OdeFurBall:Make;OdeMachine:Make;OdeRagdoll:Make;OdeTerrain:Make;portal:Make;tree:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>

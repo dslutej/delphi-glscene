@@ -1,0 +1,67 @@
+package GLScene_DesignTime;
+
+{$R *.res}
+{$R '..\Resources\GLSceneObjects.dcr'}
+{$R '..\Resources\GLScene.dcr'}
+{$R '..\Resources\nonGLScene.dcr'}
+{$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO OFF}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS OFF}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION OFF}
+{$OVERFLOWCHECKS ON}
+{$RANGECHECKS ON}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES ON}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DEFINE DEBUG}
+{$ENDIF IMPLICITBUILDING}
+{$DESCRIPTION 'GLScene OpenGL 3D library'}
+{$DESIGNONLY}
+{$IMPLICITBUILD ON}
+
+requires
+  rtl,
+  designide,
+  vclimg,
+  vcl,
+  VclSmp,
+  GLScene_RunTime;
+
+contains
+  FRFaceEditor in '..\..\Source\DesignTime\FRFaceEditor.pas' {RFaceEditor: TFrame},
+  FRMaterialPreview in '..\..\Source\DesignTime\FRMaterialPreview.pas' {RMaterialPreview: TFrame},
+  FRColorEditor in '..\..\Source\DesignTime\FRColorEditor.pas' {RColorEditor: TFrame},
+  FRTextureEdit in '..\..\Source\DesignTime\FRTextureEdit.pas' {RTextureEdit: TFrame},
+  FRTrackBarEdit in '..\..\Source\DesignTime\FRTrackBarEdit.pas' {RTrackBarEdit: TFrame},
+  FLibMaterialPicker in '..\..\Source\DesignTime\FLibMaterialPicker.pas' {GLLibMaterialPicker},
+  FMaterialEditorForm in '..\..\Source\DesignTime\FMaterialEditorForm.pas' {GLMaterialEditorForm},
+  FGUILayoutEditor in '..\..\Source\DesignTime\FGUILayoutEditor.pas' {GLLayoutEditorForm},
+  FGuiSkinEditor in '..\..\Source\DesignTime\FGuiSkinEditor.pas' {GLSkinEditorForm},
+  FShaderUniformEditor in '..\..\Source\DesignTime\FShaderUniformEditor.pas' {GLShaderUniformEditor},
+  FVectorEditor in '..\..\Source\DesignTime\FVectorEditor.pas' {GLVectorEditorForm},
+  FSceneEditor in '..\..\Source\DesignTime\FSceneEditor.pas' {GLSceneEditorForm},
+  FPlugInManagerEditor in '..\..\Source\DesignTime\FPlugInManagerEditor.pas' {GLPlugInManagerEditorForm},
+  FShaderMemo in '..\..\Source\DesignTime\FShaderMemo.pas',
+  FXCollectionEditor in '..\..\Source\DesignTime\FXCollectionEditor.pas' {GLXCollectionEditorForm},
+  FInfo in '..\..\Source\DesignTime\FInfo.pas' {GLInfoForm},
+  GLSceneFormDesign in '..\..\Source\DesignTime\GLSceneFormDesign.pas',
+  GLXCollectionRegister in '..\..\Source\DesignTime\GLXCollectionRegister.pas',
+  GLScriptBase in '..\..\Source\ScriptingAPIs\GLScriptBase.pas',
+  GLSceneRegister in '..\..\Source\DesignTime\GLSceneRegister.pas';
+
+end.
+
+
