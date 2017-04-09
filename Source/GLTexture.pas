@@ -116,11 +116,9 @@ type
     tiaLuminance : the luminance value is calculated for each pixel
     and used for RGB and Alpha values
     tiaLuminanceSqrt : same as tiaLuminance but with an Sqrt(Luminance)
-        tiaOpaque : alpha channel is uniformously set to 1.0
-        tiaTopLeftPointColorTransparent : points of the same color as the
-          top left point of the bitmap are transparent, others are opaque.
-       
-    }
+    tiaOpaque : alpha channel is uniformously set to 1.0
+    tiaTopLeftPointColorTransparent : points of the same color as the
+    top left point of the bitmap are transparent, others are opaque. }
   TGLTextureImageAlpha =
   (
     tiaDefault,
@@ -155,12 +153,10 @@ type
     function GetDepth: Integer; virtual;
     property OnTextureNeeded: TGLTextureNeededEvent read FOnTextureNeeded write FOnTextureNeeded;
   public
-    { Public Properties }
     constructor Create(AOwner: TPersistent); override;
     destructor Destroy; override;
     property OwnerTexture: TGLTexture read FOwnerTexture write FOwnerTexture;
     procedure NotifyChange(Sender: TObject); override;
-
     {Save textureImage to file.
      This may not save a picture, but for instance, parameters, if the
      textureImage is a procedural texture. }
@@ -168,8 +164,8 @@ type
     {Load textureImage from a file.
      This may not load a picture, but for instance, parameters, if the
      textureImage is a procedural texture.
-             Subclasses should invoke inherited which will take care of the
-             "OnTextureNeeded" stuff. }
+     Subclasses should invoke inherited which will take care of the
+     "OnTextureNeeded" stuff. }
     procedure LoadFromFile(const fileName: string); dynamic;
     {Returns a user-friendly denomination for the class.
      This denomination is used for picking a texture image class
@@ -182,8 +178,7 @@ type
     class function FriendlyDescription: string; virtual;
     {Request reload/refresh of data upon next use. }
     procedure Invalidate; dynamic;
-
-    {Returns image's bitmap handle.
+     {Returns image's bitmap handle.
      If the actual image is not a windows bitmap (BMP), descendants should
      take care of properly converting to bitmap. }
     function GetBitmap32: TGLImage; virtual;
@@ -196,8 +191,7 @@ type
     //{AsBitmap : Returns the TextureImage as a TBitmap }
     function AsBitmap: TBitmap;
     procedure AssignToBitmap(aBitmap: TBitmap);
-
-    property Width: Integer read GetWidth;
+     property Width: Integer read GetWidth;
     property Height: Integer read GetHeight;
     property Depth: Integer read GetDepth;
     {Native opengl texture target.  }
@@ -300,7 +294,7 @@ type
   end;
 
   {Uses a picture whose data is found in a file (only filename is stored).
-       The image is unloaded after upload to OpenGL. }
+   The image is unloaded after upload to OpenGL. }
   TGLPicFileImage = class(TGLPictureImage)
   private
     FPictureFileName: string;
@@ -571,15 +565,13 @@ type
       SetTextureWrapT default twRepeat;
     property TextureWrapR: TGLSeparateTextureWrap read FTextureWrapR write
       SetTextureWrapR default twRepeat;
-
-    {Texture format for use by the renderer. 
+     {Texture format for use by the renderer.
     See TGLTextureFormat for details. }
     property TextureFormat: TGLTextureFormat read GetTextureFormat write
       SetTextureFormat default tfDefault;
     property TextureFormatEx: TGLInternalFormat read FTextureFormat write
       SetTextureFormatEx stored StoreTextureFormatEx;
-
-    {Texture compression control.
+     {Texture compression control.
     If True the compressed TextureFormat variant (the OpenGL ICD must
     support GL_ARB_texture_compression, or this option is ignored). }
     property Compression: TGLTextureCompression read FCompression write
@@ -590,8 +582,7 @@ type
     this property is ignored. }
     property FilteringQuality: TGLTextureFilteringQuality read FFilteringQuality
       write SetFilteringQuality default tfIsotropic;
-
-    {Texture coordinates mapping mode. 
+     {Texture coordinates mapping mode.
     This property controls automatic texture coordinates generation. }
     property MappingMode: TGLTextureMappingMode read FMappingMode write
       SetMappingMode default tmmUser;
@@ -606,29 +597,25 @@ type
       write SetMappingRCoordinates stored StoreMappingRCoordinates;
     property MappingQCoordinates: TGLCoordinates4 read GetMappingQCoordinates
       write SetMappingQCoordinates stored StoreMappingQCoordinates;
-
-    {Texture Environment color. }
+     {Texture Environment color. }
     property EnvColor: TGLColor read FEnvColor write SetEnvColor;
     {Texture Border color. }
     property BorderColor: TGLColor read FBorderColor write SetBorderColor;
     {If true, the texture is disabled (not used). }
     property Disabled: Boolean read FDisabled write SetDisabled default True;
-
-    {Normal Map scaling.
+     {Normal Map scaling.
     Only applies when TextureFormat is tfNormalMap, this property defines
     the scaling that is applied during normal map generation (ie. controls
     the intensity of the bumps). }
     property NormalMapScale: Single read FNormalMapScale write SetNormalMapScale
       stored StoreNormalMapScale;
-
-    property TextureCompareMode: TGLTextureCompareMode read fTextureCompareMode
+     property TextureCompareMode: TGLTextureCompareMode read fTextureCompareMode
       write SetTextureCompareMode default tcmNone;
     property TextureCompareFunc: TGLDepthCompareFunc read fTextureCompareFunc
       write SetTextureCompareFunc default cfLequal;
     property DepthTextureMode: TGLDepthTextureMode read fDepthTextureMode write
       SetDepthTextureMode default dtmLuminance;
-
-    {Disable image release after transfering it to VGA. }
+     {Disable image release after transfering it to VGA. }
     property KeepImageAfterTransfer: Boolean read FKeepImageAfterTransfer
       write FKeepImageAfterTransfer default False;
   end;
@@ -642,8 +629,7 @@ type
     FTextureMatrixIsIdentity: Boolean;
     FTextureMatrix: TMatrix;
     FApplied: Boolean;
-
-    //implementing IInterface
+     //implementing IInterface
     function QueryInterface(const IID: TGUID; out Obj): HResult; stdcall;
     function _AddRef: Integer; stdcall;
     function _Release: Integer; stdcall;

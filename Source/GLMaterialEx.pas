@@ -69,14 +69,10 @@ type
   TOnUniformSetting = procedure(Sender: TGLBaseShaderModel;
     var ARci: TGLRenderContextInfo) of object;
 
-  // TGLBaseMaterialCollectionItem
-  //
-
   TGLBaseMaterialCollectionItem = class(
       TGLXCollectionItem,
       IGLMaterialLibrarySupported)
   private
-     
     FNameHashKey: Integer;
     FUserList: TPersistentObjectList;
     FDefferedInit: Boolean;
@@ -85,7 +81,6 @@ type
     function GetUserList: TPersistentObjectList;
     function GetMaterialLibraryEx: TGLMaterialLibraryEx;
   protected
-    
     procedure SetName(const AValue: TGLMaterialComponentName); override;
     procedure NotifyChange(Sender: TObject); virtual;
     property UserList: TPersistentObjectList read GetUserList;
@@ -102,7 +97,6 @@ type
     property MaterialLibrary: TGLMaterialLibraryEx read GetMaterialLibraryEx;
     property IsValid: Boolean read FIsValid;
   published
-    
     property Name: TGLMaterialComponentName read GetName write SetName;
     {Run-time flag, indicate that resource
        should initialize in case of failure material's level. }
@@ -112,14 +106,10 @@ type
 
   CGLBaseMaterialCollectionItem = class of TGLBaseMaterialCollectionItem;
 
-  // TGLLibMaterialProperty
-  //
-
   TGLLibMaterialProperty = class(
       TGLUpdateAbleObject,
       IGLMaterialLibrarySupported)
   protected
-    
     FEnabled: Boolean;
     FNextPassName: TGLLibMaterialName;
     function GetMaterial: TGLLibMaterialEx;
@@ -129,26 +119,18 @@ type
     procedure Loaded; virtual;
     property NextPass: TGLLibMaterialName read FNextPassName write SetNextPass;
   public
-    
     procedure NotifyChange(Sender: TObject); override;
     function GetMaterialLibrary: TGLAbstractMaterialLibrary;
-
     property MaterialLibrary: TGLMaterialLibraryEx read GetMaterialLibraryEx;
   published
-    
     property Enabled: Boolean read FEnabled write SetEnabled;
   end;
 
-  // TGLTextureSampler
-  //
-
   TGLTextureSampler = class(TGLBaseMaterialCollectionItem)
   protected
-    
     procedure WriteToFiler(AWriter: TWriter); override;
     procedure ReadFromFiler(AReader: TReader); override;
   private
-     
     FHandle: TGLSamplerHandle;
     FMinFilter: TGLMinFilter;
     FMagFilter: TGLMagFilter;
@@ -171,23 +153,16 @@ type
     procedure SetCompareFunc(AValue: TDepthFunction);
     procedure SetDecodeSRGB(AValue: Boolean);
   public
-    
     constructor Create(AOwner: TGLXCollection); override;
     destructor Destroy; override;
     procedure Assign(Source: TPersistent); override;
-
     procedure NotifyChange(Sender: TObject); override;
-
     procedure DoOnPrepare(Sender: TGLContext); override;
     procedure Apply(var ARci: TGLRenderContextInfo);
     procedure UnApply(var ARci: TGLRenderContextInfo);
-
     class function FriendlyName: string; override;
-
     property Handle: TGLSamplerHandle read FHandle;
   published
-    
-
     {Texture magnification filter. }
     property MagFilter: TGLMagFilter read FMagFilter write SetMagFilter
       default maLinear;
@@ -219,12 +194,8 @@ type
       default True;
   end;
 
-  // TGLAbstractTexture
-  //
-
   TGLAbstractTexture = class(TGLBaseMaterialCollectionItem)
   protected
-    
     FHandle: TGLTextureHandle;
     FInternalFormat: TGLInternalFormat;
     FWidth: Integer;
@@ -237,10 +208,8 @@ type
     procedure Apply(var ARci: TGLRenderContextInfo); virtual; abstract;
     procedure UnApply(var ARci: TGLRenderContextInfo); virtual; abstract;
   public
-    
     property Handle: TGLTextureHandle read FHandle;
   published
-    
     property Shape: TGLTextureTarget read GetTextureTarget;
   end;
 
@@ -258,16 +227,11 @@ type
     mgmMitchellFilter
     );
 
-  // TGLTextureImageEx
-  //
-
   TGLTextureImageEx = class(TGLAbstractTexture)
   protected
-    
     procedure WriteToFiler(AWriter: TWriter); override;
     procedure ReadFromFiler(AReader: TReader); override;
   private
-     
     FCompression: TGLTextureCompression;
     FImage: TGLBaseImage;
     FImageAlpha: TGLTextureImageAlpha;
@@ -300,52 +264,45 @@ type
     procedure StreamTransfer;
     procedure CalcLODRange(out AFirstLOD, ALastLOD: Integer);
   public
-    
     constructor Create(AOwner: TGLXCollection); override;
     destructor Destroy; override;
     procedure Assign(Source: TPersistent); override;
-
     procedure NotifyChange(Sender: TObject); override;
-
     procedure DoOnPrepare(Sender: TGLContext); override;
     procedure Apply(var ARci: TGLRenderContextInfo); override;
     procedure UnApply(var ARci: TGLRenderContextInfo); override;
-
     class function FriendlyName: string; override;
   published
-    
-
     // Factual texture properties
     property InternalWidth: Integer read FWidth;
     property InternalHeight: Integer read FHeight;
     property InternalDepth: Integer read FDepth;
     property InternalFormat: TGLInternalFormat read FInternalFormat
       write SetInternalFormat default tfRGBA8;
-
-    {Automatic Image Alpha setting. 
+    {Automatic Image Alpha setting.
       Allows to control how and if the image's Alpha channel (transparency)
       is computed. }
     property ImageAlpha: TGLTextureImageAlpha read FImageAlpha write
       SetImageAlpha default tiaDefault;
-    {Texture brightness correction. 
+    {Texture brightness correction.
       This correction is applied upon loading a TGLTextureImage, it's a
       simple saturating scaling applied to the RGB components of
       the 32 bits image, before it is passed to OpenGL, and before
       gamma correction (if any). }
     property ImageBrightness: Single read FImageBrightness write
       SetImageBrightness stored StoreBrightness;
-    {Texture gamma correction. 
+    {Texture gamma correction.
       The gamma correction is applied upon loading a TGLTextureImage,
       applied to the RGB components of the 32 bits image, before it is
       passed to OpenGL, after brightness correction (if any). }
     property ImageGamma: Single read FImageGamma write SetImageGamma stored
       StoreGamma;
-    {Texture compression control. 
+    {Texture compression control.
       If True the compressed TextureFormat variant (the OpenGL ICD must
       support GL_ARB_texture_compression, or this option is ignored). }
     property Compression: TGLTextureCompression read FCompression write
       SetCompression default tcDefault;
-    {Normal Map scaling. 
+    {Normal Map scaling.
       Force normal map generation from height map and controls
       the intensity of the bumps. }
     property HeightToNormalScale: Single read FHeightToNormalScale
@@ -363,16 +320,11 @@ type
       write SetUseStreaming default False;
   end;
 
-  // TGLFrameBufferAttachment
-  //
-
   TGLFrameBufferAttachment = class(TGLAbstractTexture)
   protected
-    
     procedure WriteToFiler(AWriter: TWriter); override;
     procedure ReadFromFiler(AReader: TReader); override;
   private
-     
     FRenderBufferHandle: TGLRenderbufferHandle;
     FLayered: Boolean;
     FCubeMap: Boolean;
@@ -389,20 +341,15 @@ type
     procedure SetSamples(AValue: Integer);
     procedure SetFixedSamplesLocation(AValue: Boolean);
   public
-    
     constructor Create(AOwner: TGLXCollection); override;
     destructor Destroy; override;
     procedure Assign(Source: TPersistent); override;
-
     procedure NotifyChange(Sender: TObject); override;
-
     procedure DoOnPrepare(Sender: TGLContext); override;
     procedure Apply(var ARci: TGLRenderContextInfo); override;
     procedure UnApply(var ARci: TGLRenderContextInfo); override;
-
     class function FriendlyName: string; override;
   published
-    
     property InternalWidth: Integer read FWidth
       write SetWidth default 256;
     property InternalHeight: Integer read FHeight
@@ -432,13 +379,10 @@ type
       write SetFixedSamplesLocation default False;
   end;
 
-  // TGLTextureSwizzling
-  //
     {Swizzle the components of a texture fetches in
         shader or fixed-function pipeline. }
   TGLTextureSwizzling = class(TGLUpdateAbleObject)
   private
-     
     FSwizzles: TSwizzleVector;
     function GetSwizzle(AIndex: Integer): TGLTextureSwizzle;
     procedure SetSwizzle(AIndex: Integer; AValue: TGLTextureSwizzle);
@@ -446,11 +390,9 @@ type
   public
     constructor Create(AOwner: TPersistent); override;
     procedure Assign(Source: TPersistent); override;
-
     procedure WriteToFiler(AWriter: TWriter);
     procedure ReadFromFiler(AReader: TReader);
   published
-    
     property RedFrom: TGLTextureSwizzle index 0 read GetSwizzle
       write SetSwizzle stored StoreSwizzle;
     property GreenFrom: TGLTextureSwizzle index 1 read GetSwizzle
@@ -461,12 +403,8 @@ type
       write SetSwizzle stored StoreSwizzle;
   end;
 
-  // TGLTextureProperties
-  //
-
   TGLTextureProperties = class(TGLLibMaterialProperty)
   private
-     
     FLibTextureName: TGLMaterialComponentName;
     FLibSamplerName: TGLMaterialComponentName;
     FLibTexture: TGLAbstractTexture;
@@ -512,52 +450,46 @@ type
     procedure SetSwizzling(const AValue: TGLTextureSwizzling);
     function StoreSwizzling: Boolean;
     procedure SetEnvColor(const AValue: TGLColor);
-
     procedure CalculateTextureMatrix;
     procedure ApplyMappingMode;
     procedure UnApplyMappingMode;
   protected
     procedure Loaded; override;
   public
-    
     constructor Create(AOwner: TPersistent); override;
     destructor Destroy; override;
     procedure Assign(Source: TPersistent); override;
-
     procedure NotifyChange(Sender: TObject); override;
     procedure Notification(Sender: TObject; Operation: TOperation); override;
-
     function IsValid: Boolean;
     procedure Apply(var ARci: TGLRenderContextInfo);
     procedure UnApply(var ARci: TGLRenderContextInfo);
-
     property TextureMatrix: TMatrix read FTextureMatrix write SetTextureMatrix;
   published
-    
     property LibTextureName: TGLMaterialComponentName read GetLibTextureName
       write SetLibTextureName;
     property LibSamplerName: TGLMaterialComponentName read GetLibSamplerName
       write SetLibSamplerName;
     property TextureOffset: TGLCoordinates read GetTextureOffset write
       SetTextureOffset stored StoreTextureOffset;
-    {Texture coordinates scaling. 
+    {Texture coordinates scaling.
        Scaling is applied before applying the offset, and is applied
        to the texture coordinates, meaning that a scale factor of (2, 2, 2)
        will make your texture look twice <i>smaller</i>. }
     property TextureScale: TGLCoordinates read GetTextureScale write
       SetTextureScale stored StoreTextureScale;
-    {Texture coordinates rotating. 
+    {Texture coordinates rotating.
        Rotating is applied after applying offset and scale,
        and rotate ST direction around R axis. }
     property TextureRotate: Single read FTextureRotate write
       SetTextureRotate stored StoreTextureRotate;
     {Texture Environment color. }
     property EnvColor: TGLColor read FEnvColor write SetEnvColor;
-    {Texture coordinates mapping mode. 
+    {Texture coordinates mapping mode.
     This property controls automatic texture coordinates generation. }
     property MappingMode: TGLTextureMappingMode read FMappingMode write
       SetMappingMode default tmmUser;
-    {Texture mapping coordinates mode for S, T, R and Q axis. 
+    {Texture mapping coordinates mode for S, T, R and Q axis.
     This property stores the coordinates for automatic texture
     coordinates generation. }
     property MappingSCoordinates: TGLCoordinates4 read GetMappingSCoordinates
@@ -573,11 +505,8 @@ type
       SetSwizzling stored StoreSwizzling;
   end;
 
-  //  TGLFixedFunctionProperties
-  //
   TGLFixedFunctionProperties = class(TGLLibMaterialProperty)
   private
-     
     FFrontProperties: TGLFaceProperties;
     FBackProperties: TGLFaceProperties;
     FDepthProperties: TGLDepthProperties;
@@ -600,21 +529,16 @@ type
     procedure SetTexProp(AValue: TGLTextureProperties);
     procedure SetTextureMode(AValue: TGLTextureMode);
   public
-    
     constructor Create(AOwner: TPersistent); override;
     destructor Destroy; override;
     procedure Assign(Source: TPersistent); override;
-
     procedure Apply(var ARci: TGLRenderContextInfo);
     procedure UnApply(var ARci: TGLRenderContextInfo);
     {Returns True if the material is blended.  }
     function Blended: Boolean;
-
   published
-    
     property MaterialOptions: TMaterialOptions read FMaterialOptions write
       SetMaterialOptions default [];
-
     property BackProperties: TGLFaceProperties read GetBackProperties write
       SetBackProperties;
     property FrontProperties: TGLFaceProperties read FFrontProperties write
@@ -625,7 +549,6 @@ type
       default bmOpaque;
     property BlendingParams: TGLBlendingParameters read FBlendingParams write
       SetBlendingParams;
-
     property FaceCulling: TFaceCulling read FFaceCulling write SetFaceCulling
       default fcBufferDefault;
     property PolygonMode: TPolygonMode read FPolygonMode write SetPolygonMode
@@ -638,16 +561,11 @@ type
     property NextPass;
   end;
 
-  //  TGLTextureCombiner
-  //
-
   TGLTextureCombiner = class(TGLBaseMaterialCollectionItem)
   protected
-    
     procedure WriteToFiler(AWriter: TWriter); override;
     procedure ReadFromFiler(AReader: TReader); override;
   private
-     
     FHandle: TGLVirtualHandle;
     FScript: TStringList;
     FCommandCache: TCombinerCache;
@@ -655,31 +573,21 @@ type
     procedure DoAllocate(Sender: TGLVirtualHandle; var handle: Cardinal);
     procedure DoDeallocate(Sender: TGLVirtualHandle; var handle: Cardinal);
   public
-    
     constructor Create(AOwner: TGLXCollection); override;
     destructor Destroy; override;
     procedure Assign(Source: TPersistent); override;
-
     procedure NotifyChange(Sender: TObject); override;
-
     procedure DoOnPrepare(Sender: TGLContext); override;
-
     class function FriendlyName: string; override;
   published
-    
     property Script: TStringList read FScript write SetScript;
   end;
 
-  // TGLARBVertexProgram
-  //
-
   TGLASMVertexProgram = class(TGLBaseMaterialCollectionItem)
   protected
-    
     procedure WriteToFiler(AWriter: TWriter); override;
     procedure ReadFromFiler(AReader: TReader); override;
   private
-     
     FHandle: TGLARBVertexProgramHandle;
     FSource: TStringList;
     FSourceFile: string;
@@ -688,19 +596,14 @@ type
     procedure SetSourceFile(AValue: string);
     function GetHandle: TGLARBVertexProgramHandle;
   public
-    
     constructor Create(AOwner: TGLXCollection); override;
     destructor Destroy; override;
     procedure Assign(Source: TPersistent); override;
-
     procedure DoOnPrepare(Sender: TGLContext); override;
-
     class function FriendlyName: string; override;
-
     procedure NotifyChange(Sender: TObject); override;
     property Handle: TGLARBVertexProgramHandle read GetHandle;
   published
-    
     property Source: TStringList read FSource write SetSource;
     property SourceFile: string read FSourceFile write SetSourceFile;
     property InfoLog: string read FInfoLog;
@@ -713,9 +616,6 @@ type
     l2eEnvColor2,
     l2eEnvColor3
     );
-
-  // TGLMultitexturingProperties
-  //
 
   TGLMultitexturingProperties = class(TGLLibMaterialProperty)
   private
@@ -738,17 +638,13 @@ type
   protected
     procedure Loaded; override;
   public
-    
     constructor Create(AOwner: TPersistent); override;
     destructor Destroy; override;
-
     procedure Notification(Sender: TObject; Operation: TOperation); override;
-
     function IsValid: Boolean;
     procedure Apply(var ARci: TGLRenderContextInfo);
     procedure UnApply(var ARci: TGLRenderContextInfo);
   published
-    
     property LibCombinerName: string read GetLibCombinerName
       write SetLibCombinerName;
     property LibAsmProgName: string read GetLibAsmProgName
@@ -784,16 +680,11 @@ type
     shtFragment
     );
 
-  // TGLSLShaderEx
-  //
-
   TGLShaderEx = class(TGLBaseMaterialCollectionItem)
   protected
-    
     procedure WriteToFiler(AWriter: TWriter); override;
     procedure ReadFromFiler(AReader: TReader); override;
   private
-     
     FHandle: array[TGLShaderType] of TGLShaderHandle;
     FSource: TStringList;
     FSourceFile: string;
@@ -810,19 +701,14 @@ type
     procedure SetGeometryVerticesOut(AValue: Integer);
     function GetHandle: TGLShaderHandle;
   public
-    
     constructor Create(AOwner: TGLXCollection); override;
     destructor Destroy; override;
     procedure Assign(Source: TPersistent); override;
-
     procedure DoOnPrepare(Sender: TGLContext); override;
-
     class function FriendlyName: string; override;
-
     procedure NotifyChange(Sender: TObject); override;
     property Handle: TGLShaderHandle read GetHandle;
   published
-    
     property Source: TStringList read FSource write SetSource;
     property SourceFile: string read FSourceFile write SetSourceFile;
     property ShaderType: TGLShaderType read FShaderType
@@ -841,7 +727,7 @@ type
 
   TGLAbstractShaderUniform = class(TGLUpdateAbleObject, IShaderParameter)
   protected
-    
+
     FName: string;
     FNameHashCode: Integer;
     FType: TGLSLDataType;

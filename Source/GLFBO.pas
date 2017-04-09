@@ -46,17 +46,14 @@ type
     procedure SetHeight(const Value: Integer);
     procedure SetWidth(const Value: Integer);
   protected
-
     function GetInternalFormat: cardinal; virtual; abstract;
-
     procedure InvalidateStorage;
   public
     constructor Create;
     destructor Destroy; override;
-
     procedure Bind;
     procedure Unbind;
-    {Handle to the OpenGL render buffer object. 
+    {Handle to the OpenGL render buffer object.
       If the handle hasn't already been allocated, it will be allocated
       by this call (ie. do not use if no OpenGL context is active!) }
     property Handle: Cardinal read GetHandle;
@@ -72,7 +69,6 @@ type
     function GetInternalFormat: cardinal; override;
   public
     constructor Create;
-
     property DepthPrecision: TGLDepthPrecision read FDepthPrecision write
       SetDepthPrecision;
   end;
@@ -87,7 +83,6 @@ type
     function GetInternalFormat: cardinal; override;
   public
     constructor Create;
-
     property StencilPrecision: TGLStencilPrecision read FStencilPrecision write
       SetStencilPrecision;
   end;
@@ -105,7 +100,6 @@ type
     FDepthTexture: TGLTexture;
     FDRBO: TGLDepthRBO;
     FSRBO: TGLStencilRBO;
-
     function GetStatus: TGLFramebufferStatus;
     procedure SetHeight(const Value: Integer);
     procedure SetWidth(const Value: Integer);
@@ -122,37 +116,29 @@ type
   public
     constructor Create;
     destructor Destroy; override;
-
     // attaches a depth rbo to the fbo
     // the depth buffer must have the same dimentions as the fbo
     procedure AttachDepthBuffer(DepthBuffer: TGLDepthRBO); overload;
     // detaches depth attachment from the fbo
     procedure DetachDepthBuffer;
-
     // attaches a stencil rbo to the fbo
     // the stencil buffer must have the same dimentions as the fbo
     procedure AttachStencilBuffer(StencilBuffer: TGLStencilRBO); overload;
     // detaches stencil attachment from the fbo
     procedure DetachStencilBuffer;
-
     // attaches a depth texture to the fbo
     // the depth texture must have the same dimentions as the fbo
     procedure AttachDepthTexture(Texture: TGLTexture); overload;
     procedure DetachDepthTexture;
-
     procedure AttachTexture(n: Cardinal; Texture: TGLTexture); overload;
     procedure DetachTexture(n: Cardinal);
-
     function GetStringStatus(out clarification: string): TGLFramebufferStatus;
     property Status: TGLFramebufferStatus read GetStatus;
     procedure Bind;
     procedure Unbind;
-
     procedure PreRender;
-    procedure Render(var rci: TGLRenderContextInfo; baseObject:
-      TGLBaseSceneObject);
+    procedure Render(var rci: TGLRenderContextInfo; baseObject: TGLBaseSceneObject);
     procedure PostRender(const PostGenerateMipmap: Boolean);
-
     property Handle: TGLFramebufferHandle read FFrameBufferHandle;
     property Width: Integer read FWidth write SetWidth;
     property Height: Integer read FHeight write SetHeight;
@@ -172,8 +158,9 @@ uses
 //-------------------------------------------------------------------------
 //-------------------------------------------------------------------------
 
-{ TGLRenderbuffer }
-
+//---------------------------------------
+//---------- TGLRenderbuffer
+//---------------------------------------
 constructor TGLRenderbuffer.Create;
 begin
   inherited Create;
@@ -237,8 +224,9 @@ begin
   FRenderbufferHandle.UnBind;
 end;
 
-{ TGLDepthRBO }
-
+//---------------------------------
+//----------- TGLDepthRBO
+//---------------------------------
 constructor TGLDepthRBO.Create;
 begin
   inherited Create;
@@ -266,8 +254,9 @@ begin
   end;
 end;
 
-{ TGLStencilRBO }
-
+//-----------------------------------------
+//------------- TGLStencilRBO
+//-----------------------------------------
 constructor TGLStencilRBO.Create;
 begin
   inherited Create;
@@ -297,8 +286,9 @@ begin
   end;
 end;
 
-{ TGLFrameBuffer }
-
+//-----------------------------------------
+//--------------- TGLFrameBuffer
+//-----------------------------------------
 constructor TGLFrameBuffer.Create;
 begin
   inherited;
@@ -486,11 +476,8 @@ begin
     begin
       if sp = spDefault then
         Continue;
-
       StencilBuffer.StencilPrecision := sp;
-
       AttachStencilRB;
-
       if not (Status = fsUnsupported) then
         Break;
     end;
@@ -762,10 +749,8 @@ begin
       GL_RENDERBUFFER_EXT, FSRBO.Handle);
     bEmpty := False;
   end;
-
   if not bEmpty and (GetStringStatus(s) <> fsComplete) then
     GLSLogger.LogErrorFmt('Framebuffer error: %s. Deactivated', [s]);
-
   Handle.NotifyDataUpdated;
 end;
 

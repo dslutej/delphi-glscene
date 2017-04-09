@@ -154,6 +154,7 @@ implementation
 
 uses
 
+  GLPipelineTransformation,
   OpenGLAdapter;
 
 // ------------------------------------------------------------------

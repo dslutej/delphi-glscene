@@ -16,8 +16,11 @@ interface
 {$I GLScene.inc}
 
 uses
-  GLPersistentClasses, GLVectorGeometry, GLState,
-  GLPipelineTransformation, GLColor;
+  GLPersistentClasses,
+  GLVectorGeometry,
+  GLState,
+  GLPipelineTransformation,
+  GLColor;
 
 type
 
@@ -28,10 +31,8 @@ type
     cy: Longint;
   end;
 
-  // TGLObjectsSorting
-  //
-  {Determines if objects are sorted, and how. 
-     Sorting is done level by level (and not for all entities), values are : 
+  {Determines if objects are sorted, and how.
+     Sorting is done level by level (and not for all entities), values are :
       osInherited : use inherited sorting mode, defaults to osRenderFarthestFirst
       osNone : do not sort objects.
   osRenderFarthestFirst : render objects whose Position is the farthest from
@@ -39,16 +40,13 @@ type
       osRenderBlendedLast : opaque objects are not sorted and rendered
         first, blended ones are rendered afterwards and depth sorted.
   osRenderNearestFirst : render objects whose Position is the nearest to
-  the camera first.
-       }
+  the camera first.}
   TGLObjectsSorting = (osInherited, osNone,
     osRenderFarthestFirst, osRenderBlendedLast,
     osRenderNearestFirst);
 
-  // TGLVisibilityCulling
-  //
   {Determines the visibility culling mode.
-     Culling is done level by level, allowed values are: 
+     Culling is done level by level, allowed values are:
       vcInherited : use inherited culling value, if selected for the root
         level, defaults to vcNone
       vcNone : no visibility culling is performed
@@ -64,8 +62,6 @@ type
      board, it may be faster not to cull at all (ie. leave this to the hardware). }
   TGLVisibilityCulling = (vcInherited, vcNone, vcObjectBased, vcHierarchical);
 
-  // TRenderContextClippingInfo
-  //
   TRenderContextClippingInfo = record
     origin: TVector;
     clippingDirection: TVector;
@@ -75,8 +71,6 @@ type
     frustum: TFrustum;
   end;
 
-  // TGLRenderContextInfo
-  //
   {Stores contextual info useful during rendering methods. }
   TGLRenderContextInfo = record
     scene: TObject; //usually TGLScene
@@ -112,7 +106,9 @@ type
   end;
   PRenderContextInfo = ^TGLRenderContextInfo;
 
+//====================================================================
 implementation
+//====================================================================
 
 end.
 

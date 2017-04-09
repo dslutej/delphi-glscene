@@ -527,13 +527,8 @@ type
     function GetMaterialEmission(const aFace: TCullFaceMode): TVector; inline;
     function GetMaterialShininess(const aFace: TCullFaceMode): Integer; inline;
   public
-<<<<<<< .mine
 
-||||||| .r7003
-    
-=======
->>>>>>> .r7016
-    constructor Create; virtual;
+	constructor Create; virtual;
     destructor Destroy; override;
     procedure PushAttrib(stateTypes: TGLStateTypes); inline;
     procedure PopAttrib(); inline;
@@ -837,15 +832,7 @@ type
     // write SetBlendDstAlpha;
   {Sets the weighting factors to be used by the blending equation, for
      both color + alpha. }
-<<<<<<< .mine
-    procedure SetBlendFunc(const Src: TBlendFunction;
-      const Dst: TDstBlendFunction); inline;
-||||||| .r7003
-    procedure SetBlendFunc(const Src: TBlendFunction;
-      const Dst: TDstBlendFunction);
-=======
-    procedure SetBlendFunc(const Src: TBlendFunction; const Dst: TDstBlendFunction);
->>>>>>> .r7016
+    procedure SetBlendFunc(const Src: TBlendFunction; const Dst: TDstBlendFunction); inline;
     {Sets the weighting factors to be used by the blending equation, with
        separate values used for color + alpha components. }
     procedure SetBlendFuncSeparate(const SrcRGB: TBlendFunction;

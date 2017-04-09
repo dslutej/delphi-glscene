@@ -144,7 +144,9 @@ implementation
 uses
 
   GLPersistentClasses,
-  GLPipelineTransformation;
+  GLPipelineTransformation,
+  GLXCollection
+  ;
 //-------------------------------------------------------------
 //-------------------------------------------------------------
 //-------------------------------------------------------------

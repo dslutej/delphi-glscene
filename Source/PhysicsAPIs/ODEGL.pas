@@ -227,7 +227,7 @@ begin
   matrix[14] := pos[2];
   matrix[15] := 1;
   GL.PushMatrix();
-  GL.MultMatrixf(@matrix);
+  GL.MultMatrixf(PSingle(@matrix));
 end;
 
 (*$WARNINGS OFF*)

@@ -1598,7 +1598,7 @@ begin
 
       if Length(collisionArray) > 0 then
         Result := NewtonCreateCompoundCollision(FManager.FNewtonWorld,
-          Length(collisionArray), @collisionArray[0], 0)
+          Length(collisionArray), TCollisionPrimitiveArray(@collisionArray[0]), 0)
       else
         Result := GetNullCollision;
 
