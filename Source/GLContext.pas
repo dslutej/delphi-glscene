@@ -754,7 +754,7 @@ type
     class function IsValid(const ID: Cardinal): Boolean; override;
     class function GetTarget: Cardinal; virtual; abstract;
   public
-    procedure LoadARBProgram(AText: string);
+    procedure LoadARBProgram(const AText: string);
     procedure Enable;
     procedure Disable;
     procedure Bind;
@@ -3210,7 +3210,7 @@ begin
   Result := GL.IsProgram(ID);
 end;
 
-procedure TGLARBProgramHandle.LoadARBProgram(AText: string);
+procedure TGLARBProgramHandle.LoadARBProgram(const AText: string);
 const
   cProgType: array[0..2] of string =
     ('ARB vertex', 'ARB fragment', 'NV geometry');

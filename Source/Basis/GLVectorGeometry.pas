@@ -547,7 +547,7 @@ procedure VectorSubtract(const V1, V2: TAffineVector; var result: TAffineVector)
 // Subtracts V2 from V1 and return value in result
 procedure VectorSubtract(const V1, V2: TAffineVector; var result: TVector); overload; inline
 // Subtracts V2 from V1 and return value in result
-procedure VectorSubtract(const V1: TVector; V2: TAffineVector; var result: TVector); overload; inline
+procedure VectorSubtract(const V1: TVector; const V2: TAffineVector; var result: TVector); overload; inline
 // Returns V1-V2
 function VectorSubtract(const V1, V2: TVector): TVector; overload; inline
 // Subtracts V2 from V1 and return value in result
@@ -996,14 +996,14 @@ procedure CalcPlaneNormal(const p1, p2, p3: TVector; var vr: TAffineVector); ove
   The plane itself is not considered to be in the tested halfspace. }
 function PointIsInHalfSpace(const point, planePoint, planeNormal: TVector): Boolean; overload;
 function PointIsInHalfSpace(const point, planePoint, planeNormal: TAffineVector): Boolean; overload;
-function PointIsInHalfSpace(const point: TAffineVector; plane: THmgPlane): Boolean; overload;
+function PointIsInHalfSpace(const point: TAffineVector; const plane: THmgPlane): Boolean; overload;
 
 { Computes algebraic distance between point and plane.
   Value will be positive if the point is in the halfspace pointed by the normal,
   negative on the other side. }
 function PointPlaneDistance(const point, planePoint, planeNormal: TVector): Single; overload;
 function PointPlaneDistance(const point, planePoint, planeNormal: TAffineVector): Single; overload;
-function PointPlaneDistance(const point: TAffineVector; plane: THmgPlane): Single; overload;
+function PointPlaneDistance(const point: TAffineVector; const plane: THmgPlane): Single; overload;
 
 { Computes point to plane projection. Plane and direction have to be normalized }
 function PointPlaneOrthoProjection(const point: TAffineVector;
@@ -1338,8 +1338,8 @@ function VectorFltToDbl(const V: TVector): THomogeneousDblVector;
 { The code below is from Wm. Randolph Franklin <wrf@ecse.rpi.edu>
   with some minor modifications for speed. It returns 1 for strictly
   interior points, 0 for strictly exterior, and 0 or 1 for points on the boundary.}
-function PointInPolygon(var xp, yp: array of Single; X, Y: Single): Boolean;
-function IsPointInPolygon(Polygon: array of TPoint; p: TPoint): Boolean;
+function PointInPolygon(const xp, yp: array of Single; X, Y: Single): Boolean;
+function IsPointInPolygon(const Polygon: array of TPoint; const p: TPoint): Boolean;
 procedure DivMod(Dividend: Integer; Divisor: Word; var result, Remainder: Word);
 
 // coordinate system manipulation functions
@@ -2288,7 +2288,7 @@ asm
   mov   [ECX+12], edx
 end;
 {$ELSE}
-procedure VectorSubtract(const V1: TVector; V2: TAffineVector;
+procedure VectorSubtract(const V1: TVector; const V2: TAffineVector;
   var result: TVector);
 begin
   result.X := V1.X - V2.X;
@@ -5953,7 +5953,7 @@ begin
 end;
 
 function PointIsInHalfSpace(const point: TAffineVector;
-  plane: THmgPlane): Boolean;
+  const plane: THmgPlane): Boolean;
 begin
   result := (PointPlaneDistance(point, plane) > 0);
 end;
@@ -6023,7 +6023,7 @@ end;
 {$ENDIF}
 
 function PointPlaneDistance(const point: TAffineVector;
-  plane: THmgPlane): Single;
+  const plane: THmgPlane): Single;
 begin
   result := PlaneEvaluatePoint(plane, point);
 end;
@@ -7915,7 +7915,7 @@ begin
   result.W := V[3];
 end;
 
-function PointInPolygon(var xp, yp: array of Single; X, Y: Single): Boolean;
+function PointInPolygon(const xp, yp: array of Single; X, Y: Single): Boolean;
 var
   i, J: Integer;
 begin
@@ -7933,7 +7933,7 @@ begin
   end;
 end;
 
-function IsPointInPolygon(Polygon: array of TPoint; p: TPoint): Boolean;
+function IsPointInPolygon(const Polygon: array of TPoint; const p: TPoint): Boolean;
 var
   a: array of TPoint;
   n, i: Integer;

@@ -172,7 +172,7 @@ end;
 // Notes : Triangle should be defined in clockwise order a,b,c
 // Return: TRUE if point is in triangle, FALSE if not.
 // -----------------------------------------------------------------------
-function CheckPointInTriangle(Point, A, B, C: TAffineVector): Boolean;
+function CheckPointInTriangle(const Point, A, B, C: TAffineVector): Boolean;
 var
   Total_angles: Single;
   V1, V2, V3: TAffineVector;

@@ -161,7 +161,7 @@ type
     procedure SetSeed(const Value: integer);
     procedure SetMaterialName(const Value: string);
     procedure SetLighting(const Value: boolean);
-    procedure SetLightDirection(Value: TVector);
+    procedure SetLightDirection(const Value: TVector);
     procedure SetTerrainRenderer(const Value: TGLTerrainRenderer);
       virtual; abstract;
     procedure SetLightColor(const Value: TColorVector);
@@ -352,7 +352,7 @@ type
     property MaxHeight: single read FMaxHeight;
     property MinHeight: single read FMinHeight;
     // Vector normal to the terrain at the position
-    function Normal(Position: TVector): TVector;
+    function Normal(const Position: TVector): TVector;
     // Max height - min height
     property RangeHeight: single read FRangeHeight;
     { Scale of the Terrain Renderer. They are set so as giving a identical
@@ -826,7 +826,7 @@ begin
   FLightColor := Value;
 end;
 
-procedure TGLBaseRandomHDS.SetLightDirection(Value: TVector);
+procedure TGLBaseRandomHDS.SetLightDirection(const Value: TVector);
 var
   v: TVector;
 begin
@@ -1872,7 +1872,7 @@ begin
   Result := (x >= 0) and (x <= FSize) and (y >= 0) and (y <= FSize);
 end;
 
-function TGLCustomRandomHDS.Normal(Position: TVector): TVector;
+function TGLCustomRandomHDS.Normal(const Position: TVector): TVector;
 var
   x, y: integer;
 begin

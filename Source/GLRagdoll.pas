@@ -64,7 +64,7 @@ type
     FReferenceMatrix: TMatrix; //Stores the first bone matrix to be used as reference
     FAnchor: TAffineVector; //The position of the joint
     procedure CreateBoundingBox;
-    procedure SetAnchor(Anchor: TAffineVector);
+    procedure SetAnchor(const Anchor: TAffineVector);
     procedure AlignToSkeleton;
     procedure CreateBoundsChild;
     procedure StartChild;
@@ -331,7 +331,7 @@ begin
   for i := 0 to Count-1 do items[i].CreateBoundsChild;
 end;
 
-procedure TGLRagdolBone.SetAnchor(Anchor: TAffineVector);
+procedure TGLRagdolBone.SetAnchor(const Anchor: TAffineVector);
 begin
   FAnchor := Anchor;
 end;

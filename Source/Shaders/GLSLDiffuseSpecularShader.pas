@@ -392,7 +392,7 @@ end;
 
 procedure GetFragmentProgramCode(const Code: TStrings;
   const ARealisticSpecular: Boolean; const AFogSupport: Boolean;
-  aRci: TGLRenderContextInfo);
+  const aRci: TGLRenderContextInfo);
 var
   scene: TGLScene;
 begin

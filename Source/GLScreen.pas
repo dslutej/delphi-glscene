@@ -72,7 +72,7 @@ function SetFullscreenMode(modeIndex: TResolution;
   displayFrequency: Integer = 0): Boolean;
 
 procedure ReadScreenImage(Dest: HDC; DestLeft, DestTop: Integer;
-  SrcRect: TRectangle);
+  const SrcRect: TRectangle);
 procedure RestoreDefaultMode;
 
 procedure GLShowCursor(AShow: Boolean);
@@ -309,7 +309,7 @@ end;
 // ReadScreenImage
 //
 procedure ReadScreenImage(Dest: HDC; DestLeft, DestTop: Integer;
-  SrcRect: TRectangle);
+  const SrcRect: TRectangle);
 var
   screenDC: HDC;
 begin

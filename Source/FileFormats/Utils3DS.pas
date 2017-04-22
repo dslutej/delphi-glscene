@@ -134,7 +134,7 @@ procedure ChunkHeaderReport(var Strings: TStrings; Chunk: PChunk3DS;
 function ChunkTagToString(Tag: word): string;
 procedure DumpChunk(const Source: TFile3DS; var Strings: TStrings;
   Chunk: PChunk3DS; IndentLevel: integer; DumpLevel: TDumpLevel);
-procedure DumpKeyHeader(Strings: TStrings; Key: TKeyHeader3DS; IndentLevel: integer);
+procedure DumpKeyHeader(Strings: TStrings; const Key: TKeyHeader3DS; IndentLevel: integer);
 
 // support functions for chunk handling
 procedure DeleteChunk(var Chunk: PChunk3DS);
@@ -1500,7 +1500,7 @@ end;
 
 //---------------------------------------------------------------------------------------------------------------------
 
-procedure DumpKeyHeader(Strings: TStrings; Key: TKeyHeader3DS; IndentLevel: integer);
+procedure DumpKeyHeader(Strings: TStrings; const Key: TKeyHeader3DS; IndentLevel: integer);
 
 var
   Output: string;

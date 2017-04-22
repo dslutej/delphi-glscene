@@ -49,7 +49,7 @@ type
   TGLLanguageExt = class(TGLLanguage)
   private
     function GetEntry(Index: integer): TGLLanguageEntry;
-    procedure SetEntry(Index: integer; aValue: TGLLanguageEntry);
+    procedure SetEntry(Index: integer; const aValue: TGLLanguageEntry);
     function GetCount: integer;
   public
     procedure AddConst(const ID: String; const Text: String);
@@ -217,7 +217,7 @@ begin
   Result := Entry[Index];
 end;
 
-procedure TGLLanguageExt.SetEntry(Index: integer; aValue: TGLLanguageEntry);
+procedure TGLLanguageExt.SetEntry(Index: integer; const aValue: TGLLanguageEntry);
 begin
   Entry[Index] := aValue;
 end;

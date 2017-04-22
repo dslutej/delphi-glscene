@@ -1216,7 +1216,7 @@ const
     end;
   end;
 
-  procedure CalculateSides(prevRow, curRow: PRowData; trajvec: TVector3f);
+  procedure CalculateSides(prevRow, curRow: PRowData; const trajvec: TVector3f);
   var
     j, k, m, n: Integer;
     deltaNormal, deltaPos: array of Double;

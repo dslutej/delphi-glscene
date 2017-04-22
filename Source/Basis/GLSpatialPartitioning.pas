@@ -48,8 +48,8 @@ function ExtendedFrustumMakeFromSceneViewer(const AFrustum: TFrustum;
   const AGLSceneViewer: TGLSceneViewer): TExtendedFrustum; overload;
 
 {Renders an AABB as a line }
-procedure RenderAABB(var rci: TGLRenderContextInfo; AABB: TAABB; w, r, g, b: single); overload;
-procedure RenderAABB(var rci: TGLRenderContextInfo; AABB: TAABB); overload;
+procedure RenderAABB(var rci: TGLRenderContextInfo; const AABB: TAABB; w, r, g, b: single); overload;
+procedure RenderAABB(var rci: TGLRenderContextInfo; const AABB: TAABB); overload;
 
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
@@ -63,12 +63,12 @@ uses
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
 
-procedure RenderAABB(var rci: TGLRenderContextInfo; AABB: TAABB);
+procedure RenderAABB(var rci: TGLRenderContextInfo; const AABB: TAABB);
 begin
   RenderAABB(rci, AABB, 1, 0.8, 0.8, 0.8);
 end;
 
-procedure RenderAABB(var rci: TGLRenderContextInfo; AABB: TAABB; w, r, g, b: single);
+procedure RenderAABB(var rci: TGLRenderContextInfo; const AABB: TAABB; w, r, g, b: single);
 begin
   GL.Color3f(r, g, b);
   rci.GLStates.LineWidth := w;

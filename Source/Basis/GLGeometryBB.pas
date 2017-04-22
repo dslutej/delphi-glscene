@@ -140,7 +140,7 @@ function PointInAABB(const P: TAffineVector; const Aabb: TAABB): Boolean; overlo
 function PointInAABB(const P: TVector; const Aabb: TAABB): Boolean; overload;
 
 {  Checks if a plane (given by the normal+d) intersects the AABB }
-function PlaneIntersectAABB(Normal: TAffineVector; D: Single; Aabb: TAABB): Boolean;
+function PlaneIntersectAABB(const Normal: TAffineVector; D: Single; const Aabb: TAABB): Boolean;
 {Compute the intersection between a plane and the AABB}
 function PlaneAABBIntersection(const plane : THmgPlane; const AABB : TAABB) : TAffineVectorList;
 {  Checks if a triangle (given by vertices v1, v2 and v3) intersects an AABB }
@@ -186,7 +186,7 @@ function BSphereIntersectsBSphere(const MainBSphere,
 {  Extend the clip rect to include given coordinate. }
 procedure IncludeInClipRect(var ClipRect: TClipRect; X, Y: Single);
 {  Projects an AABB and determines the extent of its projection as a clip rect. }
-function AABBToClipRect(const Aabb: TAABB; ModelViewProjection: TMatrix;
+function AABBToClipRect(const Aabb: TAABB; const ModelViewProjection: TMatrix;
   ViewportSizeX, ViewportSizeY: Integer): TClipRect;
 
 {  Finds the intersection between a ray and an axis aligned bounding box. }
@@ -729,8 +729,8 @@ begin
     (P.Z >= Aabb.Min.Z);
 end;
 
-function PlaneIntersectAABB(Normal: TAffineVector; D: Single;
-  Aabb: TAABB): Boolean;
+function PlaneIntersectAABB(const Normal: TAffineVector; D: Single;
+  const Aabb: TAABB): Boolean;
 var
   Vmax, Vmin: TAffineVector;
   I: Integer;
@@ -1319,7 +1319,7 @@ begin
   end;
 end;
 
-function AABBToClipRect(const Aabb: TAABB; ModelViewProjection: TMatrix;
+function AABBToClipRect(const Aabb: TAABB; const ModelViewProjection: TMatrix;
   ViewportSizeX, ViewportSizeY: Integer): TClipRect;
 var
   I: Integer;

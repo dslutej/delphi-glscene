@@ -740,9 +740,9 @@ type
     
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
-    procedure AddWord(StyleNo: integer; ArrS: array of string);
-    procedure AddSpecial(StyleNo: integer; ArrS: array of string);
-    procedure AddBrackets(StyleNo: integer; ArrS: array of string);
+    procedure AddWord(StyleNo: integer; const ArrS: array of string);
+    procedure AddSpecial(StyleNo: integer; const ArrS: array of string);
+    procedure AddBrackets(StyleNo: integer; const ArrS: array of string);
     property Delimiters: TDelimiters read FDelimiters write FDelimiters;
   published
     {TControl}
@@ -811,7 +811,7 @@ type
     property CaseSensitive: Boolean read FCaseSensitive write SetCaseSensitive;
   end;
 
-procedure Border(Canvas: TCanvas; rct: TRect; BorderType: TBorderType);
+procedure Border(Canvas: TCanvas; const rct: TRect; BorderType: TBorderType);
 
 implementation
 
@@ -846,7 +846,7 @@ var
 
 // ---------------------Helper functions 
 
-function PointInRect(P: TPoint; rct: TRect): Boolean;
+function PointInRect(const P: TPoint; const rct: TRect): Boolean;
 {$IFDEF GLS_INLINE}inline;{$ENDIF}
 begin
   with rct do
@@ -875,7 +875,7 @@ begin
   end;
 end;
 
-function TotalRect(rct1, rct2: TRect): TRect;
+function TotalRect(const rct1, rct2: TRect): TRect;
 {$IFDEF GLS_INLINE}inline;{$ENDIF}
 begin
   Result := rct1;
@@ -3004,7 +3004,7 @@ end;
 //        BORDER
 //--------------------------------------------------------------
 
-procedure Border(Canvas: TCanvas; rct: TRect; BorderType: TBorderType);
+procedure Border(Canvas: TCanvas; const rct: TRect; BorderType: TBorderType);
 const
   Colors: array[TBorderType] of array[1..4] of TColor
     = (($D0D0D0, clWhite, clGray, clBlack),
@@ -3280,7 +3280,7 @@ var
   i, p: integer;
   s1, s0, s: string;
   //-----------------------------------------------------------
-  function LastPos(Substr, s: string): integer;
+  function LastPos(const Substr, s: string): integer;
   var
     i, j, lenSub: integer;
   begin
@@ -5294,7 +5294,7 @@ end;
 //        SYNTAX MEMO - ADD WORD
 //--------------------------------------------------------------
 
-procedure TGLSSynHiMemo.AddWord(StyleNo: integer; ArrS: array of string);
+procedure TGLSSynHiMemo.AddWord(StyleNo: integer; const ArrS: array of string);
 var
   i: integer;
 begin
@@ -5306,7 +5306,7 @@ end;
 //        SYNTAX MEMO - ADD SPECIAL
 //--------------------------------------------------------------
 
-procedure TGLSSynHiMemo.AddSpecial(StyleNo: integer; ArrS: array of string);
+procedure TGLSSynHiMemo.AddSpecial(StyleNo: integer; const ArrS: array of string);
 var
   i: integer;
 begin
@@ -5318,7 +5318,7 @@ end;
 //        SYNTAX MEMO - ADD BRACKETS
 //--------------------------------------------------------------
 
-procedure TGLSSynHiMemo.AddBrackets(StyleNo: integer; ArrS: array of string);
+procedure TGLSSynHiMemo.AddBrackets(StyleNo: integer; const ArrS: array of string);
 var
   i: integer;
 begin

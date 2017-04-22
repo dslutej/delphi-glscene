@@ -230,17 +230,17 @@ type
     procedure WriteCardinal(AValue: Cardinal);
     procedure WriteData(Size: Integer; Data: Pointer);
     procedure WriteDouble(AValue: Double);
-    procedure WriteFace(F: TFace3DS);
+    procedure WriteFace(const F: TFace3DS);
     procedure WriteFixedString(const AValue: String3DS; Len: Integer);
     procedure WriteHeader(ChunkType: Word; ChunkSize: Cardinal);
     procedure WriteInteger(AValue: Integer);
-    procedure WriteKeyHeader(K: TKeyHeader3DS);
-    procedure WritePoint(P: TPoint3DS);
+    procedure WriteKeyHeader(const K: TKeyHeader3DS);
+    procedure WritePoint(const P: TPoint3DS);
     procedure WriteShort(AValue: SmallInt);
     procedure WriteSingle(AValue: Single);
     procedure WriteString(const AValue: String3DS);
-    procedure WriteTexVertex(T: TTexVert3DS);
-    procedure WriteTrackHeader(T: TTrackHeader3DS);
+    procedure WriteTexVertex(const T: TTexVert3DS);
+    procedure WriteTrackHeader(const T: TTrackHeader3DS);
     procedure WriteWord(AValue: Word);
 
     property Atmosphere: TAtmosphere3DS read GetAtmosphereData;
@@ -1812,7 +1812,7 @@ end;
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-procedure TFile3DS.WritePoint(P: TPoint3DS);
+procedure TFile3DS.WritePoint(const P: TPoint3DS);
 
 begin
   WriteSingle(P.X);
@@ -1831,7 +1831,7 @@ end;
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-procedure TFile3DS.WriteTexVertex(T: TTexVert3DS);
+procedure TFile3DS.WriteTexVertex(const T: TTexVert3DS);
 
 begin
   WriteSingle(T.U);
@@ -1850,7 +1850,7 @@ end;
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-procedure TFile3DS.WriteFace(F: TFace3DS);
+procedure TFile3DS.WriteFace(const F: TFace3DS);
 
 begin
   WriteWord(F.v1);
@@ -1873,7 +1873,7 @@ end;
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-procedure TFile3DS.WriteTrackHeader(T: TTrackHeader3DS);
+procedure TFile3DS.WriteTrackHeader(const T: TTrackHeader3DS);
 
 begin
   WriteWord(T.Flags);
@@ -1896,7 +1896,7 @@ end;
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-procedure TFile3DS.WriteKeyHeader(K: TKeyHeader3DS);
+procedure TFile3DS.WriteKeyHeader(const K: TKeyHeader3DS);
 
 begin
   WriteCardinal(K.time);

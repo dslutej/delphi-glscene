@@ -262,7 +262,7 @@ function GetOrCreateDCEDynamic(obj : TGLBaseSceneObject) : TGLDCEDynamic; overlo
 
 implementation
 
-function RotateVectorByObject(Obj: TGLBaseSceneObject; v: TAffineVector): TAffineVector;
+function RotateVectorByObject(Obj: TGLBaseSceneObject; const v: TAffineVector): TAffineVector;
 var v2: TVector;
 begin
   SetVector(v2,v);

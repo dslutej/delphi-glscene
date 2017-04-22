@@ -305,7 +305,7 @@ end;
 
 //------------------------------------------------------------------------------
 
-function Approximation(Data: array of Integer): Integer;
+function Approximation(const Data: array of Integer): Integer;
 
 // calculate a better estimation of the last value in the given data, depending
 // on the other values (used to approximate a smoother joystick movement)

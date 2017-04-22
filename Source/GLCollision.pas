@@ -727,10 +727,10 @@ type
      public
       Collision:TGLBCollision;
       AABB:TAABB;
-      constructor Create(Collision:TGLBCollision; AABB:TAABB);
+      constructor Create(Collision:TGLBCollision; const AABB: TAABB);
    end;
 
-constructor TCollisionNode.Create(Collision:TGLBCollision; AABB:TAABB);
+constructor TCollisionNode.Create(Collision:TGLBCollision; const AABB:TAABB);
 begin
   inherited Create();
   Self.Collision:=Collision;

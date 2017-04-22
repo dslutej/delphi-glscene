@@ -295,7 +295,7 @@ type
 
     {  Computes which child the AABB should go in. Returns nil if no such child
       exists }
-    function GetChildForAABB(AABB: TAABB): TSectorNode; virtual;
+    function GetChildForAABB(const AABB: TAABB): TSectorNode; virtual;
 
     {  The leaves that are stored in this node }
     property Leaves: TSpacePartitionLeafList read FLeaves;
@@ -558,7 +558,7 @@ type
 
     {  Computes which child the AABB should go in. Returns nil if no such child
       exists }
-    function GetChildForAABB(AABB: TAABB): TSectorNode; override;
+    function GetChildForAABB(const AABB: TAABB): TSectorNode; override;
   end;
 
   {  Implements quadtrees. 
@@ -576,12 +576,12 @@ type
   end;
 
   {  Determines to which extent one Cone contains an BSphere }
-function ConeContainsBSphere(const Cone: TSPCone; BSphere: TBSphere)
+function ConeContainsBSphere(const Cone: TSPCone; const BSphere: TBSphere)
   : TSpaceContains;
 
 {  Determines if a extended frustum intersects an BSphere }
 function ExtendedFrustumIntersectsBSphere(const AExtendedFrustum
-  : TExtendedFrustum; ABSphere: TBSphere): Boolean;
+  : TExtendedFrustum; const ABSphere: TBSphere): Boolean;
 
 {  Create an extended frustum from a number of values }
 function ExtendedFrustumMake(const AFrustum: TFrustum;
@@ -634,7 +634,7 @@ const
     (CMAX, CMID, CMID) // Lower Back Right
     );
 
-function ConeContainsBSphere(const Cone: TSPCone; BSphere: TBSphere)
+function ConeContainsBSphere(const Cone: TSPCone; const BSphere: TBSphere)
   : TSpaceContains;
 var
   U, D: TAffineVector;
@@ -681,7 +681,7 @@ begin
 end; // }
 
 function ExtendedFrustumIntersectsBSphere(const AExtendedFrustum
-  : TExtendedFrustum; ABSphere: TBSphere): Boolean;
+  : TExtendedFrustum; const ABSphere: TBSphere): Boolean;
 begin
   // Test if the bounding sphere of the node intersect the bounding sphere of the
   // frustum? This test is exremely fast
@@ -1420,7 +1420,7 @@ begin
   AABBToBSphere(FAABB, FBSphere);
 end;
 
-function TSectorNode.GetChildForAABB(AABB: TAABB): TSectorNode;
+function TSectorNode.GetChildForAABB(const AABB: TAABB): TSectorNode;
 var
   Location: TAffineVector;
   ChildNode: TSectorNode;
@@ -2040,7 +2040,7 @@ begin
   FChildCount := 4;
 end;
 
-function TSPQuadtreeNode.GetChildForAABB(AABB: TAABB): TSectorNode;
+function TSPQuadtreeNode.GetChildForAABB(const AABB: TAABB): TSectorNode;
 var
   Location: TAffineVector;
   ChildNode: TSectorNode;

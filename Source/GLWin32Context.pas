@@ -235,7 +235,7 @@ end;
 // SetupPalette
 //
 
-function SetupPalette(DC: HDC; PFD: TPixelFormatDescriptor): HPalette;
+function SetupPalette(DC: HDC; const PFD: TPixelFormatDescriptor): HPalette;
 var
   nColors, I: Integer;
   LogPalette: TMaxLogPalette;

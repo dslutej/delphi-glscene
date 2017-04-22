@@ -243,7 +243,7 @@ type
     function BoneByID(anID: Integer): TGLSkeletonBone; override;
     function BoneByName(const aName: string): TGLSkeletonBone; override;
     {Set the bone's matrix. Becareful using this. }
-    procedure SetGlobalMatrix(Matrix: TMatrix); // Ragdoll
+    procedure SetGlobalMatrix(const Matrix: TMatrix); // Ragdoll
     {Set the bone's GlobalMatrix. Used for Ragdoll. }
     procedure SetGlobalMatrixForRagDoll(RagDollMatrix: TMatrix); // Ragdoll
     {Calculates the global matrix for the bone and its sub-bone.
@@ -2355,7 +2355,7 @@ begin
   inherited;
 end;
 
-procedure TGLSkeletonBone.SetGlobalMatrix(Matrix: TMatrix); // ragdoll
+procedure TGLSkeletonBone.SetGlobalMatrix(const Matrix: TMatrix); // ragdoll
 begin
   FGlobalMatrix := Matrix;
 end;

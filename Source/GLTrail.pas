@@ -87,8 +87,8 @@ type
     destructor Destroy; override;
 
     procedure CreateMark(obj: TGlBaseSceneObject; width: single;CurrentTime : Double); overload;
-    procedure CreateMark(APos,ADir,AUp: TVector3f; AWidth: single;ACurrentTime : Double); overload;
-    function CreateMark(p1,p2: TVector3f;CurrentTime : Double):boolean; overload;
+    procedure CreateMark(const APos,ADir,AUp: TVector3f; AWidth: single;ACurrentTime : Double); overload;
+    function CreateMark(const p1,p2: TVector3f;CurrentTime : Double):boolean; overload;
 
     procedure ClearMarks;
 
@@ -211,7 +211,7 @@ end;
 
 
 
-function TGLTrail.CreateMark(p1,p2: TVector3f; CurrentTime : Double): boolean;
+function TGLTrail.CreateMark(const p1,p2: TVector3f; CurrentTime : Double): boolean;
 var
    diff: integer;
    uv1,uv2: TTexPoint;
@@ -333,7 +333,7 @@ begin
 
 end;
 
-procedure TGLTrail.CreateMark(APos,ADir,AUp: TVector3f; AWidth: single;ACurrentTime : Double);
+procedure TGLTrail.CreateMark(const APos,ADir,AUp: TVector3f; AWidth: single;ACurrentTime : Double);
 var
 apoint1,apoint2,crossp: TVector3f;
 begin

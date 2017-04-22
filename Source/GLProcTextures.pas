@@ -61,7 +61,7 @@ type
     procedure SaveToFile(const fileName: string); override;
     procedure LoadFromFile(const fileName: string); override;
     procedure NoiseAnimate(speed: Single);
-    procedure SetPermFromData(inPERM: array of Byte);
+    procedure SetPermFromData(const inPERM: array of Byte);
     procedure SetPermToDefault;
   published
     property Width: Integer read GetWidth write SetWidth default 128;
@@ -449,7 +449,7 @@ begin
   Result := Lerp(wz, vz0, vz1);
 end;
 
-procedure TGLProcTextureNoise.SetPermFromData(inPERM: array of Byte);
+procedure TGLProcTextureNoise.SetPermFromData(const inPERM: array of Byte);
 var
   I: Integer;
 begin

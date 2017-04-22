@@ -116,7 +116,7 @@ type
 
     procedure Refresh;
     function FastScreenToVector(x, y: Integer): TAffineVector;
-    function FastVectorToScreen(vec: TAffineVector): TAffineVector;
+    function FastVectorToScreen(const vec: TAffineVector): TAffineVector;
 
     function PixelToWorld(const x, y: Integer): TAffineVector;
     function WorldToPixel(const aPoint: TAffineVector; out pixX, pixY: integer;
@@ -496,7 +496,7 @@ begin
   result.Z := lb.Z + riVec.Z * Rlerp + UpVec.Z * Ulerp;
 end;
 
-function TGLzBuffer.FastVectorToScreen(Vec: TAffineVector): TAffineVector;
+function TGLzBuffer.FastVectorToScreen(const Vec: TAffineVector): TAffineVector;
 var
   v0, v1, x, y, z: Single;
 begin

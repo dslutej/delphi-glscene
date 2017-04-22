@@ -262,7 +262,7 @@ type
 
   {  Return logger wich created by TGLSLogger component }
 function UserLog: TGLLogSession;
-function SkipBeforeSTR(var TextFile: Text; SkipSTR: string): Boolean;
+function SkipBeforeSTR(var TextFile: Text; const SkipSTR: string): Boolean;
 function ReadLine(var TextFile: Text): string;
 
 {  GLScene inner logger.
@@ -336,7 +336,7 @@ Begin
 End;
 
 {Function from HotLog by Olivier Touzot "QnnO".}
-Function VarRecToStr(vr:TVarRec):String;
+Function VarRecToStr(const vr:TVarRec):String;
 // See D6PE help topic "TVarRec"
 Begin
   Result := vTypeAsSring[vr.VType] + ' ';
@@ -462,7 +462,7 @@ begin
      Result := -1;
 end;
 
-function SkipBeforeSTR(var TextFile: Text; SkipSTR: string): Boolean;
+function SkipBeforeSTR(var TextFile: Text; const SkipSTR: string): Boolean;
 var
   s: string;
 begin

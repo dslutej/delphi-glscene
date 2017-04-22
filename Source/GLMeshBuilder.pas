@@ -32,13 +32,13 @@ uses
   GLVectorGeometry,
   GLVectorLists;
 
-procedure BuildCube(Mesh : TMeshObject; Position, Scale : TAffineVector);
-procedure BuildCylinder(Mesh : TMeshObject; Position, Scale : TAffineVector; Slices : Integer);
-procedure BuildCylinder2(Mesh : TMeshObject; Position, Scale : TAffineVector; TopRadius,BottomRadius,Height: single; Slices : Integer);
+procedure BuildCube(Mesh : TMeshObject; const Position, Scale : TAffineVector);
+procedure BuildCylinder(Mesh : TMeshObject; const Position, Scale : TAffineVector; Slices : Integer);
+procedure BuildCylinder2(Mesh : TMeshObject; const Position, Scale : TAffineVector; TopRadius,BottomRadius,Height: single; Slices : Integer);
 
 implementation
 
-function  VectorCombineWeighted(Position,Scale : TAffineVector; X, Y, Z : Single) : TAffineVector;
+function  VectorCombineWeighted(const Position, Scale : TAffineVector; X, Y, Z : Single) : TAffineVector;
 
 Begin
   Result.X:= position.X+Scale.X*X;
@@ -46,7 +46,7 @@ Begin
   Result.Z:= position.Z+Scale.Z*Z;
 End;
 
-procedure BuildCube(Mesh : TMeshObject; Position, Scale : TAffineVector);
+procedure BuildCube(Mesh : TMeshObject; const Position, Scale : TAffineVector);
 Var
   FGR : TFGVertexNormalTexIndexList;
   VertexOffset : Integer;
@@ -149,7 +149,7 @@ Begin
   FGR.TexCoordIndices.Add(TextureOffset+2,TextureOffset+7,TextureOffset+6);
 End;
 
-procedure BuildCylinder(Mesh : TMeshObject; Position, Scale : TAffineVector; Slices : Integer);
+procedure BuildCylinder(Mesh : TMeshObject; const Position, Scale : TAffineVector; Slices : Integer);
 Var
   FGR : TFGVertexNormalTexIndexList;
   VertexOffset : Integer;
@@ -217,7 +217,7 @@ Begin
 End;
 
 
-procedure BuildCylinder2(Mesh : TMeshObject; Position, Scale : TAffineVector;  TopRadius,BottomRadius,Height: single; Slices : Integer);
+procedure BuildCylinder2(Mesh : TMeshObject; const Position, Scale : TAffineVector; TopRadius,BottomRadius,Height: single; Slices : Integer);
 Var
   FGR : TFGVertexNormalTexIndexList;
   VertexOffset : Integer;

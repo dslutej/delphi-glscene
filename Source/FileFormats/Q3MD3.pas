@@ -48,22 +48,22 @@ type
 // which class of animation is extracted. eg NamePrefix='TORSO' will load
 // all animations starting with 'TORSO_' like 'TORSO_STAND'
 procedure LoadQ3Anims(Animations:TGLActorAnimations;
-            FileName:string; NamePrefix:string); overload;
+            FileName:string; const NamePrefix:string); overload;
 procedure LoadQ3Anims(Animations:TGLActorAnimations;
-            Strings:TStrings; NamePrefix:string); overload;
+            Strings:TStrings; const NamePrefix:string); overload;
 
 // Quake3 Skin loading procedure. Use this procedure to apply textures
 // to a GLActor. This doens't use the actors original preloaded materials so
 // it may be a good idea to clear the actors material library before
 // running this to keep everything nice and clean.
-procedure LoadQ3Skin(FileName:string; Actor:TGLActor);
+procedure LoadQ3Skin(const FileName:string; Actor:TGLActor);
 
 implementation
 
 // LoadQ3Anims
 //
 procedure LoadQ3Anims(Animations:TGLActorAnimations;
-            FileName:string; NamePrefix:string);
+            FileName:string; const NamePrefix:string);
 var
   AnimStrings:TStrings;
 begin
@@ -74,7 +74,7 @@ begin
 end;
 
 procedure LoadQ3Anims(Animations:TGLActorAnimations;
-            Strings:TStrings; NamePrefix:string);
+            Strings:TStrings; const NamePrefix:string);
 var
   anim :TStringList;
   val : array[0..3] of integer;
@@ -83,7 +83,7 @@ var
   commatext,str1 : string;
   TorsoStartFrame,LegsStartFrame : integer; // Used to Fix LEGS Frame values red from CFG file
 
-  function StrIsNumber(str:string):boolean;
+  function StrIsNumber(const str:string):boolean;
   var
     i : integer;
   begin
@@ -159,7 +159,7 @@ end;
 
 // LoadQ3Skin
 //
-procedure LoadQ3Skin(FileName:string; Actor:TGLActor);
+procedure LoadQ3Skin(const FileName:string; Actor:TGLActor);
 const
   // This list can be expanded if necessary
   ExtList : array[0..3] of string = ('.jpg','.jpeg','.tga','.bmp');
@@ -174,7 +174,7 @@ var
   textureFound,
   meshFound    : Boolean;
 
-  function GetMeshObjectByName(MeshObjects:TGLMeshObjectList; Name:string;
+  function GetMeshObjectByName(MeshObjects:TGLMeshObjectList; const Name:string;
     var mesh:TMeshObject):Boolean;
   var
     i : integer;

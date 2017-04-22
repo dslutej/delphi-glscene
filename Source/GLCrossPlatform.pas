@@ -200,11 +200,11 @@ function RelativePath(const S: string): string;
    If the platform has none, should return a value derived from the highest
    precision time reference available, avoiding, if possible, timers that
    allocate specific system resources. }
-procedure QueryPerformanceCounter(var val: Int64);
+procedure QueryPerformanceCounter(out val: Int64);
 {Returns the frequency of the counter used by QueryPerformanceCounter. 
    Return value is in ticks per second (Hz), returns False if no precision
    counter is available. }
-function QueryPerformanceFrequency(var val: Int64): Boolean;
+function QueryPerformanceFrequency(out val: Int64): Boolean;
 
 {Starts a precision timer. 
    Returned value should just be considered as 'handle', even if it ain't so.
@@ -228,8 +228,8 @@ function GLSTime: Double;
 function RDTSC: Int64;
 
 function GLOKMessageBox(const Text, Caption: string): Integer;
-procedure GLLoadBitmapFromInstance(Instance: LongInt; ABitmap: TBitmap; AName: string);
-procedure ShowHTMLUrl(Url: string);
+procedure GLLoadBitmapFromInstance(Instance: LongInt; ABitmap: TBitmap; const AName: string);
+procedure ShowHTMLUrl(const Url: string);
 function GLGetTickCount: int64;
 procedure SetExeDirectory;
 function GetDecimalSeparator: Char;
@@ -298,7 +298,7 @@ begin
   Result := Application.MessageBox(PChar(Text), PChar(Caption), MB_OK);
 end;
 
-procedure GLLoadBitmapFromInstance(Instance: LongInt; ABitmap: TBitmap; AName: string);
+procedure GLLoadBitmapFromInstance(Instance: LongInt; ABitmap: TBitmap; const AName: string);
 begin
 {$IFDEF MSWINDOWS}
   ABitmap.Handle := LoadBitmap(Instance, PChar(AName));
@@ -318,7 +318,7 @@ begin
 {$ENDIF}
 end;
 
-procedure ShowHTMLUrl(Url: string);
+procedure ShowHTMLUrl(const Url: string);
 begin
 {$IFDEF MSWINDOWS}
   ShellExecute(0, 'open', PChar(Url), nil, nil, SW_SHOW);
@@ -520,7 +520,7 @@ begin
 end;
 {$ENDIF}
 
-procedure QueryPerformanceCounter(var val: Int64);
+procedure QueryPerformanceCounter(out val: Int64);
 {$IFDEF MSWINDOWS}
 begin
   Windows.QueryPerformanceCounter(val);
@@ -537,7 +537,7 @@ begin
 end;
 {$ENDIF}
 
-function QueryPerformanceFrequency(var val: Int64): Boolean;
+function QueryPerformanceFrequency(out val: Int64): Boolean;
 {$IFDEF MSWINDOWS}
 begin
   Result := Boolean(Windows.QueryPerformanceFrequency(val));

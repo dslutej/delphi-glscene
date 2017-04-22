@@ -72,7 +72,7 @@ type
       renderChildren: Boolean);
 
     procedure SetGuiLayout(NewGui: TGLGuiLayout); virtual;
-    procedure SetGuiLayoutName(NewName: TGLGuiComponentName);
+    procedure SetGuiLayoutName(const NewName: TGLGuiComponentName);
 
     procedure Notification(AComponent: TComponent; Operation: TOperation);
       override;
@@ -629,7 +629,7 @@ type
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     procedure Clear;
-    function Add(Data: array of string): Integer; overload;
+    function Add(const Data: array of string): Integer; overload;
     function Add(const Data: string): Integer; overload;
     procedure SetText(Data: string);
     procedure Notification(AComponent: TComponent; Operation: TOperation);
@@ -809,7 +809,7 @@ begin
   end;
 end;
 
-procedure TGLBaseComponent.SetGuiLayoutName(NewName: TGLGuiComponentName);
+procedure TGLBaseComponent.SetGuiLayoutName(const NewName: TGLGuiComponentName);
 
 begin
   if FGuiLayoutName <> NewName then
@@ -3842,7 +3842,7 @@ begin
   NotifyChange(Self);
 end;
 
-function TGLStringGrid.Add(Data: array of string): Integer;
+function TGLStringGrid.Add(const Data: array of string): Integer;
 var
   XC: Integer;
 begin
