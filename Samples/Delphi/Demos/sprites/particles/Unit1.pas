@@ -105,48 +105,6 @@ begin
     Y := 3 * (Random - 0.5);
     Z := 3 * (Random - 0.5);
   end;
-  with TGLSprite(GLParticles1.CreateParticle).Position do
-  begin
-    X := 3 * (Random - 0.5);
-    Y := 3 * (Random - 0.5);
-    Z := 3 * (Random - 0.5);
-  end;
-  with TGLSprite(GLParticles1.CreateParticle).Position do
-  begin
-    X := 3 * (Random - 0.5);
-    Y := 3 * (Random - 0.5);
-    Z := 3 * (Random - 0.5);
-  end;
-  with TGLSprite(GLParticles1.CreateParticle).Position do
-  begin
-    X := 3 * (Random - 0.5);
-    Y := 3 * (Random - 0.5);
-    Z := 3 * (Random - 0.5);
-  end;
-  with TGLSprite(GLParticles1.CreateParticle).Position do
-  begin
-    X := 3 * (Random - 0.5);
-    Y := 3 * (Random - 0.5);
-    Z := 3 * (Random - 0.5);
-  end;
-  with TGLSprite(GLParticles1.CreateParticle).Position do
-  begin
-    X := 3 * (Random - 0.5);
-    Y := 3 * (Random - 0.5);
-    Z := 3 * (Random - 0.5);
-  end;
-  with TGLSprite(GLParticles1.CreateParticle).Position do
-  begin
-    X := 3 * (Random - 0.5);
-    Y := 3 * (Random - 0.5);
-    Z := 3 * (Random - 0.5);
-  end;
-  with TGLSprite(GLParticles1.CreateParticle).Position do
-  begin
-    X := 3 * (Random - 0.5);
-    Y := 3 * (Random - 0.5);
-    Z := 3 * (Random - 0.5);
-  end;
   // infos for the user
   Caption := 'Particles - ' + Format('%d particles, %.1f FPS',
     [GLParticles1.Count - 1, GLSceneViewer1.FramesPerSecond]);

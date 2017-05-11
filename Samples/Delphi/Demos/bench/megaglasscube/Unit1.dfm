@@ -28,7 +28,7 @@ object Form1: TForm1
   object GLScene1: TGLScene
     ObjectsSorting = osNone
     Left = 8
-    Top = 16
+    Top = 8
     object DummyCube1: TGLDummyCube
       ObjectsSorting = osRenderBlendedLast
       CubeSize = 10.000000000000000000

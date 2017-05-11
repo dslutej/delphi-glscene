@@ -319,7 +319,7 @@ object Form1: TForm1
         Up.Coordinates = {0000803F000000000000000000000000}
         BottomRadius = 0.600000023841857900
         Height = 6.000000000000000000
-        TopRadius = 0.800000011920928900
+        TopRadius = 0.800000011920929000
       end
       object GLSphere4: TGLSphere
         Position.Coordinates = {00000000000080400000A0C00000803F}

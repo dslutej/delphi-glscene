@@ -1494,7 +1494,7 @@ cgSetErrorCallBack(ErrorCallBack);
 {$IFDEF OutputCompilerWarnings}
 CompilerMsg := TStringList.Create;
 // default WarningFilePath is set to app. path
-WarningFilePath := extractfilepath(Application.ExeName);
+WarningFilePath := extractfilepath(ParamStr(0));
 {$ENDIF}
 
 finalization

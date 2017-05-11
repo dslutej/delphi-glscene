@@ -12,7 +12,6 @@ uses
   Vcl.ExtCtrls,
   
   GLScene,
-  GLRenderContextInfo,
   GLObjects,
   GLVectorGeometry,
   GLTexture,
@@ -52,13 +51,14 @@ implementation
 {$R *.DFM}
 
 const
-	cSize = 12;
+	cSize = 5;
 
 procedure TForm1.FormCreate(Sender: TObject);
 var
 	x, y, z : Integer;
 	cube : TGLCube;
 	factor, cubeSize : Single;
+  Color : TColor;
 begin
 	// bench only creation and 1st render (with lists builds, etc...)
 	factor:=70/(cSize*2+1);
@@ -73,9 +73,9 @@ begin
         cube.CubeHeight := cubeSize;
         cube.CubeDepth := cubeSize;
         cube.Material.BlendingMode := bmTransparency;
-        cube.ObjectStyle := [];
         with cube.Material.FrontProperties do
         begin
+          Color := Random(1);
           Diffuse.Color := VectorLerp(clrBlue, clrWhite, (x * x + y * y + z * z)
             / (cSize * cSize * 3));
           Diffuse.Alpha := 0.5;

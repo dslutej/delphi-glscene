@@ -63,12 +63,12 @@ object Form1: TForm1
   end
   object GLCadencer1: TGLCadencer
     Scene = GLScene1
-    SleepLength = 0
+    SleepLength = 1
     Left = 40
     Top = 72
   end
   object Timer1: TTimer
-    Interval = 40
+    Interval = 300
     OnTimer = Timer1Timer
     Left = 208
     Top = 8

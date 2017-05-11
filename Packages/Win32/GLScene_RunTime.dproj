@@ -388,6 +388,7 @@
         <DCCReference Include="..\..\Source\Basis\OpenGL1x.pas"/>
         <DCCReference Include="..\..\Source\Basis\OpenGLAdapter.pas"/>
         <DCCReference Include="..\..\Source\Basis\OpenGLTokens.pas"/>
+        <DCCReference Include="..\..\Source\Basis\OpenGLVCL.pas"/>
         <DCCReference Include="..\..\Source\FileFormats\Q3BSP.pas"/>
         <DCCReference Include="..\..\Source\FileFormats\Q3MD3.pas"/>
         <DCCReference Include="..\..\Source\FileFormats\Types3DS.pas"/>
@@ -427,7 +428,7 @@
                 <Platform value="Win64">False</Platform>
             </Platforms>
             <Deployment Version="3">
-                <DeployFile LocalName="C:\Users\Public\Documents\Embarcadero\Studio\18.0\Bpl\GLScene_RunTime.bpl" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\GLScene_RunTime.bpl" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>GLScene_RunTime.bpl</RemoteName>
                         <Overwrite>true</Overwrite>

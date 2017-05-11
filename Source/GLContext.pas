@@ -1108,7 +1108,7 @@ begin
   end;
 end;
 
-function GL: TGLExtensionsAndEntryPoints;
+function GL: TGLExtensionsAndEntryPoints; inline;
 begin
   Result := vGL;
 end;

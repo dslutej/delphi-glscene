@@ -577,17 +577,17 @@ end;
 
 function TGLMesh.Length: Single;
 begin
-  //
+  Result := 0;
 end;
 
 function TGLMesh.Area: Single;
 begin
-  //
+  Result := 0;
 end;
 
 function TGLMesh.Volume: Single;
 begin
-  //
+  Result := 0;
 end;
 
 procedure TGLMesh.BuildList(var rci: TGLRenderContextInfo);

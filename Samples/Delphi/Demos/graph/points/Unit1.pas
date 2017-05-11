@@ -55,18 +55,15 @@ var
 
 implementation
 
-uses GLVectorTypes;
-
 {$R *.DFM}
 
 const
-   cNbPoints = 100000;
+   cNbPoints = 180;
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
    // allocate points in the 1st point set
    GLPoints1.Positions.Count:=cNbPoints;
-   GLPoints2.Positions.Count:=cNbPoints;
    // specify white color for the 1st point set
    // (if a single color is defined, all points will use it,
    // otherwise, it's a per-point coloring)
@@ -80,25 +77,25 @@ procedure TForm1.GLCadencer1Progress(Sender: TObject; const deltaTime,
 var
    i : Integer;
    f, a, ab, ca, sa : Single;
-   p1,p2 : TAffineVectorList;
+   p : TAffineVectorList;
    v : TAffineVector;
 begin
    if CBAnimate.Checked then begin
       // update the 1st point set with values from a math func
       f:=1+Cos(newTime);
-      p1:=GLPoints1.Positions;
-      p2:=GLPoints2.Positions;
+      p:=GLPoints1.Positions;
       ab:=newTime*0.1;
       for i:=0 to cNbPoints-1 do
       begin
-         a:=DegToRad(0.01*i)+ab;
+         a:=DegToRad(4*i)+ab;
          SinCos(a, sa, ca);
-         v.X:=4*ca;
-         v.Y:=4*Cos(f*a);
-         v.Z:=4*sa;
-         p1[i]:=v;
-         p2[i]:=v;
+         v.X:=2*ca;
+         v.Y:=2*Cos(f*a);
+         v.Z:=2*sa;
+         p.Create[i]:=v;
       end;
+      // replicate points in second set
+      GLPoints2.Positions:=GLPoints1.Positions;
    end;
    GLSceneViewer1.Invalidate;
 end;

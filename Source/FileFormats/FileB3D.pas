@@ -166,14 +166,14 @@ type
     fMaterials: TStringList;
     fNodes: TB3DNode;
     procedure FreeLists;
-    function GetChunkType(aChunk: TB3DChunk): TB3DChunkType;
-    function SkipChunk(aStream: TStream; aChunk: TB3DChunk): Integer;
-    function ReadTextureChunk(aStream: TStream; aChunk: TB3DChunk): Integer;
-    function ReadMaterialChunk(aStream: TStream; aChunk: TB3DChunk): Integer;
-    function ReadNodeChunk(aStream: TStream; aChunk: TB3DChunk; Node: PNODEChunk; level: Integer): Integer;
-    function ReadMeshChunk(aStream: TStream; aChunk: TB3DChunk; Mesh: PMESHChunk): Integer;
-    function ReadVerticesChunk(aStream: TStream; aChunk: TB3DChunk; Vertices: PVRTSChunk): Integer;
-    function ReadTrianglesChunk(aStream: TStream; aChunk: TB3DChunk; Triangle: PTRISChunk): Integer;
+    function GetChunkType(const aChunk: TB3DChunk): TB3DChunkType;
+    function SkipChunk(aStream: TStream; const aChunk: TB3DChunk): Integer;
+    function ReadTextureChunk(aStream: TStream; const aChunk: TB3DChunk): Integer;
+    function ReadMaterialChunk(aStream: TStream; const aChunk: TB3DChunk): Integer;
+    function ReadNodeChunk(aStream: TStream; const aChunk: TB3DChunk; Node: PNODEChunk; level: Integer): Integer;
+    function ReadMeshChunk(aStream: TStream; const aChunk: TB3DChunk; Mesh: PMESHChunk): Integer;
+    function ReadVerticesChunk(aStream: TStream; const aChunk: TB3DChunk; Vertices: PVRTSChunk): Integer;
+    function ReadTrianglesChunk(aStream: TStream; const aChunk: TB3DChunk; Triangle: PTRISChunk): Integer;
   public
     constructor Create; virtual;
     destructor Destroy; override;
@@ -313,7 +313,7 @@ begin
   inherited Destroy;
 end;
 
-function TFileB3D.GetChunkType(aChunk: TB3DChunk): TB3DChunkType;
+function TFileB3D.GetChunkType(const aChunk: TB3DChunk): TB3DChunkType;
 begin
   Result := bctUnKnown;
   if StrLIComp(aChunk.chunk, 'BB3D', 4)=0 then
@@ -338,7 +338,7 @@ begin
     Result := bctTriangle;
 end;
 
-function TFileB3D.SkipChunk(aStream: TStream; aChunk: TB3DChunk): Integer;
+function TFileB3D.SkipChunk(aStream: TStream; const aChunk: TB3DChunk): Integer;
 begin
   aStream.Seek(aChunk.length, soFromCurrent);
   Result := aChunk.length;
@@ -356,7 +356,7 @@ begin
   end;
 end;
 
-function TFileB3D.ReadTextureChunk(aStream: TStream; aChunk: TB3DChunk): Integer;
+function TFileB3D.ReadTextureChunk(aStream: TStream; const aChunk: TB3DChunk): Integer;
 var
   Texture: TB3DTexture;
   Count: Integer;
@@ -381,7 +381,7 @@ begin
   Result := fTextures.Count;
 end;
 
-function TFileB3D.ReadMaterialChunk(aStream: TStream; aChunk: TB3DChunk): Integer;
+function TFileB3D.ReadMaterialChunk(aStream: TStream; const aChunk: TB3DChunk): Integer;
 var
   Material: TB3DMaterial;
   Count, I: Integer;
@@ -417,7 +417,7 @@ begin
   Result := fMaterials.Count;
 end;
 
-function TFileB3D.ReadMeshChunk(aStream: TStream; aChunk: TB3DChunk; Mesh: PMESHChunk): Integer;
+function TFileB3D.ReadMeshChunk(aStream: TStream; const aChunk: TB3DChunk; Mesh: PMESHChunk): Integer;
 var
   C: TB3DChunk;
   T: PTRISChunk;
@@ -465,7 +465,7 @@ begin
   end;
 end;
 
-function TFileB3D.ReadVerticesChunk(aStream: TStream; aChunk: TB3DChunk; Vertices: PVRTSChunk): Integer;
+function TFileB3D.ReadVerticesChunk(aStream: TStream; const aChunk: TB3DChunk; Vertices: PVRTSChunk): Integer;
 var
   v: PVertexData;
   v1: PVertexData;
@@ -523,7 +523,7 @@ begin
   end;
 end;
 
-function TFileB3D.ReadTrianglesChunk(aStream: TStream; aChunk: TB3DChunk; Triangle: PTRISChunk): Integer;
+function TFileB3D.ReadTrianglesChunk(aStream: TStream; const aChunk: TB3DChunk; Triangle: PTRISChunk): Integer;
 begin
   Result := 0;
   if Triangle=nil then
@@ -538,7 +538,7 @@ begin
 end;
 
 //read in only the mesh data, the keyframes and animation had been dropped
-function TFileB3D.ReadNodeChunk(aStream: TStream; aChunk: TB3DChunk; Node: PNODEChunk; level: Integer): Integer;
+function TFileB3D.ReadNodeChunk(aStream: TStream; const aChunk: TB3DChunk; Node: PNODEChunk; level: Integer): Integer;
 var
   Count: Integer;
   C: TB3DChunk;

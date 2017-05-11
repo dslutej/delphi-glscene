@@ -22,7 +22,6 @@ object Form1: TForm1
     Height = 355
     Camera = GLCamera1
     Buffer.BackgroundColor = clBlack
-    Buffer.AntiAliasing = csa16xHQ
     FieldOfView = 148.535995483398400000
     Align = alClient
     TabOrder = 0

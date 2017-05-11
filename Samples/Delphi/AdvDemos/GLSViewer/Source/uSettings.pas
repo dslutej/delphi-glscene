@@ -33,8 +33,8 @@ var
   FileVersion: cardinal;
 begin
   GeneralSection := RegGLSViewer + 'General';
-  FileVersion := GetFileVersion(Application.ExeName);
-  ExePath := ExtractFilePath(Application.ExeName);
+  FileVersion := GetFileVersion(ParamStr(0));
+  ExePath := ExtractFilePath(ParamStr(0));
   RegIni := TRegistryIniFile.Create(GeneralSection);
   try
     with RegIni do

@@ -4,6 +4,7 @@
 #define Unit1H
 //---------------------------------------------------------------------------
 #include <System.Classes.hpp>
+#include <System.Math.hpp>
 #include <Vcl.Controls.hpp>
 #include <Vcl.StdCtrls.hpp>
 #include <Vcl.Forms.hpp>

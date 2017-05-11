@@ -113,7 +113,7 @@ end;
 
 procedure TGLForm.ReadIniFile;
 begin
-  IniFile := TIniFile.Create(ChangeFileExt(Application.ExeName, '.ini'));
+  IniFile := TIniFile.Create(ChangeFileExt(ParamStr(0), '.ini'));
   with IniFile do
     try
       LangID := ReadInteger('GLOptions', 'RadioGroupLanguage', 0);

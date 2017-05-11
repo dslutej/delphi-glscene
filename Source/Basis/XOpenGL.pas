@@ -122,7 +122,7 @@ uses
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
 
-function xgl(): TGLMultitextureCoordinator;
+function xgl(): TGLMultitextureCoordinator; inline;
 begin
   Result := TGLMultitextureCoordinator(vCurrentGLContext.MultitextureCoordinator);
 end;

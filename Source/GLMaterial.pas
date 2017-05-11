@@ -196,9 +196,8 @@ type
   public
     constructor Create(AOwner: TPersistent); override;
     destructor Destroy; override;
-    procedure Apply(var rci: TGLRenderContextInfo; aFace: TCullFaceMode);
-    procedure ApplyNoLighting(var rci: TGLRenderContextInfo; aFace:
-      TCullFaceMode); inline;
+    procedure Apply(var rci: TGLRenderContextInfo; aFace: TCullFaceMode); inline;
+    procedure ApplyNoLighting(var rci: TGLRenderContextInfo; aFace: TCullFaceMode); inline;
     procedure Assign(Source: TPersistent); override;
   published
     property Ambient: TGLColor read FAmbient write SetAmbient;
@@ -332,7 +331,7 @@ type
   TMaterialOptions = set of TMaterialOption;
 
   {Describes a rendering material.
-      A material is basicly a set of face properties (front and back) that take
+      A material is basicaly a set of face properties (front and back) that take
       care of standard material rendering parameters (diffuse, ambient, emission
       and specular) and texture mapping.
       An instance of this class is available for almost all objects in GLScene

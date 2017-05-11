@@ -705,10 +705,10 @@ function VectorLength(const V: array of Single): Single; overload;
 
 { Calculates norm of a vector which is defined as norm = x * x + y * y
   Also known as "Norm 2" in the math world, this is sqr(VectorLength). }
-function VectorNorm(const X, Y: Single): Single; overload;
+function VectorNorm(const X, Y: Single): Single; overload; inline;
 { Calculates norm of a vector which is defined as norm = x*x + y*y + z*z
   Also known as "Norm 2" in the math world, this is sqr(VectorLength). }
-function VectorNorm(const V: TAffineVector): Single; overload;
+function VectorNorm(const V: TAffineVector): Single; overload; inline;
 { Calculates norm of a vector which is defined as norm = x*x + y*y + z*z
   Also known as "Norm 2" in the math world, this is sqr(VectorLength). }
 function VectorNorm(const V: TVector): Single; overload;

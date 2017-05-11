@@ -113,7 +113,7 @@ void __fastcall TForm1::TimerTimer(TObject *Sender) {
 	else {
 		t = (double)t * 24;
 		if ((double)t > 1) {
-			buf = IntToStr(Trunc((double)t)) + " hours, ";
+			buf = IntToStr(Round((double)t)) + " hours, ";
 			i = Round(System::Frac((double)t) * 60);
 			if (i > 1)
 				buf = buf + IntToStr(i) + " minutes...";
@@ -128,6 +128,7 @@ void __fastcall TForm1::TimerTimer(TObject *Sender) {
 		}
 	}
 }
+
 // ---------------------------------------------------------------------------
 
 void __fastcall TForm1::CadencerProgress(TObject *Sender,
@@ -149,6 +150,7 @@ void __fastcall TForm1::CadencerProgress(TObject *Sender,
 	DCFirTree->Turn(deltaTime);
 	Viewer->Invalidate();
 }
+
 // ---------------------------------------------------------------------------
 
 void __fastcall TForm1::FormResize(TObject *Sender) {

@@ -422,7 +422,6 @@ type
     TP_GlobalClassHandling: TList;
     /// Items are TClassMode. If a is derived from b, a comes first
     TP_Retranslator: TExecutable; /// Cast this to TTP_Retranslator
-      FWhenNewLanguageListeners: TInterfaceList;  /// List of all registered WhenNewLanguage listeners
       {$ifdef DXGETTEXTDEBUG}
       DebugLogCS:TMultiReadExclusiveWriteSynchronizer;
       DebugLog:TStream;

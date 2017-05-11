@@ -459,7 +459,7 @@ begin
   if not FileExists(cImposterCacheFile) then
     Exit;
   FileAge(cImposterCacheFile, cacheAge, True);
-  FileAge(Application.ExeName, exeAge, True);
+  FileAge(ParamStr(0), exeAge, True);
   if cacheAge < exeAge then
     Exit;
 

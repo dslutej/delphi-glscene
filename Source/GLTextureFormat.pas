@@ -19,20 +19,17 @@ uses
   OpenGLTokens;
 
 type
-
-  // Texture addressing rules
+  { Texture addressing rules }
   TGLSeparateTextureWrap = (twRepeat, twClampToEdge, twClampToBorder,
     twMirrorRepeat, twMirrorClampToEdge, twMirrorClampToBorder);
 
-  // Specifies the texture comparison mode for currently bound depth textures.
-  // That is, a texture whose internal format is tfDEPTH_COMPONENT*
+  { Specifies the texture comparison mode for currently bound depth textures.
+    That is, a texture whose internal format is tfDEPTH_COMPONENT* }
   TGLTextureCompareMode = (tcmNone, tcmCompareRtoTexture);
 
-  // Filtering quality
+  { Filtering quality }
   TGLTextureFilteringQuality = (tfIsotropic, tfAnisotropic);
 
-  // TGLTextureTarget
-  //
   TGLTextureTarget =
   (
     ttNoShape, ttTexture1D, ttTexture2D, ttTexture3D, ttTexture1DArray,
@@ -43,8 +40,6 @@ type
   TGLTextureSwizzle = (tswRed, tswGreen, tswBlue, tswAlpha, tswZero, tswOne);
   TSwizzleVector = array[0..3] of TGLTextureSwizzle;
 
-  // TGLInternalFormat
-  //
   TGLInternalFormat = (
     tfALPHA4,
     tfALPHA8,
@@ -207,10 +202,8 @@ type
     tfRGBA16_SNORM
     );
 
-  // TGLInternalCompression
-  //
-  {Texture compression option. 
-     If OpenGL supports it, this will activate a compressed texture format: 
+  {Texture compression option.
+     If OpenGL supports it, this will activate a compressed texture format:
       tcDefault : uses global default compression option
       tcNone : do not use compression
       tcStandard : use standard compression, average quality, average rate
@@ -220,8 +213,6 @@ type
   TGLInternalCompression = (tcDefault, tcNone, tcStandard, tcHighQuality,
     tcHighSpeed);
 
-  // Global texturing defaults
-  //
 var
   vDefaultTextureFormat: TGLInternalFormat = tfRGBA8;
   vDefaultTextureCompression: TGLInternalCompression = tcNone;

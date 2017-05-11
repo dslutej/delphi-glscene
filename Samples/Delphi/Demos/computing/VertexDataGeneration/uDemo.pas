@@ -3,13 +3,31 @@ unit uDemo;
 interface
 
 uses
-  System.SysUtils, System.Variants, System.Classes,
-  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs,
-  
-  GLScene, GLVectorGeometry, GLCadencer, GLWin32Viewer, GLCrossPlatform,
-  GLBaseClasses, GLSimpleNavigation, GLObjects, GLCoordinates, GLContext,
-  GLSCUDA, GLSCUDACompiler,  GLSCUDAContext, GLSCUDAGraphics,
-  GLMaterial, GLCustomShader, GLSLShader;
+  System.SysUtils,
+  System.Variants,
+  System.Classes,
+  Vcl.Graphics,
+  Vcl.Controls,
+  Vcl.Forms,
+  Vcl.Dialogs,
+
+  GLScene,
+  GLVectorGeometry,
+  GLCadencer,
+  GLWin32Viewer,
+  GLCrossPlatform,
+  GLBaseClasses,
+  GLSimpleNavigation,
+  GLObjects,
+  GLCoordinates,
+  GLContext,
+  GLSCUDA,
+  GLSCUDACompiler,
+  GLSCUDAContext,
+  GLSCUDAGraphics,
+  GLMaterial,
+  GLCustomShader,
+  GLSLShader;
 
 type
   TForm1 = class(TForm)
@@ -34,7 +52,7 @@ type
     procedure GLSLShader1Apply(Shader: TGLCustomGLSLShader);
     procedure GLSCUDA1OpenGLInteropInit(out Context: TGLContext);
   private
-     
+
   public
      
     FieldWidth: Integer;

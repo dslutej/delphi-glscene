@@ -11,7 +11,7 @@ uses
   Vcl.Forms,
   Vcl.Dialogs,
   Vcl.StdCtrls,
-  
+
   GLVectorFileObjects,
   GLScene,
   GLObjects,
@@ -43,10 +43,7 @@ type
       Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
     procedure GLSceneViewer1MouseMove(Sender: TObject; Shift: TShiftState;
       X, Y: Integer);
-  private
-     
   public
-     
     mx, my: Integer;
   end;
 
@@ -103,8 +100,7 @@ begin
   mo.Mode := momFaceGroups;
   fg := TFGIndexTexCoordList.CreateOwned(mo.FaceGroups);
   fg.Mode := fgmmTriangles;
-  GLFeedback1.BuildMeshFromBuffer(
-    mo.Vertices, mo.Normals, nil, fg.TexCoords, fg.VertexIndices);
+  GLFeedback1.BuildMeshFromBuffer(mo.Vertices, mo.Normals, nil, fg.TexCoords, fg.VertexIndices);
 
   // Deactivate the feedback object
   GLFeedback1.Active := False;

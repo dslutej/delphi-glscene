@@ -390,7 +390,7 @@ procedure TGLInfoForm.LoadContributors;
    ContrPath: TFileName;
 begin
 {
-   ContrPath := ExtractFilePath(Application.ExeName);
+   ContrPath := ExtractFilePath(ParamStr(0));
    ContributorsFileName := ContrPath + '\Contributors.txt';
 
    if FileExists(ContributorsFileName)

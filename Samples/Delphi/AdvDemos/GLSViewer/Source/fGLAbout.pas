@@ -67,7 +67,7 @@ end;
 procedure TGLAbout.FormCreate(Sender: TObject);
 begin
   inherited;
-  StaticTextVersion.Caption := ReadVersionInfo(Application.ExeName);
+  StaticTextVersion.Caption := ReadVersionInfo(ParamStr(0));
 end;
 
 function TGLAbout.GetFileInfo(const FileName: TFileName): TVSFixedFileInfo;
@@ -123,7 +123,7 @@ begin
   if VerSize > 0 then
   begin
     GetMem(Buf, VerSize);
-    GetFileVersionInfo(PChar(Application.ExeName), 0, VerSize, Buf);
+    GetFileVersionInfo(PChar(ParamStr(0)), 0, VerSize, Buf);
 
     VerQueryValue(Buf, '\', Value, VerSize);
     with TVSFixedFileInfo(Value^) do

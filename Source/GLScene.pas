@@ -720,7 +720,7 @@ type
     procedure Assign(Source: TPersistent); override;
     procedure DoRender(var ARci: TGLRenderContextInfo;
       ARenderSelf, ARenderChildren: Boolean); override;
-    property Material: TGLMaterial read FMaterial write SeTGLMaterial;
+    property Material: TGLMaterial read FMaterial write SetGLMaterial;
     property Hint: string read FHint write FHint;
   end;
 

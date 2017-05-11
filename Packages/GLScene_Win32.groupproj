@@ -33,15 +33,6 @@
         <Projects Include="Win32\GLScene_Cg_DesignTime.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="..\..\branches\Examples\SceneObjects\Cube\MegaCube1\MegaCube.dproj">
-            <Dependencies/>
-        </Projects>
-        <Projects Include="..\..\branches\Examples\SceneObjects\Cube\MegaCube2\MegaCube2.dproj">
-            <Dependencies/>
-        </Projects>
-        <Projects Include="..\..\branches\Examples\SceneObjects\Canvas\CanvasPixels.dproj">
-            <Dependencies/>
-        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -140,41 +131,14 @@
     <Target Name="GLScene_Cg_DesignTime:Make">
         <MSBuild Projects="Win32\GLScene_Cg_DesignTime.dproj" Targets="Make"/>
     </Target>
-    <Target Name="MegaCube">
-        <MSBuild Projects="..\..\branches\Examples\SceneObjects\Cube\MegaCube1\MegaCube.dproj"/>
-    </Target>
-    <Target Name="MegaCube:Clean">
-        <MSBuild Projects="..\..\branches\Examples\SceneObjects\Cube\MegaCube1\MegaCube.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="MegaCube:Make">
-        <MSBuild Projects="..\..\branches\Examples\SceneObjects\Cube\MegaCube1\MegaCube.dproj" Targets="Make"/>
-    </Target>
-    <Target Name="MegaCube2">
-        <MSBuild Projects="..\..\branches\Examples\SceneObjects\Cube\MegaCube2\MegaCube2.dproj"/>
-    </Target>
-    <Target Name="MegaCube2:Clean">
-        <MSBuild Projects="..\..\branches\Examples\SceneObjects\Cube\MegaCube2\MegaCube2.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="MegaCube2:Make">
-        <MSBuild Projects="..\..\branches\Examples\SceneObjects\Cube\MegaCube2\MegaCube2.dproj" Targets="Make"/>
-    </Target>
-    <Target Name="CanvasPixels">
-        <MSBuild Projects="..\..\branches\Examples\SceneObjects\Canvas\CanvasPixels.dproj"/>
-    </Target>
-    <Target Name="CanvasPixels:Clean">
-        <MSBuild Projects="..\..\branches\Examples\SceneObjects\Canvas\CanvasPixels.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="CanvasPixels:Make">
-        <MSBuild Projects="..\..\branches\Examples\SceneObjects\Canvas\CanvasPixels.dproj" Targets="Make"/>
-    </Target>
     <Target Name="Build">
-        <CallTarget Targets="GLScene_RunTime;GLScene_DesignTime;GLScene_Sounds_RunTime;GLScene_Sounds_DesignTime;GLScene_Physics_RunTime;GLScene_Physics_DesignTime;GLScene_Parallel_RunTime;GLScene_Parallel_DesignTime;GLScene_Cg_RunTime;GLScene_Cg_DesignTime;MegaCube;MegaCube2;CanvasPixels"/>
+        <CallTarget Targets="GLScene_RunTime;GLScene_DesignTime;GLScene_Sounds_RunTime;GLScene_Sounds_DesignTime;GLScene_Physics_RunTime;GLScene_Physics_DesignTime;GLScene_Parallel_RunTime;GLScene_Parallel_DesignTime;GLScene_Cg_RunTime;GLScene_Cg_DesignTime"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="GLScene_RunTime:Clean;GLScene_DesignTime:Clean;GLScene_Sounds_RunTime:Clean;GLScene_Sounds_DesignTime:Clean;GLScene_Physics_RunTime:Clean;GLScene_Physics_DesignTime:Clean;GLScene_Parallel_RunTime:Clean;GLScene_Parallel_DesignTime:Clean;GLScene_Cg_RunTime:Clean;GLScene_Cg_DesignTime:Clean;MegaCube:Clean;MegaCube2:Clean;CanvasPixels:Clean"/>
+        <CallTarget Targets="GLScene_RunTime:Clean;GLScene_DesignTime:Clean;GLScene_Sounds_RunTime:Clean;GLScene_Sounds_DesignTime:Clean;GLScene_Physics_RunTime:Clean;GLScene_Physics_DesignTime:Clean;GLScene_Parallel_RunTime:Clean;GLScene_Parallel_DesignTime:Clean;GLScene_Cg_RunTime:Clean;GLScene_Cg_DesignTime:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="GLScene_RunTime:Make;GLScene_DesignTime:Make;GLScene_Sounds_RunTime:Make;GLScene_Sounds_DesignTime:Make;GLScene_Physics_RunTime:Make;GLScene_Physics_DesignTime:Make;GLScene_Parallel_RunTime:Make;GLScene_Parallel_DesignTime:Make;GLScene_Cg_RunTime:Make;GLScene_Cg_DesignTime:Make;MegaCube:Make;MegaCube2:Make;CanvasPixels:Make"/>
+        <CallTarget Targets="GLScene_RunTime:Make;GLScene_DesignTime:Make;GLScene_Sounds_RunTime:Make;GLScene_Sounds_DesignTime:Make;GLScene_Physics_RunTime:Make;GLScene_Physics_DesignTime:Make;GLScene_Parallel_RunTime:Make;GLScene_Parallel_DesignTime:Make;GLScene_Cg_RunTime:Make;GLScene_Cg_DesignTime:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

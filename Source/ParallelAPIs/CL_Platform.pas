@@ -37,8 +37,6 @@ unit CL_Platform;
 
 interface
 
-
-
 {$IFDEF MSWINDOWS}
    {$DEFINE CL_APT_ENTRY}
 const
