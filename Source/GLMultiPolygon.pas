@@ -83,14 +83,14 @@ type
     procedure Assign(Source: TPersistent); override;
 
   published
-    
+
     property Description: string read FDescription write SetDescription;
     {The nodes list.  }
     property Nodes: TGLContourNodes read FNodes write SetNodes;
-    {Number of divisions for each segment in spline modes. 
+    {Number of divisions for each segment in spline modes.
       Minimum 1 (disabled), ignored in lsmLines mode. }
     property Division: Integer read FDivision write SetDivision default 10;
-    {Default spline drawing mode. 
+    {Default spline drawing mode.
       This mode is used only for the curve, not for the rotation path. }
     property SplineMode: TGLLineSplineMode read FSplineMode write SetSplineMode default lsmLines;
   end;
@@ -104,14 +104,12 @@ type
     function GetItems(index: Integer): TGLContour;
     procedure SetItems(index: Integer; const Value: TGLContour);
   protected
-
   public
     constructor Create(AOwner: TComponent); overload;
-    function Add: TGLContour;
-    function FindItemID(ID: Integer): TGLContour;
+    function Add: TGLContour; inline;
+    function FindItemID(ID: Integer): TGLContour; inline;
     property Items[index: Integer]: TGLContour read GetItems write SetItems; default;
     procedure GetExtents(var min, max: TAffineVector);
-
   end;
 
   // TPolygonList

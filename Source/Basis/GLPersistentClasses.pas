@@ -23,9 +23,8 @@ interface
 
 uses
   System.Classes,
-  System.SysUtils,
-  GLCrossPlatform,
-  GLStrings;
+  System.SysUtils
+  ;
 
 type
 
@@ -289,9 +288,9 @@ type
   TGLInterfacedCollectionItem = class(TCollectionItem, IInterface)
   protected
     // Implementing IInterface.
-    function QueryInterface(const IID: TGUID; out Obj): HResult; virtual; stdcall;
-    function _AddRef: Integer; virtual; stdcall;
-    function _Release: Integer; virtual; stdcall;
+    function QueryInterface(const IID: TGUID; out Obj): HResult; stdcall;
+    function _AddRef: Integer; stdcall;
+    function _Release: Integer; stdcall;
   end;
 
   {Triggered when file signature does not match. }
@@ -309,18 +308,20 @@ function UTF8ToWideString(const s: AnsiString): WideString;
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
 implementation
+
+
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
 
 uses
-  GLApplicationFileIO;
-
+  GLApplicationFileIO,
+  GLCrossPlatform,
+  GLStrings;
 
 const
   cDefaultListGrowthDelta = 16;
 
-const
   cVTInteger = 'Int';
   cVTFloat = 'Float';
   cVTString = 'Str';
@@ -1363,6 +1364,7 @@ var
    C  :TExtended80Rec; // Temporary variable to store 10 bytes floating point number in a Win64 application
 {$ENDIF}
 begin
+  Result := 0.0;
   {$IFDEF WIN64}
   if ReadValue = vaExtended then
   begin

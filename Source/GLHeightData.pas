@@ -145,25 +145,25 @@ type
     procedure MarkDirty(XLeft, YTop, xRight, yBottom: Integer); overload;
     procedure MarkDirty; overload;
 
-    {  Maximum number of background threads. 
+    {  Maximum number of background threads.
       If 0 (zero), multithreading is disabled and StartPreparingData
       will be called from the mainthread, and all preload requirements
       (queued TGLHeightData objects) will be loaded in sequence from
-      the main thread. 
+      the main thread.
       If 1, basic multithreading and queueing gets enabled,
       ie. StartPreparingData will be called from a thread, but from one
       thread only (ie. there is no need to implement a TGLHeightDataThread,
-      just make sure StartPreparingData code is thread-safe). 
+      just make sure StartPreparingData code is thread-safe).
       Other values (2 and more) are relevant only if you implement
       a TGLHeightDataThread subclass and fire it in StartPreparingData. }
     property MaxThreads: Integer read FMaxThreads write SetMaxThreads;
-    {  Maximum Size of TDataHeight pool in bytes. 
+    {  Maximum Size of TDataHeight pool in bytes.
       The pool (cache) can actually get larger if more data than the pool
       can accomodate is used, but as soon as data gets released and returns
       to the pool, TDataHeight will be freed until total pool Size gets
       below this figure.
       The pool manager frees TDataHeight objects who haven't been requested
-      for the longest time first. 
+      for the longest time first.
       The default value of zero effectively disables pooling. }
     property MaxPoolSize: Integer read FMaxPoolSize write FMaxPoolSize;
     {  Height to return for undefined tiles. }
@@ -180,7 +180,7 @@ type
     {  This is called BEFORE StartPreparing Data, but always from the main thread. }
     procedure BeforePreparingData(HeightData: TGLHeightData); virtual;
 
-    {  Request to start preparing data. 
+    {  Request to start preparing data.
       If your subclass is thread-enabled, this is here that you'll create
       your thread and fire it (don't forget the requirements), if not,
       that'll be here you'll be doing your work.
@@ -202,8 +202,8 @@ type
 
   // TGLHeightDataState
   //
-  {  Possible states for a TGLHeightData. 
-    
+  {  Possible states for a TGLHeightData.
+
      hdsQueued : the data has been queued for loading
      hdsPreparing : the data is currently loading or being prepared for use
      hdsReady : the data is fully loaded and ready for use

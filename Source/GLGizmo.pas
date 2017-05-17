@@ -109,7 +109,6 @@ type
     procedure Notification(AComponent: TComponent;
       Operation: TOperation); virtual;
     procedure AssignFromObject(const AObject: TGLCustomSceneObject);
-
     // TODO: create a special type for Matrix.
     property OldMatrix: TMatrix read FOldMatrix write SetOldMatrix;
   published
@@ -170,37 +169,29 @@ type
   TGLGizmo = class(TComponent)
   private
     _GZObaseGizmo: TGLBaseSceneObject;
-
     _GZOBoundingcube: TGLCube;
-
     _GZOrootHelpers: TGLBaseSceneObject;
     _GZOrootLines: TGLBaseSceneObject;
     _GZOrootTorus: TGLBaseSceneObject;
     _GZOrootCubes: TGLBaseSceneObject;
     _GZORootAxisLabel: TGLBaseSceneObject;
     _GZORootVisibleInfoLabels: TGLBaseSceneObject;
-
     _GZOlineX, _GZOlineY, _GZOlineZ, _GZOplaneXY, _GZOplaneXZ,
       _GZOplaneYZ: TGLLines; // For Move
     _GZOTorusX, _GZOTorusY, _GZOTorusZ: TGLGizmoPickTorus; // For Rotate
     _GZOCubeX, _GZOCubeY, _GZOCubeZ: TGLGizmoPickCube; // For Scale
-
     _GZOAxisLabelX, _GZOAxisLabelY, _GZOAxisLabelZ: TGLFlatText;
     _GZOVisibleInfoLabels: TGLFlatText;
-
     FRootGizmo: TGLBaseSceneObject;
     FSelectedObj: TGLBaseSceneObject;
     // FLastOperation,
     FOperation: TGLGizmoOperation;
     FSelAxis: TGLGizmoAxis;
-
     FBoundingBoxColor: TGLColor;
     FSelectedColor: TGLColor;
     FVisibleInfoLabelsColor: TGLColor;
-
     FBoundingBoxColorChanged: Boolean;
     FVisibleInfoLabelsColorChanged: Boolean;
-
     FForceOperation: Boolean;
     FForceAxis: Boolean;
     FForceUniformScale: Boolean;
@@ -208,29 +199,21 @@ type
     FExcludeObjects: Boolean;
     FNoZWrite: Boolean;
     FEnabled: Boolean;
-
     FAutoZoomFactor: Single;
     FZoomFactor: Single;
     FMoveCoef: Single;
     FRotationCoef: Single;
-
     FViewer: TGLSceneViewer;
-
     FGizmoElements: TGLGizmoElements;
     FVisibleVisibleInfoLabels: TGLGizmoVisibleInfoLabels;
-
     FExcludeObjectsList: TStrings;
-
     Moving: Boolean;
     Mx, My: Integer;
     Rx, Ry: Integer;
-
     dglEnable, dglDisable, dgtEnable, dgtDisable, dgcEnable, dgcDisable,
       dglaEnable, dglaDisable, dgliEnable, dgliDisable: TGLDirectOpenGL;
-
     LastMousePos: TVector;
     ObjDimensions: TVector;
-
     FOnBeforeSelect: TGLGizmoAcceptEvent;
     FOnBeforeUpdate: TGLGizmoUpdateEvent;
     FOnSelectionLost: TNotifyEvent;
@@ -238,29 +221,22 @@ type
     FGizmoThickness: Single;
     FPickMode: TGLGizmoPickMode;
     FInternalRaycastHitData: TList;
-
     FUndoHistory: TGLGizmoUndoCollection;
     FLabelFont: TGLCustomBitmapFont;
-
     procedure SetRootGizmo(const AValue: TGLBaseSceneObject);
-
     procedure SetGizmoElements(const AValue: TGLGizmoElements);
     procedure SeTGLGizmoVisibleInfoLabels(const AValue
       : TGLGizmoVisibleInfoLabels);
     procedure SetBoundingBoxColor(const AValue: TGLColor);
     procedure SetSelectedColor(const AValue: TGLColor);
     procedure SetVisibleInfoLabelsColor(const AValue: TGLColor);
-
     procedure SetExcludeObjectsList(const AValue: TStrings);
-
     procedure DirectGlDisable(Sender: TObject; var Rci: TGLRenderContextInfo);
     procedure DirectGlEnable(Sender: TObject; var Rci: TGLRenderContextInfo);
-
     function MouseWorldPos(const X, Y: Integer): TVector;
     function CheckObjectInExcludeList(const Obj: TGLBaseSceneObject): Boolean;
     procedure UpdateVisibleInfoLabels;
     procedure SetGLGizmoThickness(const Value: Single);
-
     function InternalGetPickedObjects(const X1, Y1, X2, Y2: Integer;
       const GuessCount: Integer = 8): TGLPickList;
     procedure ClearInternalRaycastHitData;
@@ -274,65 +250,48 @@ type
     procedure Loaded; override;
     procedure Notification(AComponent: TComponent;
       Operation: TOperation); override;
-
     procedure ViewerMouseMove(const X, Y: Integer);
     procedure ViewerMouseDown(const X, Y: Integer);
     procedure ViewerMouseUp(const X, Y: Integer);
-
     procedure UpdateGizmo; overload;
     procedure UpdateGizmo(const NewDimensions: TVector); overload;
     procedure SetVisible(const AValue: Boolean);
     function GetPickedObjectPoint(const Obj: TGLBaseSceneObject): TVector;
-
     procedure LooseSelection; virtual;
-
     procedure UndoAdd(const AObject: TGLCustomSceneObject);
     property RootGizmo: TGLBaseSceneObject read FRootGizmo write SetRootGizmo;
-
     // --------------------------------------------------------------------
   published
-
     property Viewer: TGLSceneViewer read FViewer write SetViewer;
-
     property GizmoElements: TGLGizmoElements read FGizmoElements
       write SetGizmoElements;
-
     property BoundingBoxColor: TGLColor read FBoundingBoxColor
       write SetBoundingBoxColor;
     property SelectedColor: TGLColor read FSelectedColor write SetSelectedColor;
-
     property SelAxis: TGLGizmoAxis read FSelAxis write FSelAxis;
     property ForceAxis: Boolean read FForceAxis write FForceAxis;
-
     property SelectedObj: TGLBaseSceneObject read FSelectedObj
       write SetSelectedObj;
-
     property Operation: TGLGizmoOperation read FOperation write FOperation;
     property ForceOperation: Boolean read FForceOperation write FForceoperation;
     property ForceUniformScale: Boolean read FForceUniformScale
       write FForceUniformScale;
-
     property ExcludeObjects: Boolean read FExcludeObjects write FExcludeObjects;
     property ExcludeObjectsList: TStrings read FExcludeObjectsList
       write SetExcludeObjectsList;
-
     property VisibleInfoLabels: TGLGizmoVisibleInfoLabels
       read FVisibleVisibleInfoLabels write SeTGLGizmoVisibleInfoLabels;
     property VisibleInfoLabelsColor: TGLColor read FVisibleInfoLabelsColor
       write SetVisibleInfoLabelsColor;
-
     property AutoZoom: Boolean read FAutoZoom write FAutoZoom;
     property AutoZoomFactor: Single read FAutoZoomFactor write FAutoZoomFactor;
     property ZoomFactor: Single read FZoomFactor write FZoomFactor;
-
     property MoveCoef: Single read FMoveCoef write FMoveCoef;
     property RotationCoef: Single read FRotationCoef write FRotationCoef;
     property ScaleCoef: Single read FScaleCoef write FScaleCoef;
     property NoZWrite: Boolean read FNoZWrite write FNoZWrite;
-
     property GizmoThickness: Single read FGizmoThickness
       write SeTGLGizmoThickness;
-
     {  Indicates whether the gizmo is enabled or not.
       WARNING: When loading/editing (possibly whenever a structureChanged
       call is made) a model, sometimes the gizmo will trigger a
@@ -340,20 +299,16 @@ type
       remember to disable the gizmo before loading, then process windows
       messages (i.e. application.processMessage) and then enable the gizmo
       again. }
-
     {  Warning Enable is ReadOnly property if you set to False, Gizmo is not Hidden
       use Visible instead if you want to Hide, if you want to Hide but keep enabled
       see the VisibleGizmo property }
     property Enabled: Boolean read FEnabled write FEnabled default False;
-
     property LabelFont: TGLCustomBitmapFont read FLabelFont write SetLabelFont
       default nil;
-
     property OnBeforeSelect: TGLGizmoAcceptEvent read FOnBeforeSelect
       write FOnBeforeSelect;
     property OnSelectionLost: TNotifyEvent read FOnSelectionLost
       write FOnSelectionLost;
-
     {  Called before an Update is applied. The "vector" parameter is the difference
       that will be applied to the object, according to the axis and
       operation selected. }
@@ -363,7 +318,9 @@ type
       default PmGetPickedObjects;
   end;
 
+//=========================================================
 implementation
+//=========================================================
 
 uses
 

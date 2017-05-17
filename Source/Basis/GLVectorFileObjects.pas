@@ -1044,8 +1044,6 @@ type
   TGLFreeForm = class(TGLBaseMesh)
   private
     FOctree: TGLOctree;
-  protected
-    function GetOctree: TGLOctree;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -1064,7 +1062,7 @@ type
       TMatrix; triangles: TAffineVectorList = nil): boolean;
     //  TODO:  function OctreeSphereIntersect
     {Octree support *experimental*. Use only if you understand what you're doing! }
-    property Octree: TGLOctree read GetOctree;
+    property Octree: TGLOctree read FOctree;
     procedure BuildOctree(TreeDepth: integer = 3);
   published
     property AutoCentering;
@@ -6509,43 +6507,52 @@ begin
   inherited StructureChanged;
 end;
 
-function TGLBaseMesh.RayCastIntersect(const rayStart, rayVector: TVector;
-  intersectPoint: PVector = nil;
-  intersectNormal: PVector = nil): Boolean;
+function TGLBaseMesh.RayCastIntersect (const rayStart, rayVector: TVector;
+intersectPoint: PVector = nil;
+intersectNormal: PVector = nil): Boolean;
+
 var
-  i: Integer;
-  tris: TAffineVectorList;
+  i,j: Integer;
+  Obj: TMeshObject;
+  Tris: TAffineVectorList;
   locRayStart, locRayVector, iPoint, iNormal: TVector;
   d, minD: Single;
+
 begin
-  // BEWARE! Utterly inefficient implementation!
-  tris := MeshObjects.ExtractTriangles;
-  try
-    SetVector(locRayStart, AbsoluteToLocal(rayStart));
-    SetVector(locRayVector, AbsoluteToLocal(rayVector));
-    minD := -1;
-    i := 0;
-    while i < tris.Count do
-    begin
-      if RayCastTriangleIntersect(locRayStart, locRayVector,
-        tris.List^[i], tris.List^[i + 1], tris.List^[i + 2],
-        @iPoint, @iNormal) then
+  SetVector(locRayStart, AbsoluteToLocal(rayStart));
+  SetVector(locRayVector, AbsoluteToLocal(rayVector));
+  minD := -1;
+
+  for j := 0 to MeshObjects.Count - 1 do
+  begin
+    Obj := MeshObjects.GetMeshObject(j);
+    if not Obj.Visible then
+      Continue;
+    Tris := Obj.ExtractTriangles(NIL, NIL); //objTexCoords & objNormals
+    try
+      i := 0;
+      while i < Tris.Count do
       begin
-        d := VectorDistance2(locRayStart, iPoint);
-        if (d < minD) or (minD < 0) then
+        if RayCastTriangleIntersect(locRayStart, locRayVector, Tris.List^[i],
+          Tris.List^[i + 1], Tris.List^[i + 2], @iPoint, @iNormal) then
         begin
-          minD := d;
-          if intersectPoint <> nil then
-            intersectPoint^ := iPoint;
-          if intersectNormal <> nil then
-            intersectNormal^ := iNormal;
+          d := VectorDistance2(locRayStart, iPoint);
+          if (d < minD) or (minD < 0) then
+            begin
+              minD := d;
+              if intersectPoint <> nil then
+                intersectPoint^ := iPoint;
+              if intersectNormal <> nil then
+                intersectNormal^ := iNormal;
+            end;
         end;
+        Inc(i, 3);
       end;
-      Inc(i, 3);
+    finally
+      Tris.Free;
     end;
-  finally
-    tris.Free;
   end;
+
   Result := (minD >= 0);
   if Result then
   begin
@@ -6622,13 +6629,6 @@ destructor TGLFreeForm.Destroy;
 begin
   FOctree.Free;
   inherited Destroy;
-end;
-
-function TGLFreeForm.GetOctree: TGLOctree;
-begin
-  // if not Assigned(FOctree) then  //If auto-created, can never use "if Assigned(GLFreeform1.Octree)"
-  //   FOctree := TOctree.Create;   //moved this code to BuildOctree
-  Result := FOctree;
 end;
 
 procedure TGLFreeForm.BuildOctree(TreeDepth: integer = 3);

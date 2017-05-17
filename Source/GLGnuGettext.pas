@@ -2337,7 +2337,6 @@ var
   line: string;
   i: integer;
   s:TStringList;
-  slAsTStringList:TStringList;
   {$ifdef DELPHI2009OROLDER}
   originalOwnsObjects: Boolean;
   {$endif}

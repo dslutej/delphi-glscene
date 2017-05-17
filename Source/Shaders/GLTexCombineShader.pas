@@ -92,7 +92,10 @@ implementation
 uses
 
   GLState,
-  OpenGLAdapter;
+  OpenGLAdapter,
+
+  Vcl.Dialogs
+  ;
 // ------------------
 // ------------------ TGLTexCombineShader ------------------
 // ------------------

@@ -711,7 +711,7 @@ type
     FHint: string;
   protected
     function Blended: Boolean; override;
-    procedure SetGLMaterial(AValue: TGLMaterial);
+    procedure SetGLMaterial(AValue: TGLMaterial); inline;
     procedure DestroyHandle; override;
     procedure Loaded; override;
   public

@@ -65,7 +65,7 @@ type
     GraphicClass: TGraphicClass;
     Extension: string;
     Description: string;
-    DescResID: integer;
+    //DescResID: integer;
   end;
 
 {$ifopt R+}

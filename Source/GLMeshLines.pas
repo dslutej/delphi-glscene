@@ -17,8 +17,7 @@ uses
    
   GLScene, 
   GLObjects, 
-  GLTexture, 
-  GLVectorFileObjects, 
+  GLTexture,
   GLCoordinates, 
   GLContext, 
   GLMaterial, 
@@ -28,7 +27,8 @@ uses
   GLVectorGeometry, 
   GLSpline,
   GLVectorTypes, 
-  GLVectorLists, 
+  GLVectorLists,
+  GLVectorFileObjects,
   GLRenderContextInfo;
 
 type
@@ -700,10 +700,13 @@ var
   lNodeWasSelected: Boolean;
 begin
   Result := nil;
+  lNodeWasSelected := False;
+
   if Assigned(FSelectedLineItem) and not lNodeWasSelected then
     lStartPoint := FSelectedLineItem.ID + 1
   else
     lStartPoint := 0;
+
   for i := lStartPoint to FLines.Count - 1 do
   begin
     if (FLines[i] <> FSelectedLineItem) or lNodeWasSelected then

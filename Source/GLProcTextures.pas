@@ -30,7 +30,6 @@ type
     FNoiseMap: TGLBitmap32;
     FWidth, FHeight: Integer;
     FMinCut: Byte;
-    //FMaxCut         : Byte;
     FNoiseSharpness: Single;
     FNoiseAnimate: Single;
     FSeamless: Boolean;
@@ -146,7 +145,6 @@ begin
     Line := FNoiseMap.ScanLine[y];
     for x := 0 to FNoiseMap.Width - 1 do
     begin
-      nf := 0;
 
       case FSeamless of
         // Take 4 octaves of noise and add them weighted for seamless.

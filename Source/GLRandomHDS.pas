@@ -335,7 +335,7 @@ type
       cyclic landscapes when you need a seamless joint), call fHeigth instead
       (this is a protected field, therefore only accessible from TGLFractalHDS
       descendents. }
-    property Height[x, y: integer]: single read GetHeight write SetHeight;
+    property Heights[x, y: integer]: single read GetHeight write SetHeight;
     // Range checked
     { A specific implementation of THeightDataSource.InterpolatedHeight }
     function Interpolate(x, y: single): single;
@@ -1113,22 +1113,22 @@ begin
       Application.ProcessMessages;
       z0 := FHeight[i, j];
       Normal := NullHmgVector;
-      MakeVector(v1, Scale.x, (Height[i + 1, j] - z0) * Scale.y / VSF, 0);
-      MakeVector(v2, 0, (Height[i, j + 1] - z0) * Scale.y / VSF, Scale.z);
+      MakeVector(v1, Scale.x, (Heights[i + 1, j] - z0) * Scale.y / VSF, 0);
+      MakeVector(v2, 0, (Heights[i, j + 1] - z0) * Scale.y / VSF, Scale.z);
       Normal := VectorCrossProduct(v2, v1);
       NormalizeVector(Normal);
-      MakeVector(v1, -Scale.x, (Height[i - 1, j] - z0) * Scale.y / VSF, 0);
-      MakeVector(v2, 0, (Height[i, j + 1] - z0) * Scale.y / VSF, Scale.z);
+      MakeVector(v1, -Scale.x, (Heights[i - 1, j] - z0) * Scale.y / VSF, 0);
+      MakeVector(v2, 0, (Heights[i, j + 1] - z0) * Scale.y / VSF, Scale.z);
       n1 := VectorCrossProduct(v1, v2);
       NormalizeVector(n1);
       Normal := VectorAdd(Normal, n1);
-      MakeVector(v1, -Scale.x, (Height[i - 1, j] - z0) * Scale.y / VSF, 0);
-      MakeVector(v2, 0, (Height[i, j - 1] - z0) * Scale.y / VSF, -Scale.z);
+      MakeVector(v1, -Scale.x, (Heights[i - 1, j] - z0) * Scale.y / VSF, 0);
+      MakeVector(v2, 0, (Heights[i, j - 1] - z0) * Scale.y / VSF, -Scale.z);
       n1 := VectorCrossProduct(v2, v1);
       NormalizeVector(n1);
       Normal := VectorAdd(Normal, n1);
-      MakeVector(v1, Scale.x, (Height[i + 1, j] - z0) * Scale.y / VSF, 0);
-      MakeVector(v2, 0, (Height[i, j - 1] - z0) * Scale.y / VSF, -Scale.z);
+      MakeVector(v1, Scale.x, (Heights[i + 1, j] - z0) * Scale.y / VSF, 0);
+      MakeVector(v2, 0, (Heights[i, j - 1] - z0) * Scale.y / VSF, -Scale.z);
       n1 := VectorCrossProduct(v1, v2);
       NormalizeVector(n1);
       Normal := VectorAdd(Normal, n1);
@@ -1469,7 +1469,7 @@ begin
       z1 := FErosionByLife.Robustness;
       for i := 0 to 7 do
       begin
-        z := z + Height[x + NeighX[i], y + NeighY[i]] * NeighW[i];
+        z := z + Heights[x + NeighX[i], y + NeighY[i]] * NeighW[i];
         z1 := z1 + NeighW[i];
       end; // for i
       FHeight[x, y] := z / z1;
@@ -1852,17 +1852,17 @@ begin
   if x > y then
   begin
     // top-right triangle
-    h1 := Height[ix + 1, iy];
-    h2 := Height[ix, iy];
-    h3 := Height[ix + 1, iy + 1];
+    h1 := Heights[ix + 1, iy];
+    h2 := Heights[ix, iy];
+    h3 := Heights[ix + 1, iy + 1];
     Result := h1 + (h2 - h1) * (1 - x) + (h3 - h1) * y;
   end
   else
   begin
     // bottom-left triangle
-    h1 := Height[ix, iy + 1];
-    h2 := Height[ix + 1, iy + 1];
-    h3 := Height[ix, iy];
+    h1 := Heights[ix, iy + 1];
+    h2 := Heights[ix + 1, iy + 1];
+    h3 := Heights[ix, iy];
     Result := h1 + (h2 - h1) * (x) + (h3 - h1) * (1 - y);
   end;
 end;
@@ -1959,7 +1959,7 @@ end;
 
 function TGLCustomRandomHDS.StandardisedHeight(const x, y: integer): single;
 begin
-  Result := (Height[x, y] - FMinHeight) / FRangeHeight * 1000;
+  Result := (Heights[x, y] - FMinHeight) / FRangeHeight * 1000;
 end;
 
 procedure TGLCustomRandomHDS.StartPreparingData(heightData: TGLHeightData);

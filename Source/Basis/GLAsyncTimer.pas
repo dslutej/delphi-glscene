@@ -44,8 +44,10 @@ type
     procedure SetEnabled(Value: Boolean);
     function GetInterval: Word;
     procedure SetInterval(Value: Word);
+    {$WARN SYMBOL_PLATFORM OFF}
     function GetThreadPriority: TThreadPriority;
     procedure SetThreadPriority(Value: TThreadPriority);
+    {$WARN SYMBOL_PLATFORM ON}
     procedure DoTimer;
   public
     constructor Create(AOwner: TComponent); override;
@@ -55,14 +57,20 @@ type
     property Interval: Word read GetInterval write SetInterval
       default cDEFAULT_TIMER_INTERVAL;
     property OnTimer: TNotifyEvent read FOnTimer write FOnTimer;
+    {$WARN SYMBOL_PLATFORM OFF}
     property ThreadPriority: TThreadPriority read GetThreadPriority
       write SetThreadPriority default tpTimeCritical;
+    {$WARN SYMBOL_PLATFORM ON}
   end;
 
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
 implementation
+
+uses
+
+  Winapi.Windows;
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
@@ -185,19 +193,22 @@ begin
   end;
 end;
 
+{$WARN SYMBOL_PLATFORM OFF}
 function TGLAsyncTimer.GetThreadPriority: TThreadPriority;
 begin
   Result := FTimerThread.Priority;
 end;
+{$WARN SYMBOL_PLATFORM ON}
 
+{$WARN SYMBOL_PLATFORM OFF}
 procedure TGLAsyncTimer.SetThreadPriority(Value: TThreadPriority);
 begin
   FTimerThread.Priority := Value;
 end;
+{$WARN SYMBOL_PLATFORM ON}
 
 initialization
 
-  RegisterClass(TGLAsyncTimer);
-
+  System.Classes.RegisterClass(TGLAsyncTimer);
 
 end.

@@ -168,7 +168,7 @@ var
   IsDesignTime: Boolean = False;
   vProjectTargetName: TProjectTargetNameFunc;
 
-function GLPoint(const x, y: Integer): TGLPoint;
+function GLPoint(const x, y: Integer): TGLPoint; inline;
 {Builds a TColor from Red Green Blue components. }
 function RGB(const r, g, b: Byte): TColor; {$NODEFINE RGB} inline;
 function GetGLRect(const aLeft, aTop, aRight, aBottom: Integer): TGLRect;
@@ -328,7 +328,7 @@ begin
 {$ENDIF}
 end;
 
-function GLPoint(const x, y: Integer): TGLPoint;
+function GLPoint(const x, y: Integer): TGLPoint; inline;
 begin
   Result.X := x;
   Result.Y := y;

@@ -1229,7 +1229,10 @@ implementation
 uses
 
   GLPipelineTransformation,
-  OpenGLAdapter;
+  OpenGLAdapter,
+
+  Vcl.Dialogs
+  ;
 
 const
   cTextureMagFilter: array[maNearest..maLinear] of Cardinal =

@@ -3,7 +3,7 @@
 //
 {
    Misc. lists of vectors and entities
-
+ 
 }
 unit GLVectorLists;
 
@@ -14,7 +14,7 @@ interface
 uses
   System.Classes,
   System.SysUtils,
-
+  
   GLVectorTypes,
   GLVectorGeometry,
   GLPersistentClasses;
@@ -24,23 +24,22 @@ type
   TBaseListOptions = set of TBaseListOption;
 
   {Base class for lists, introduces common behaviours. }
-  TBaseList = class abstract (TPersistentObject)
-  strict private
-    FBufferItem: PByteArray;
-    FOptions: TBaseListOptions;
-    FTagString: string;
-  protected
-    FRevision: LongWord;
+  TBaseList = class(TPersistentObject)
+  private
     FCount: Integer;
     FCapacity: Integer;
     FGrowthDelta: Integer;
-//    FRevision: LongWord;
+    FBufferItem: PByteArray;
+    FOptions: TBaseListOptions;
+    FRevision: LongWord;
+    FTagString: string;
+  protected
+     // The base list pointer (untyped)
     FBaseList: PByteArray;
-    // The base list pointer (untyped)
     // Must be defined by all subclasses in their constructor(s)
     FItemSize: Integer;
     procedure SetCount(Val: Integer);  inline;
-        {Only function where list may be alloc'ed & freed.
+        {Only function where list may be alloc'ed & freed. 
            Resizes the array pointed by FBaseList, adjust the subclass's
            typed pointer accordingly if any. }
     procedure SetCapacity(NewCapacity: Integer); virtual;
@@ -93,10 +92,9 @@ type
   end;
 
   {Base class for vector lists, introduces common behaviours. }
-  TBaseVectorList = class abstract(TBaseList)
-  strict private
-    function GetItemAddress(Index: Integer): PFloatArray; inline;
+  TBaseVectorList = class(TBaseList)
   protected
+    function GetItemAddress(Index: Integer): PFloatArray; inline;
   public
     procedure WriteToFiler(writer: TVirtualWriter); override;
     procedure ReadFromFiler(reader: TVirtualReader); override;
@@ -111,7 +109,7 @@ type
     {Replace content of the list with lerp results between the two given lists.
      Note: you can't Lerp with Self!!! }
     procedure Lerp(const list1, list2: TBaseVectorList; lerpFactor: Single); dynamic; abstract;
-        {Replace content of the list with angle lerp between the two given lists.
+        {Replace content of the list with angle lerp between the two given lists. 
            Note: you can't Lerp with Self!!! }
     procedure AngleLerp(const list1, list2: TBaseVectorList; lerpFactor: Single);
     procedure AngleCombine(const list1: TBaseVectorList; intensity: Single);
@@ -125,12 +123,12 @@ type
    Similar to TList, but using TAffineVector as items.
    The list has stack-like push/pop methods. }
   TAffineVectorList = class(TBaseVectorList)
-  strict private
   private
-    function GetList: PAffineVectorArray; inline;
+    FList: PAffineVectorArray;
   protected
     function Get(Index: Integer): TAffineVector; inline;
     procedure Put(Index: Integer; const item: TAffineVector); inline;
+    procedure SetCapacity(NewCapacity: Integer); override;
   public
     constructor Create; override;
     procedure Assign(Src: TPersistent); override;
@@ -153,7 +151,7 @@ type
     function IndexOf(const item: TAffineVector): Integer;
     function FindOrAdd(const item: TAffineVector): Integer;
     property Items[Index: Integer]: TAffineVector read Get write Put; default;
-    property List: PAffineVectorArray read GetList;
+    property List: PAffineVectorArray read FList;
     procedure Translate(const delta: TAffineVector); overload; override;
     procedure Translate(const delta: TAffineVector; base, nb: Integer); overload;
     // Translates the given item
@@ -162,7 +160,6 @@ type
     procedure TranslateItems(Index: Integer; const delta: TAffineVector; nb: Integer);
     // Combines the given item
     procedure CombineItem(Index: Integer; const vector: TAffineVector; const f: Single);
-
         {Transforms all items by the matrix as if they were points. 
            ie. the translation component of the matrix is honoured. }
     procedure TransformAsPoints(const matrix: TMatrix);
@@ -180,7 +177,7 @@ type
    Similar to TList, but using TVector as items.
        The list has stack-like push/pop methods. }
   TVectorList = class(TBaseVectorList)
-  strict private
+  private
     FList: PVectorArray;
   protected
     function Get(Index: Integer): TVector; inline;
@@ -254,7 +251,6 @@ type
   public
     constructor Create; override;
     procedure Assign(src: TPersistent); override;
-
     function Add(const item: Integer): Integer; overload; inline;
     function AddNC(const item: Integer): Integer; overload; inline;
     procedure Add(const i1, i2: Integer); overload; inline;
@@ -268,7 +264,6 @@ type
 
     property Items[Index: Integer]: Integer read Get write Put; default;
     property List: PIntegerArray read FList;
-
     {Adds count items in an arithmetic serie.
      Items are (aBase), (aBase+aDelta) ... (aBase+(aCount-1)*aDelta) }
     procedure AddSerie(aBase, aDelta, aCount: Integer);
@@ -278,7 +273,6 @@ type
     procedure AddIntegers(const aList: TIntegerList); overload;
     {Add all integers from anArray into the list. }
     procedure AddIntegers(const anArray: array of Integer); overload;
-
     {Returns the minimum integer item, zero if list is empty. }
     function MinInteger: Integer;
     {Returns the maximum integer item, zero if list is empty. }
@@ -287,7 +281,6 @@ type
     procedure Sort;
     {Sort items in ascending order and remove duplicated integers. }
     procedure SortAndRemoveDuplicates;
-
     {Locate a value in a sorted list. }
     function BinarySearch(const Value: Integer): Integer; overload;
     {Locate a value in a sorted list.
@@ -301,7 +294,6 @@ type
     function AddSorted(const Value: Integer; const ignoreDuplicates: Boolean = False): Integer;
     {Removes an integer from a sorted list.  }
     procedure RemoveSorted(const Value: Integer);
-
     {Adds delta to all items in the list. }
     procedure Offset(delta: Integer); overload;
     procedure Offset(delta: Integer; const base, nb: Integer); overload;
@@ -321,7 +313,6 @@ type
     procedure Put(Index: Integer; const item: Single); inline;
     procedure SetCapacity(NewCapacity: Integer); override;
   public
-
     constructor Create; override;
     procedure Assign(Src: TPersistent); override;
     function Add(const item: Single): Integer; overload; inline;
@@ -366,19 +357,15 @@ type
     procedure Put(Index: Integer; const item: Double);
     procedure SetCapacity(NewCapacity: Integer); override;
   public
-
     constructor Create; override;
     procedure Assign(Src: TPersistent); override;
     function Add(const item: Double): Integer;
     procedure Push(const Val: Double);
     function Pop: Double;
     procedure Insert(Index: Integer; const item: Double);
-
     property Items[Index: Integer]: Double read Get write Put; default;
     property List: PDoubleArrayList read FList;
-
     procedure AddSerie(aBase, aDelta: Double; aCount: Integer);
-
     {Adds delta to all items in the list. }
     procedure Offset(delta: Double); overload;
         {Adds to each item the corresponding item in the delta list.
@@ -391,10 +378,8 @@ type
     procedure Sqr;
     {SquareRoot all items. }
     procedure Sqrt;
-
     {Computes the sum of all elements. }
     function Sum: Double;
-
     function Min: Single;
     function Max: Single;
   end;
@@ -403,10 +388,8 @@ type
    Similar to TList, but using Byte as items.  }
   TByteList = class(TBaseList)
   private
-     
     FList: PByteArray;
   protected
-
     function Get(Index: Integer): Byte; inline;
     procedure Put(Index: Integer; const item: Byte); inline;
     procedure SetCapacity(NewCapacity: Integer); override;
@@ -424,7 +407,6 @@ type
         The list has stack-like push/pop methods. }
   TQuaternionList = class(TBaseVectorList)
   private
-
     FList: PQuaternionArray;
   protected
     function Get(Index: Integer): TQuaternion;
@@ -473,7 +455,6 @@ type
     procedure Put(Index: Integer; const item: T4ByteData);
     procedure SetCapacity(NewCapacity: Integer); override;
   public
-
     constructor Create; override;
     procedure Assign(Src: TPersistent); override;
     function  Add(const item: T4ByteData): Integer; overload;
@@ -499,18 +480,14 @@ type
 
   TLongWordList = class(TBaseList)
   private
-
     FList: PLongWordArray;
   protected
-
     function Get(Index: Integer): LongWord;
     procedure Put(Index: Integer; const item: LongWord);
     procedure SetCapacity(newCapacity: Integer); override;
   public
-    
     constructor Create; override;
     procedure Assign(src: TPersistent); override;
-
     function Add(const item: LongWord): Integer; overload;
     function AddNC(const item: LongWord): Integer; overload;
     procedure Add(const i1, i2: LongWord); overload;
@@ -524,7 +501,6 @@ type
 
     property Items[Index: Integer]: LongWord read Get write Put; default;
     property List: PLongWordArray read FList;
-
     {Add n integers at the address starting at (and including) first. }
     procedure AddLongWords(const First: PLongWord; n: Integer); overload;
     {Add all integers from aList into the list. }
@@ -828,8 +804,8 @@ begin
   Assert(Val >= 0);
   if Val > FCapacity then
     SetCapacity(Val);
-  {if (Val > FCount) and (bloSetCountResetsMemory in FOptions) then
-    FillChar(FBaseList[FItemSize * FCount], SizeOf(FBaseList[FItemSize * FCount]), Byte(0));}
+  if (Val > FCount) and (bloSetCountResetsMemory in FOptions) then
+    FillChar(FBaseList[FItemSize * FCount], SizeOf(FBaseList[FItemSize * FCount]), Byte(0));
   FCount := Val;
   Inc(FRevision);
 end;
@@ -1244,7 +1220,7 @@ begin
   begin
     inherited;
     if (Src is TAffineVectorList) then
-      System.Move(TAffineVectorList(Src).FBaseList^, FBaseList^, FCount * SizeOf(TAffineVector));
+      System.Move(TAffineVectorList(Src).FList^, FList^, FCount * SizeOf(TAffineVector));
   end
   else
     Clear;
@@ -1255,7 +1231,7 @@ begin
   Result := FCount;
   if Result = FCapacity then
     SetCapacity(FCapacity + FGrowthDelta);
-  PAffineVectorArray(FBaseList)^[Result] := Item;
+  FList^[Result] := Item;
   Inc(FCount);
   Inc(FRevision);
 end;
@@ -1270,8 +1246,8 @@ begin
   Inc(FCount, 2);
   while FCount > FCapacity do
     SetCapacity(FCapacity + FGrowthDelta);
-  PAffineVectorArray(FBaseList)^[FCount - 2] := i1;
-  PAffineVectorArray(FBaseList)^[FCount - 1] := i2;
+  FList^[FCount - 2] := i1;
+  FList^[FCount - 1] := i2;
   Inc(FRevision);
 end;
 
@@ -1280,9 +1256,9 @@ begin
   Inc(FCount, 3);
   while FCount > FCapacity do
     SetCapacity(FCapacity + FGrowthDelta);
-  PAffineVectorArray(FBaseList)^[FCount - 3] := i1;
-  PAffineVectorArray(FBaseList)^[FCount - 2] := i2;
-  PAffineVectorArray(FBaseList)^[FCount - 1] := i3;
+  FList^[FCount - 3] := i1;
+  FList^[FCount - 2] := i2;
+  FList^[FCount - 1] := i3;
   Inc(FRevision);
 end;
 
@@ -1388,7 +1364,7 @@ begin
   begin
     if Count + list.Count > Capacity then
       Capacity := Count + list.Count;
-    System.Move(list.FBaseList[0], FBaseList[Count], list.Count * SizeOf(TAffineVector));
+    System.Move(list.FList[0], FList[Count], list.Count * SizeOf(TAffineVector));
     Inc(FCount, list.Count);
   end;
   Inc(FRevision);
@@ -1399,12 +1375,7 @@ begin
 {$IFOPT R+}
     Assert(Cardinal(Index) < Cardinal(FCount));
 {$ENDIF}
-  Result := PAffineVectorArray(FBaseList)^[Index];
-end;
-
-function TAffineVectorList.GetList: PAffineVectorArray;
-begin
-  Result := PAffineVectorArray(FBaseList);
+  Result := FList^[Index];
 end;
 
 procedure TAffineVectorList.Insert(Index: Integer; const Item: TAffineVector);
@@ -1415,9 +1386,9 @@ begin
   if FCount = FCapacity then
     SetCapacity(FCapacity + FGrowthDelta);
   if Index < FCount then
-    System.Move(FBaseList[Index], FBaseList[Index + 1],
+    System.Move(FList[Index], FList[Index + 1],
       (FCount - Index) * SizeOf(TAffineVector));
-  PAffineVectorArray(FBaseList)^[Index] := Item;
+  FList^[Index] := Item;
   Inc(FCount);
   Inc(FRevision);
 end;
@@ -1426,13 +1397,13 @@ function TAffineVectorList.IndexOf(const item: TAffineVector): Integer;
 var
   I: Integer;
 begin
+  Result := -1;
   for I := 0 to Count - 1 do
-    if VectorEquals(item, PAffineVectorArray(FBaseList)^[I]) then
+    if VectorEquals(item, FList^[I]) then
     begin
       Result := I;
-      Exit;
+      Break;
     end;
-  Result := -1;
 end;
 
 function TAffineVectorList.FindOrAdd(const item: TAffineVector): Integer;
@@ -1450,8 +1421,14 @@ begin
 {$IFOPT R+}
     Assert(Cardinal(Index) < Cardinal(FCount));
 {$ENDIF}
-  PAffineVectorArray(FBaseList)^[Index] := Item;
+  FList^[Index] := Item;
   Inc(FRevision);
+end;
+
+procedure TAffineVectorList.SetCapacity(NewCapacity: Integer);
+begin
+  inherited;
+  FList := PAffineVectorArray(FBaseList);
 end;
 
 procedure TAffineVectorList.Push(const Val: TAffineVector);
@@ -1473,13 +1450,13 @@ end;
 
 procedure TAffineVectorList.Translate(const delta: TAffineVector);
 begin
-  VectorArrayAdd(PAffineVectorArray(FBaseList), delta, Count, PAffineVectorArray(FBaseList));
+  VectorArrayAdd(FList, delta, Count, FList);
   Inc(FRevision);
 end;
 
 procedure TAffineVectorList.Translate(const delta: TAffineVector; base, nb: Integer);
 begin
-  VectorArrayAdd(@PAffineVectorArray(FBaseList)[base], delta, nb, @PAffineVectorArray(FBaseList)[base]);
+  VectorArrayAdd(@FList[base], delta, nb, @FList[base]);
   Inc(FRevision);
 end;
 
@@ -1488,7 +1465,7 @@ begin
 {$IFOPT R+}
     Assert(Cardinal(Index) < Cardinal(FCount));
 {$ENDIF}
-  AddVector(PAffineVectorArray(FBaseList)^[Index], delta);
+  AddVector(FList^[Index], delta);
   Inc(FRevision);
 end;
 
@@ -1500,7 +1477,7 @@ begin
     if nb > FCount then
         nb := FCount;
 {$ENDIF}
-  VectorArrayAdd(@PAffineVectorArray(FBaseList)[Index], delta, nb - Index, @PAffineVectorArray(FBaseList)[Index]);
+  VectorArrayAdd(@FList[Index], delta, nb - Index, @FList[Index]);
   Inc(FRevision);
 end;
 
@@ -1509,7 +1486,7 @@ begin
 {$IFOPT R+}
     Assert(Cardinal(Index) < Cardinal(FCount));
 {$ENDIF}
-  CombineVector(PAffineVectorArray(FBaseList)^[Index], vector, @f);
+  CombineVector(FList^[Index], vector, @f);
   Inc(FRevision);
 end;
 
@@ -1518,7 +1495,7 @@ var
   I: Integer;
 begin
   for I := 0 to FCount - 1 do
-    PAffineVectorArray(FBaseList)^[I] := VectorTransform(PAffineVectorArray(FBaseList)^[I], matrix);
+    FList^[I] := VectorTransform(FList^[I], matrix);
   Inc(FRevision);
 end;
 
@@ -1538,7 +1515,7 @@ var
   I: Integer;
 begin
   for I := 0 to FCount - 1 do
-    PAffineVectorArray(FBaseList)^[I] := VectorTransform(PAffineVectorArray(FBaseList)^[I], matrix);
+    FList^[I] := VectorTransform(FList^[I], matrix);
   Inc(FRevision);
 end;
 
@@ -1565,7 +1542,7 @@ procedure TAffineVectorList.Scale(factor: Single);
 begin
   if (Count > 0) and (factor <> 1) then
   begin
-    ScaleFloatArray(@PAffineVectorArray(FBaseList)[0].X, Count * 3, factor);
+    ScaleFloatArray(@FList[0].X, Count * 3, factor);
     Inc(FRevision);
   end;
 end;
@@ -1575,7 +1552,7 @@ var
   I: Integer;
 begin
   for I := 0 to Count - 1 do
-    ScaleVector(PAffineVectorArray(FBaseList)^[I], factors);
+    ScaleVector(FList^[I], factors);
   Inc(FRevision);
 end;
 

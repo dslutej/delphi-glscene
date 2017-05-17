@@ -435,7 +435,12 @@ implementation
 
 uses
 
-  GLPersistentClasses;
+  GLPersistentClasses,
+
+  System.Types,
+  Vcl.Forms,
+  Winapi.Windows
+  ;
 
 const
   EPS =  0.001;

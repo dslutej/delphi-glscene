@@ -30,7 +30,7 @@
 {.$DEFINE GLS_NO_REGIONS}
 
 // Activate Logging
-{.$DEFINE GLS_LOGGING}
+{$DEFINE GLS_LOGGING}
 
 // Activate OpenGL debug mode
 {.$DEFINE GLS_OPENGL_DEBUG}
@@ -103,13 +103,11 @@
   Error: unsupported version, requires at least Delphi XE2
 {$ENDIF}
 
-{$IFDEF GLS_ASM}
+//{$IFDEF GLS_ASM}
   {$IFDEF GLS_INLINE}
     {$DEFINE GLS_INLINE_VICE_ASM}
   {$ENDIF}
-{$ENDIF}
-
-{$DEFINE GLS_INLINE_VICE_ASM}
+//{$ENDIF}
 
 {$IFNDEF GLS_NO_REGIONS}
   {$DEFINE GLS_REGIONS}

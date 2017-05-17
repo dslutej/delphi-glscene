@@ -419,6 +419,11 @@ type
 //-------------------------------------------------------------------
 //-------------------------------------------------------------------
 implementation
+
+uses
+
+  Winapi.Windows;
+
 //-------------------------------------------------------------------
 //-------------------------------------------------------------------
 //-------------------------------------------------------------------
@@ -901,7 +906,7 @@ begin
     AutoCompleteCommand(MatchCount, AdditionalCommandsMatchList,
       CommandsMatchList);
     if MatchCount = 0 then
-      Beep;
+      System.SysUtils.Beep;
 
     if CurrentTickCount - FPreviousTickCount < Controls.FDblClickDelay then
       if MatchCount > 1 then

@@ -532,13 +532,12 @@ var
   m1, m2, m3, Deside: Integer;
   dmin, dmax, x1, x2, y1, y2: Single;
   minY1, maxY1, minX1, maxX1, ScaleFont, ActualValue: Single;
-  I, J, K, V, lcnt, m: Integer;
+  I, J, K, lcnt, m: Integer;
   CastTab: TCastArray;
   h: TVectorL4D;
   sh: TVectorL4I;
   xh, yh: TVectorL4D;
   temp1, temp2: Single;
-  r: Byte;
   IUniqueList: TList<Single>;
 
   // ------- service xsec west east lin. interpol -------------------------------

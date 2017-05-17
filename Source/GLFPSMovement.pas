@@ -210,7 +210,10 @@ uses
 
   GLCoordinates,
   GLVectorTypes,
-  OpenGLAdapter;
+  OpenGLAdapter,
+
+  WinApi.Windows
+  ;
 
 function GetFPSMovement(behaviours: TGLBehaviours): TGLBFPSMovement; overload;
 var

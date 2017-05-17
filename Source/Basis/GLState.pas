@@ -528,9 +528,9 @@ type
     function GetMaterialShininess(const aFace: TCullFaceMode): Integer; inline;
   public
 
-	constructor Create; virtual;
+  	constructor Create; virtual;
     destructor Destroy; override;
-    procedure PushAttrib(stateTypes: TGLStateTypes); inline;
+    procedure PushAttrib(const stateTypes: TGLStateTypes); inline;
     procedure PopAttrib(); inline;
     procedure Enable(const aState: TGLState);
     procedure Disable(const aState: TGLState);
@@ -1438,7 +1438,7 @@ begin
   GL.PopAttrib();
 end;
 
-procedure TGLStateCache.PushAttrib(stateTypes: TGLStateTypes);
+procedure TGLStateCache.PushAttrib(const stateTypes: TGLStateTypes);
 var
   tempFlag: Cardinal;
   I: Integer;

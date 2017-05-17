@@ -32,8 +32,6 @@ type
   EFilerException = class(Exception)
   end;
 
-  // TGLXCollectionItem
-
   {  Base class for implementing a XCollection item. 
     NOTES : 
      Don't forget to override the ReadFromFiler/WriteToFiler persistence
@@ -43,41 +41,30 @@ type
      }
   TGLXCollectionItem = class(TGLInterfacedPersistent)
   private
-     
     FOwner: TGLXCollection;
     FName: string;
-
   protected
-    
     function GetName: string; virtual;
     procedure SetName(const val: string); virtual;
     function GetOwner: TPersistent; override;
-
     {  Override this function to write subclass data. }
     procedure WriteToFiler(writer: TWriter); virtual;
     {  Override this function to read subclass data. }
     procedure ReadFromFiler(reader: TReader); virtual;
     {  Override to perform things when owner form has been loaded. }
     procedure Loaded; dynamic;
-
     {  Triggers an EFilerException with appropriate version message. }
     procedure RaiseFilerException(const archiveVersion: integer);
-
   public
-    
     constructor Create(aOwner: TGLXCollection); virtual;
     destructor Destroy; override;
-
     function GetNamePath: string; override;
     property Owner: TGLXCollection read FOwner;
-
     {  Default implementation uses WriteToFiler/ReadFromFiler.  }
     procedure Assign(Source: TPersistent); override;
-
     procedure MoveUp;
     procedure MoveDown;
     function Index: integer;
-
     {  Returns a user-friendly denomination for the class. 
       This denomination is used for picking a texture image class
       in the IDE expert. }
@@ -102,15 +89,11 @@ type
     {  Allows the XCollectionItem class to determine if it should be allowed
       to be added to the given collection. }
     class function CanAddTo(collection: TGLXCollection): Boolean; virtual;
-
   published
-    
     property Name: string read FName write SetName;
   end;
 
   TGLXCollectionItemClass = class of TGLXCollectionItem;
-
-  // TGLXCollection
 
   {  Holds a list of TGLXCollectionItem objects. 
     This class looks a lot like a polymorphic-enabled TCollection, it is
@@ -121,38 +104,28 @@ type
     with polymorphism-support and full backward compatibility). }
   TGLXCollection = class(TPersistent)
   private
-     
     FOwner: TPersistent;
     FList: TList;
     FCount: integer;
-
     {  Archive Version is used to update the way data items is loaded. }
     FArchiveVersion: integer;
   protected
-    
     function GetItems(Index: integer): TGLXCollectionItem;
     function GetOwner: TPersistent; override;
-
     procedure ReadFromFiler(reader: TReader);
     procedure WriteToFiler(writer: TWriter);
-
   public
-    
     constructor Create(aOwner: TPersistent); virtual;
     destructor Destroy; override;
-
     procedure Assign(Source: TPersistent); override;
     procedure Loaded;
-
     property Owner: TPersistent read FOwner write FOwner;
     function GetNamePath: string; override;
-
     {  Class of the items. 
       Unlike TCollection, items can be of ItemsClass OR ANY of its
       subclasses, ie. this function is used only for asserting your adding
       objects of the right class, and not for persistence. }
     class function ItemsClass: TGLXCollectionItemClass; virtual;
-
     property Items[index: integer]: TGLXCollectionItem read GetItems; default;
     property Count: integer read FCount;
     function Add(anItem: TGLXCollectionItem): integer;
@@ -170,7 +143,6 @@ type
     {  Indicates if an object of the given class can be added. 
       This function is used to enforce Unique XCollection. }
     function CanAdd(aClass: TGLXCollectionItemClass): Boolean; virtual;
-
     property archiveVersion: integer read FArchiveVersion;
   end;
 
@@ -178,7 +150,6 @@ type
 procedure RegisterXCollectionDestroyEvent(notifyEvent: TNotifyEvent);
 {  DeRegisters event. }
 procedure DeRegisterXCollectionDestroyEvent(notifyEvent: TNotifyEvent);
-
 {  Registers a TGLXCollectionItem subclass for persistence requirements. }
 procedure RegisterXCollectionItemClass(aClass: TGLXCollectionItemClass);
 {  Removes a TGLXCollectionItem subclass from the list. }
@@ -220,14 +191,10 @@ end;
 
 // ---------- internal global routines (used by xcollection editor) -------------
 
-// RegisterXCollectionDestroyEvent
-
 procedure RegisterXCollectionDestroyEvent(notifyEvent: TNotifyEvent);
 begin
   vXCollectionDestroyEvent := notifyEvent;
 end;
-
-// DeRegisterXCollectionDestroyEvent
 
 procedure DeRegisterXCollectionDestroyEvent(notifyEvent: TNotifyEvent);
 begin
@@ -235,8 +202,6 @@ begin
 end;
 
 // ------------------------------------------------------------------------------
-
-// RegisterXCollectionItemClass
 
 procedure RegisterXCollectionItemClass(aClass: TGLXCollectionItemClass);
 begin
@@ -246,8 +211,6 @@ begin
     vXCollectionItemClasses.Add(aClass);
 end;
 
-// UnregisterXCollectionItemClass
-
 procedure UnregisterXCollectionItemClass(aClass: TGLXCollectionItemClass);
 begin
   if not Assigned(vXCollectionItemClasses) then
@@ -255,8 +218,6 @@ begin
   if vXCollectionItemClasses.IndexOf(aClass) >= 0 then
     vXCollectionItemClasses.Remove(aClass);
 end;
-
-// FindXCollectionItemClass
 
 function FindXCollectionItemClass(const ClassName: string)
   : TGLXCollectionItemClass;
@@ -273,8 +234,6 @@ begin
         Break;
       end;
 end;
-
-// GetXCollectionItemClassesList
 
 function GetXCollectionItemClassesList(baseClass
   : TGLXCollectionItemClass = nil): TList;
@@ -301,8 +260,6 @@ end;
 // ------------------ TGLXCollectionItem ------------------
 // ------------------
 
- 
-
 constructor TGLXCollectionItem.Create(aOwner: TGLXCollection);
 begin
   inherited Create;
@@ -317,8 +274,6 @@ begin
   end;
 end;
 
- 
-
 destructor TGLXCollectionItem.Destroy;
 begin
   if Assigned(FOwner) then
@@ -328,8 +283,6 @@ begin
   end;
   inherited Destroy;
 end;
-
-// Assign
 
 procedure TGLXCollectionItem.Assign(Source: TPersistent);
 begin
@@ -341,21 +294,15 @@ begin
     inherited Assign(Source);
 end;
 
-// SetName
-
 procedure TGLXCollectionItem.SetName(const val: string);
 begin
   FName := val;
 end;
 
-// GetOwner
-
 function TGLXCollectionItem.GetOwner: TPersistent;
 begin
   result := FOwner;
 end;
-
-// WriteToFiler
 
 procedure TGLXCollectionItem.WriteToFiler(writer: TWriter);
 begin
@@ -366,35 +313,31 @@ begin
   end;
 end;
 
-// ReadFromFiler
-
 procedure TGLXCollectionItem.ReadFromFiler(reader: TReader);
+{$IFOPT C+}
 var
   ver: integer;
+{$ENDIF}  
 begin
   with reader do
   begin
+    {$IFOPT C+}
     ver := ReadInteger;
     Assert(ver = 0);
+	{$ENDIF}
     FName := ReadString;
   end;
 end;
-
-// Loaded
 
 procedure TGLXCollectionItem.Loaded;
 begin
   // does nothing by default
 end;
 
-// GetName
-
 function TGLXCollectionItem.GetName: string;
 begin
   result := FName;
 end;
-
-// GetNamePath
 
 function TGLXCollectionItem.GetNamePath: string;
 begin
@@ -403,8 +346,6 @@ begin
   else
     result := inherited GetNamePath;
 end;
-
-// MoveUp
 
 procedure TGLXCollectionItem.MoveUp;
 var
@@ -418,8 +359,6 @@ begin
   end;
 end;
 
-// MoveDown
-
 procedure TGLXCollectionItem.MoveDown;
 var
   i: integer;
@@ -432,8 +371,6 @@ begin
   end;
 end;
 
-// Index
-
 function TGLXCollectionItem.Index: integer;
 begin
   if Assigned(Owner) then
@@ -442,36 +379,26 @@ begin
     result := -1;
 end;
 
-// RaiseFilerException
-
 procedure TGLXCollectionItem.RaiseFilerException(const archiveVersion: integer);
 begin
   raise EFilerException.Create(ClassName + strUnknownArchiveVersion +
     IntToStr(archiveVersion));
 end;
 
-// FriendlyDescription
-
 class function TGLXCollectionItem.FriendlyDescription: string;
 begin
   result := FriendlyName;
 end;
-
-// ItemCategory
 
 class function TGLXCollectionItem.ItemCategory: string;
 begin
   result := '';
 end;
 
-// UniqueXCollectionItem
-
 class function TGLXCollectionItem.UniqueItem: Boolean;
 begin
   result := False;
 end;
-
-// CanAddTo
 
 class function TGLXCollectionItem.CanAddTo(collection: TGLXCollection): Boolean;
 begin
@@ -483,16 +410,12 @@ end;
 // ------------------ TGLXCollection ------------------
 // ------------------
 
- 
-
 constructor TGLXCollection.Create(aOwner: TPersistent);
 begin
   inherited Create;
   FOwner := aOwner;
   FList := TList.Create;
 end;
-
- 
 
 destructor TGLXCollection.Destroy;
 begin
@@ -502,8 +425,6 @@ begin
   FList.Free;
   inherited Destroy;
 end;
-
-// Assign
 
 procedure TGLXCollection.Assign(Source: TPersistent);
 var
@@ -530,8 +451,6 @@ begin
   FCount := FList.Count;
 end;
 
-// Loaded
-
 procedure TGLXCollection.Loaded;
 var
   i: integer;
@@ -539,8 +458,6 @@ begin
   for i := 0 to FList.Count - 1 do
     TGLXCollectionItem(FList[i]).Loaded;
 end;
-
-// WriteToFiler
 
 procedure TGLXCollection.WriteToFiler(writer: TWriter);
 var
@@ -584,8 +501,6 @@ begin
   end;
 end;
 
-// ReadFromFiler
-//
 procedure TGLXCollection.ReadFromFiler(reader: TReader);
 var
   vt: TValueType;
@@ -677,28 +592,20 @@ begin
   FCount := FList.Count;
 end;
 
-// ItemsClass
-
 class function TGLXCollection.ItemsClass: TGLXCollectionItemClass;
 begin
   result := TGLXCollectionItem;
 end;
-
-// GetItems
 
 function TGLXCollection.GetItems(Index: integer): TGLXCollectionItem;
 begin
   result := TGLXCollectionItem(FList[index]);
 end;
 
-// GetOwner
-
 function TGLXCollection.GetOwner: TPersistent;
 begin
   result := FOwner;
 end;
-
-// GetNamePath
 
 function TGLXCollection.GetNamePath: string;
 var
@@ -712,8 +619,6 @@ begin
     exit;
   result := s + '.XCollection';
 end;
-
-// Add
 
 function TGLXCollection.Add(anItem: TGLXCollectionItem): integer;
 begin
@@ -729,8 +634,6 @@ begin
   FCount := FList.Count;
 end;
 
-// GetOrCreate
-
 function TGLXCollection.GetOrCreate(anItem: TGLXCollectionItemClass)
   : TGLXCollectionItem;
 var
@@ -743,8 +646,6 @@ begin
   else
     result := anItem.Create(Self);
 end;
-
-// Delete
 
 procedure TGLXCollection.Delete(Index: integer);
 begin
@@ -759,8 +660,6 @@ begin
   FCount := FList.Count;
 end;
 
-// Remove
-
 procedure TGLXCollection.Remove(anItem: TGLXCollectionItem);
 var
   i: integer;
@@ -769,8 +668,6 @@ begin
   if i >= 0 then
     Delete(i);
 end;
-
-// Clear
 
 procedure TGLXCollection.Clear;
 var
@@ -787,14 +684,10 @@ begin
   FCount := 0;
 end;
 
-// IndexOf
-
 function TGLXCollection.IndexOf(anItem: TGLXCollectionItem): integer;
 begin
   result := FList.IndexOf(anItem);
 end;
-
-// IndexOfClass
 
 function TGLXCollection.IndexOfClass(aClass: TGLXCollectionItemClass): integer;
 var
@@ -808,8 +701,6 @@ begin
       Break;
     end;
 end;
-
-// GetByClass
 
 function TGLXCollection.GetByClass(aClass: TGLXCollectionItemClass)
   : TGLXCollectionItem;
@@ -825,8 +716,6 @@ begin
     end;
 end;
 
-// IndexOfName
-
 function TGLXCollection.IndexOfName(const aName: string): integer;
 var
   i: integer;
@@ -839,8 +728,6 @@ begin
       Break;
     end;
 end;
-
-// CanAdd
 
 function TGLXCollection.CanAdd(aClass: TGLXCollectionItemClass): Boolean;
 var

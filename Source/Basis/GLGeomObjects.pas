@@ -506,6 +506,7 @@ implementation
 
 uses
   GLVectorLists,
+
   System.SysUtils;
 
 // ------------------
@@ -2780,6 +2781,8 @@ begin
           else
             StopOffset :=0;
         end ;
+      else
+        StartOffset := 0;
     end;
 
     // handle texture generation

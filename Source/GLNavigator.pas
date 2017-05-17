@@ -159,6 +159,12 @@ type
 
 implementation
 
+uses
+
+  System.Types,
+  Vcl.Forms,
+  Winapi.Windows;
+
 Constructor TGLNavigator.Create(AOwner : TComponent);
 Begin
   inherited;

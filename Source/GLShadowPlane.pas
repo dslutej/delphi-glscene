@@ -133,7 +133,10 @@ uses
   GLPersistentClasses,
   GLPipelineTransformation,
   GLVectorTypes,
-  OpenGLAdapter;
+  OpenGLAdapter,
+
+  System.Types
+  ;
 //-------------------------------------------------------------
 //-------------------------------------------------------------
 //-------------------------------------------------------------

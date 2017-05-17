@@ -119,7 +119,10 @@ implementation
 
 uses
 
-  OpenGLAdapter
+  OpenGLAdapter,
+
+  Vcl.Graphics,
+  WinApi.Windows
   ;
 //-------------------------------------------------------------
 //-------------------------------------------------------------

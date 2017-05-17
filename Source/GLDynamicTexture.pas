@@ -102,7 +102,10 @@ implementation
 
 uses
   GLVectorGeometry,
-  OpenGLAdapter;
+  OpenGLAdapter,
+
+  System.Types
+  ;
 
 { TGLDynamicTextureImage }
 

@@ -47,11 +47,12 @@ type
     FOwner: TPersistent;
     FUpdating: Integer;
     FOnNotifyChange: TNotifyEvent;
+  protected
+    function GetOwner: TPersistent; override; final;
   public
     constructor Create(AOwner: TPersistent); virtual;
     procedure NotifyChange(Sender: TObject); virtual;
     procedure Notification(Sender: TObject; Operation: TOperation); virtual;
-    function GetOwner: TPersistent; override;
     property Updating: Integer read FUpdating;
     procedure BeginUpdate; inline;
     procedure EndUpdate; inline;
@@ -62,18 +63,17 @@ type
   {A base class describing the "cadenceing" interface.  }
   TGLCadenceAbleComponent = class(TGLComponent, IGLProgessAble)
   public
-
     procedure DoProgress(const progressTime: TProgressTimes); virtual;
   end;
 
   {A base class describing the "update" interface.  }
-  TGLUpdateAbleComponent = class(TGLCadenceAbleComponent, IGLNotifyAble)
+  TGLUpdateAbleComponent = class (TGLCadenceAbleComponent, IGLNotifyAble)
   public
-
     procedure NotifyChange(Sender: TObject); virtual;
   end;
 
-  TGLNotifyCollection = class(TOwnedCollection)
+
+  TGLNotifyCollection = class (TOwnedCollection)
   private
     FOnNotifyChange: TNotifyEvent;
   protected
@@ -103,12 +103,12 @@ procedure TGLUpdateAbleObject.NotifyChange(Sender: TObject);
 begin
   if FUpdating = 0 then
   begin
-    if Assigned(Owner) then
+    if Assigned(FOwner) then
     begin
-      if Owner is TGLUpdateAbleObject then
-        TGLUpdateAbleObject(Owner).NotifyChange(Self)
-      else if Owner is TGLUpdateAbleComponent then
-        TGLUpdateAbleComponent(Owner).NotifyChange(Self);
+      if FOwner is TGLUpdateAbleObject then
+        TGLUpdateAbleObject(FOwner).NotifyChange(Self)
+      else if FOwner is TGLUpdateAbleComponent then
+        TGLUpdateAbleComponent(FOwner).NotifyChange(Self);
     end;
     if Assigned(FOnNotifyChange) then
       FOnNotifyChange(Self);
