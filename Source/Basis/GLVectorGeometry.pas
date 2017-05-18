@@ -5082,6 +5082,109 @@ begin
   result.Z.Z := m1.Z.X * m2.X.Z + m1.Z.Y * m2.Y.Z + m1.Z.Z * m2.Z.Z;
 end;
 
+{$codealign 16}
+function MatrixMultiply(const m1, m2: TMatrix): TMatrix;
+asm
+
+  // Move 16 float32s into xmm-registers. Unaligned :/
+  movups xmm4, [m2.X]
+  movups xmm5, [m2.Y]
+  movups xmm6, [m2.Z]
+  movups xmm7, [m2.W]
+
+  // ---------------------------------------------------------------------------
+
+  movss  xmm0, [m1]+0
+  movss  xmm1, [m1]+4
+  movss  xmm2, [m1]+8
+  movss  xmm3, [m1]+12
+
+  shufps xmm1, xmm1, 0
+  shufps xmm2, xmm2, 0
+  shufps xmm3, xmm3, 0
+
+  mulps  xmm0, xmm4
+  mulps  xmm1, xmm5
+  mulps  xmm2, xmm6
+  mulps  xmm3, xmm7
+
+  addps  xmm0, xmm1
+  addps  xmm0, xmm2
+  addps  xmm0, xmm3
+
+  movups [Result.X], xmm0
+
+  // ---------------------------------------------------------------------------
+
+  movss  xmm0, [m1]+16
+  movss  xmm1, [m1]+20
+  movss  xmm2, [m1]+24
+  movss  xmm3, [m1]+28
+
+  shufps xmm1, xmm1, 0
+  shufps xmm2, xmm2, 0
+  shufps xmm3, xmm3, 0
+
+  mulps  xmm0, xmm4
+  mulps  xmm1, xmm5
+  mulps  xmm2, xmm6
+  mulps  xmm3, xmm7
+
+  addps  xmm0, xmm1
+  addps  xmm0, xmm2
+  addps  xmm0, xmm3
+
+  movups [Result.Y], xmm0
+
+  // ---------------------------------------------------------------------------
+
+  movss  xmm0, [m1]+32
+  movss  xmm1, [m1]+36
+  movss  xmm2, [m1]+40
+  movss  xmm3, [m1]+44
+
+  shufps xmm0, xmm0, 0
+  shufps xmm1, xmm1, 0
+  shufps xmm2, xmm2, 0
+  shufps xmm3, xmm3, 0
+
+  mulps  xmm0, xmm4
+  mulps  xmm1, xmm5
+  mulps  xmm2, xmm6
+  mulps  xmm3, xmm7
+
+  addps  xmm0, xmm1
+  addps  xmm0, xmm2
+  addps  xmm0, xmm3
+
+  movups [Result.Z], xmm0
+
+  // ---------------------------------------------------------------------------
+
+  movss  xmm0, [m1]+48
+  movss  xmm1, [m1]+52
+  movss  xmm2, [m1]+56
+  movss  xmm3, [m1]+60
+
+  shufps xmm0, xmm0, 0
+  shufps xmm1, xmm1, 0
+  shufps xmm2, xmm2, 0
+  shufps xmm3, xmm3, 0
+
+  mulps  xmm0, xmm4
+  mulps  xmm1, xmm5
+  mulps  xmm2, xmm6
+  mulps  xmm3, xmm7
+
+  addps  xmm0, xmm1
+  addps  xmm0, xmm2
+  addps  xmm0, xmm3
+
+  movups [Result.W], xmm0
+
+end;
+
+{
 function MatrixMultiply(const m1, m2: TMatrix): TMatrix;
 begin
   result.X.X := m1.X.X * m2.X.X + m1.X.Y * m2.Y.X + m1.X.Z * m2.Z.X +
@@ -5117,7 +5220,113 @@ begin
   result.W.W := m1.W.X * m2.X.W + m1.W.Y * m2.Y.W + m1.W.Z * m2.Z.W +
     m1.W.W * m2.W.W;
 end;
+}
 
+{$codealign 16}
+procedure MatrixMultiply(const m1, m2: TMatrix; var MResult: TMatrix);
+asm
+
+  // Move 16 float32s into xmm-registers. Unaligned :/
+  movups xmm4, [m2.X]
+  movups xmm5, [m2.Y]
+  movups xmm6, [m2.Z]
+  movups xmm7, [m2.W]
+
+  // ---------------------------------------------------------------------------
+
+  movss  xmm0, [m1]+0
+  movss  xmm1, [m1]+4
+  movss  xmm2, [m1]+8
+  movss  xmm3, [m1]+12
+
+  shufps xmm0, xmm0, 0
+  shufps xmm1, xmm1, 0
+  shufps xmm2, xmm2, 0
+  shufps xmm3, xmm3, 0
+
+  mulps  xmm0, xmm4
+  mulps  xmm1, xmm5
+  mulps  xmm2, xmm6
+  mulps  xmm3, xmm7
+
+  addps  xmm0, xmm1
+  addps  xmm0, xmm2
+  addps  xmm0, xmm3
+
+  movups [MResult.X], xmm0
+
+  // ---------------------------------------------------------------------------
+
+  movss  xmm0, [m1]+16
+  movss  xmm1, [m1]+20
+  movss  xmm2, [m1]+24
+  movss  xmm3, [m1]+28
+
+  shufps xmm0, xmm0, 0
+  shufps xmm1, xmm1, 0
+  shufps xmm2, xmm2, 0
+  shufps xmm3, xmm3, 0
+
+  mulps  xmm0, xmm4
+  mulps  xmm1, xmm5
+  mulps  xmm2, xmm6
+  mulps  xmm3, xmm7
+
+  addps  xmm0, xmm1
+  addps  xmm0, xmm2
+  addps  xmm0, xmm3
+
+  movups [MResult.Y], xmm0
+
+  // ---------------------------------------------------------------------------
+
+  movss  xmm0, [m1]+32
+  movss  xmm1, [m1]+36
+  movss  xmm2, [m1]+40
+  movss  xmm3, [m1]+44
+
+  shufps xmm0, xmm0, 0
+  shufps xmm1, xmm1, 0
+  shufps xmm2, xmm2, 0
+  shufps xmm3, xmm3, 0
+
+  mulps  xmm0, xmm4
+  mulps  xmm1, xmm5
+  mulps  xmm2, xmm6
+  mulps  xmm3, xmm7
+
+  addps  xmm0, xmm1
+  addps  xmm0, xmm2
+  addps  xmm0, xmm3
+
+  movups [MResult.Z], xmm0
+
+  // ---------------------------------------------------------------------------
+
+  movss  xmm0, [m1]+48
+  movss  xmm1, [m1]+52
+  movss  xmm2, [m1]+56
+  movss  xmm3, [m1]+60
+
+  shufps xmm0, xmm0, 0
+  shufps xmm1, xmm1, 0
+  shufps xmm2, xmm2, 0
+  shufps xmm3, xmm3, 0
+
+  mulps  xmm0, xmm4
+  mulps  xmm1, xmm5
+  mulps  xmm2, xmm6
+  mulps  xmm3, xmm7
+
+  addps  xmm0, xmm1
+  addps  xmm0, xmm2
+  addps  xmm0, xmm3
+
+  movups [MResult.W], xmm0
+
+end;
+
+{
 procedure MatrixMultiply(const m1, m2: TMatrix; var MResult: TMatrix);
 begin
   MResult.X.X := m1.X.X * m2.X.X + m1.X.Y * m2.Y.X + m1.X.Z * m2.Z.X +
@@ -5153,6 +5362,7 @@ begin
   MResult.W.W := m1.W.X * m2.X.W + m1.W.Y * m2.Y.W + m1.W.Z * m2.Z.W +
     m1.W.W * m2.W.W;
 end;
+}
 
 function VectorTransform(const V: TVector; const M: TMatrix): TVector;
 begin

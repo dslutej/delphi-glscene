@@ -239,7 +239,7 @@ procedure SetDecimalSeparator(AValue: Char);
 function AnsiStartsText(const ASubText, AText: string): Boolean;
 
 // Classes.pas
-function IsSubComponent(const AComponent: TComponent): Boolean;
+function IsSubComponent(const AComponent: TComponent): Boolean; inline;
 procedure MakeSubComponent(const AComponent: TComponent; const Value: Boolean);
 
 function FindUnitName(anObject: TObject): string; overload;

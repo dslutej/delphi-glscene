@@ -353,7 +353,7 @@ type
     procedure SetLineColor(const Value: TGLColor);
     procedure SetLinePattern(const Value: TGLushort);
     procedure SetLineWidth(const val: Single);
-    function StoreLineWidth: Boolean;
+    function StoreLineWidth: Boolean; inline;
     procedure SetAntiAliased(const val: Boolean);
     {  Setup OpenGL states according to line style.
       You must call RestoreLineStyle after drawing your lines.
@@ -473,6 +473,7 @@ type
   TGLCube = class(TGLSceneObject)
   private
     FCubeSize: TAffineVector;
+    FCubeHalfSize: TAffineVector;
     FParts: TCubeParts;
     FNormalDirection: TNormalDirection;
     function GetCubeWHD(const Index: Integer): TGLFloat; inline;
@@ -2302,6 +2303,8 @@ constructor TGLCube.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
   FCubeSize := XYZVector;
+  FCubeHalfSize := VectorScale(FCubeSize, 0.5);
+
   FParts := [cpTop, cpBottom, cpFront, cpBack, cpLeft, cpRight];
   FNormalDirection := ndOutside;
   ObjectStyle := ObjectStyle + [osDirectDraw];
@@ -2313,9 +2316,9 @@ var
   TanLoc, BinLoc: Integer;
 begin
 
-  hw := FCubeSize.X * 0.5;
-  hh := FCubeSize.Y * 0.5;
-  hd := FCubeSize.Z * 0.5;
+  hw := FCubeHalfSize.X;
+  hh := FCubeHalfSize.Y;
+  hd := FCubeHalfSize.Z;
 
   if GL.ARB_shader_objects and (rci.GLStates.CurrentProgram > 0) then
   begin
@@ -2518,9 +2521,9 @@ var
 begin
   connectivity := TConnectivity.Create(True);
 
-  hw := FCubeSize.X * 0.5;
-  hh := FCubeSize.Y * 0.5;
-  hd := FCubeSize.Z * 0.5;
+  hw := FCubeHalfSize.X;
+  hh := FCubeHalfSize.Y;
+  hd := FCubeHalfSize.Z;
 
   if cpFront in FParts then
   begin
@@ -2575,6 +2578,7 @@ begin
   if AValue <> FCubeSize.V[index] then
   begin
     FCubeSize.V[index] := AValue;
+    FCubeHalfSize.V[index] := AValue*0.5;
     StructureChanged;
   end;
 end;
@@ -2602,6 +2606,7 @@ begin
   if Assigned(Source) and (Source is TGLCube) then
   begin
     FCubeSize := TGLCube(Source).FCubeSize;
+    FCubeHalfSize := TGLCube(Source).FCubeHalfSize;
     FParts := TGLCube(Source).FParts;
     FNormalDirection := TGLCube(Source).FNormalDirection;
   end;
@@ -2623,15 +2628,14 @@ var
   rv: TVector;
   rs, r: TVector;
   i: Integer;
-  t, e: Single;
+  t: Single;
   eSize: TAffineVector;
 begin
   rs := AbsoluteToLocal(rayStart);
   SetVector(rv, VectorNormalize(AbsoluteToLocal(rayVector)));
-  e := 0.5 + 0.0001; // Small value for floating point imprecisions
-  eSize.X := FCubeSize.X * e;
-  eSize.Y := FCubeSize.Y * e;
-  eSize.Z := FCubeSize.Z * e;
+  eSize.X := FCubeHalfSize.X + 0.0001;
+  eSize.Y := FCubeHalfSize.Y + 0.0001;
+  eSize.Z := FCubeHalfSize.Z + 0.0001;
   p[0] := XHmgVector;
   p[1] := YHmgVector;
   p[2] := ZHmgVector;

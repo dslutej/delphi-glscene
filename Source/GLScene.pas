@@ -223,9 +223,9 @@ type
     procedure SetRollAngle(AValue: Single);
     procedure SetTurnAngle(AValue: Single);
     procedure SetRotation(aRotation: TGLCoordinates);
-    function GetPitchAngle: Single;
-    function GetTurnAngle: Single;
-    function GetRollAngle: Single;
+    function GetPitchAngle: Single; inline;
+    function GetTurnAngle: Single; inline;
+    function GetRollAngle: Single; inline;
     procedure SetShowAxes(AValue: Boolean);
     procedure SetScaling(AValue: TGLCoordinates);
     procedure SetObjectsSorting(const val: TGLObjectsSorting);
@@ -298,13 +298,13 @@ type
     {Returns the handle to the object's build list.
        Use with caution! Some objects don't support buildlists! }
     function GetHandle(var rci: TGLRenderContextInfo): Cardinal;
-    function ListHandleAllocated: Boolean;
+    function ListHandleAllocated: Boolean; inline;
     {The local transformation (relative to parent).
        If you're *sure* the local matrix is up-to-date, you may use LocalMatrix
        for quicker access. }
     property Matrix: TMatrix read GetMatrix write SetMatrix;
     {See Matrix. }
-    function MatrixAsAddress: PMatrix;
+    function MatrixAsAddress: PMatrix; inline;
     {Holds the local transformation (relative to parent).
        If you're not *sure* the local matrix is up-to-date, use Matrix property. }
     property LocalMatrix: PMatrix read FLocalMatrix;
@@ -325,7 +325,7 @@ type
        Multiplying an absolute coordinate with this matrix gives a local coordinate.
        The current implem uses transposition(AbsoluteMatrix), which is true
        unless you're using some scaling... }
-    function InvAbsoluteMatrix: TMatrix;
+    function InvAbsoluteMatrix: TMatrix; inline;
     {See InvAbsoluteMatrix. }
     function InvAbsoluteMatrixAsAddress: PMatrix;
     {The object's absolute matrix by composing all local matrices.
@@ -440,10 +440,10 @@ type
     function BoundingSphereRadiusUnscaled: Single; inline;
     {Indicates if a point is within an object.
        Given coordinate is an absolute coordinate.
-       Linear or surfacic objects shall always return False. 
+       Linear or surfacic objects shall always return False.
        Default value is based on AxisAlignedDimension and a cube bounding. }
     function PointInObject(const point: TVector): Boolean; virtual;
-    {Request to determine an intersection with a casted ray. 
+    {Request to determine an intersection with a casted ray.
        Given coordinates & vector are in absolute coordinates, rayVector
        must be normalized.
        rayStart may be a point inside the object, allowing retrieval of
@@ -503,15 +503,15 @@ type
     procedure MoveDown;
     procedure MoveFirst;
     procedure MoveLast;
-    procedure BeginUpdate; virtual;
-    procedure EndUpdate; virtual;
+    procedure BeginUpdate; inline;
+    procedure EndUpdate; inline;
     {Make object-specific geometry description here.
        Subclasses should MAINTAIN OpenGL states (restore the states if
        they were altered). }
     procedure BuildList(var rci: TGLRenderContextInfo); virtual;
     function GetParentComponent: TComponent; override;
-    function HasParent: Boolean; override;
-    function IsUpdating: Boolean;
+    function HasParent: Boolean; override; final;
+    function IsUpdating: Boolean; inline;
     // Moves the object along the Up vector (move up/down)
     procedure Lift(ADistance: Single);
     // Moves the object along the direction vector
@@ -3744,6 +3744,7 @@ begin
     GL.StringMarkerGREMEDY(
       Length(Name) + Length('.Render'), PGLChar(TGLString(Name + '.Render')));
 {$ENDIF}
+
   if (ARci.drawState = dsPicking) and not FPickable then
     exit;
 
@@ -3775,7 +3776,6 @@ begin
     shouldRenderSelf := True;
     shouldRenderChildren := FChildren.Count>0;
   end;
-
 
   // Prepare Matrix and PickList stuff
   ARci.PipelineTransformation.Push;
@@ -3850,6 +3850,7 @@ begin
     else
       DoRender(ARci, False, shouldRenderChildren);
   end;
+
   // Pop Name & Matrix
   if Assigned(master) then
     TGLSceneBuffer(ARci.buffer).FSelector.CurrentObject := master;

@@ -82,7 +82,7 @@ type
     function GetViewProjectionMatrix: TMatrix; inline;
     function GetFrustum: TFrustum; inline;
 
-    procedure SetModelMatrix(const AMatrix: TMatrix);
+    procedure SetModelMatrix(const AMatrix: TMatrix); inline;
     procedure SetViewMatrix(const AMatrix: TMatrix); inline;
     procedure SetProjectionMatrix(const AMatrix: TMatrix); inline;
   protected
