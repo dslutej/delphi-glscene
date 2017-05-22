@@ -160,11 +160,11 @@ type
     procedure TranslateItems(Index: Integer; const delta: TAffineVector; nb: Integer);
     // Combines the given item
     procedure CombineItem(Index: Integer; const vector: TAffineVector; const f: Single);
-        {Transforms all items by the matrix as if they were points. 
-           ie. the translation component of the matrix is honoured. }
+    {Transforms all items by the matrix as if they were points. 
+     ie. the translation component of the matrix is honoured. }
     procedure TransformAsPoints(const matrix: TMatrix);
-        {Transforms all items by the matrix as if they were vectors. 
-           ie. the translation component of the matrix is not honoured. }
+    {Transforms all items by the matrix as if they were vectors. 
+     ie. the translation component of the matrix is not honoured. }
     procedure TransformAsVectors(const matrix: TMatrix); overload;
     procedure TransformAsVectors(const matrix: TAffineMatrix); overload;
     procedure Normalize; override;

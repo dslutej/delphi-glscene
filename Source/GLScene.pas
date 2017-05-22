@@ -372,13 +372,13 @@ type
     {Converts a vector from local coordinates to absolute coordinates.  }
     function LocalToAbsolute(const v: TAffineVector): TAffineVector; overload;
     {Returns the Right vector (based on Up and Direction) }
-    function Right: TVector;
+    function Right: TVector; inline;
     {Returns the Left vector (based on Up and Direction) }
-    function LeftVector: TVector;
+    function LeftVector: TVector; inline;
     {Returns the Right vector (based on Up and Direction) }
-    function AffineRight: TAffineVector;
+    function AffineRight: TAffineVector; inline;
     {Returns the Left vector (based on Up and Direction) }
-    function AffineLeftVector: TAffineVector;
+    function AffineLeftVector: TAffineVector; inline;
     {Calculates the object's square distance to a point/object.
        pt is assumed to be in absolute coordinates,
        AbsolutePosition is considered as being the object position. }

@@ -616,17 +616,17 @@ function PointProject(const p, origin, direction: TAffineVector): Single; overlo
 function PointProject(const p, origin, direction: TVector): Single; overload; inline
 
 // Calculates the cross product between vector 1 and 2
-function VectorCrossProduct(const V1, V2: TAffineVector): TAffineVector; overload; inline
+function VectorCrossProduct(const V1, V2: TAffineVector): TAffineVector; overload;
 // Calculates the cross product between vector 1 and 2
-function VectorCrossProduct(const V1, V2: TVector): TVector; overload; inline
+function VectorCrossProduct(const V1, V2: TVector): TVector; overload;
 // Calculates the cross product between vector 1 and 2, place result in vr
-procedure VectorCrossProduct(const V1, V2: TVector; var vr: TVector); overload; inline
+procedure VectorCrossProduct(const V1, V2: TVector; var vr: TVector); overload;
 // Calculates the cross product between vector 1 and 2, place result in vr
-procedure VectorCrossProduct(const V1, V2: TAffineVector; var vr: TVector); overload; inline
+procedure VectorCrossProduct(const V1, V2: TAffineVector; var vr: TVector); overload;
 // Calculates the cross product between vector 1 and 2, place result in vr
-procedure VectorCrossProduct(const V1, V2: TVector; var vr: TAffineVector); overload; inline
+procedure VectorCrossProduct(const V1, V2: TVector; var vr: TAffineVector); overload;
 // Calculates the cross product between vector 1 and 2, place result in vr
-procedure VectorCrossProduct(const V1, V2: TAffineVector; var vr: TAffineVector); overload; inline
+procedure VectorCrossProduct(const V1, V2: TAffineVector; var vr: TAffineVector); overload;
 
 // Calculates linear interpolation between start and stop at point t
 function Lerp(const start, stop, T: Single): Single;{$IFDEF GLS_INLINE_VICE_ASM}inline; {$ENDIF}
@@ -971,14 +971,14 @@ function UnProject(WindowVector: TVector; ViewProjMatrix: TMatrix;
 
 // Computes the parameters of a plane defined by three points.
 function PlaneMake(const p1, p2, p3: TAffineVector): THmgPlane; overload;
-function PlaneMake(const p1, p2, p3: TVector): THmgPlane; overload; inline;
+function PlaneMake(const p1, p2, p3: TVector): THmgPlane; overload;
 // Computes the parameters of a plane defined by a point and a normal.
-function PlaneMake(const point, normal: TAffineVector): THmgPlane; overload; inline;
-function PlaneMake(const point, normal: TVector): THmgPlane; overload; inline;
+function PlaneMake(const point, normal: TAffineVector): THmgPlane; overload;
+function PlaneMake(const point, normal: TVector): THmgPlane; overload;
 // Converts from single to double representation
 procedure SetPlane(var dest: TDoubleHmgPlane; const src: THmgPlane); inline;
 // Normalize a plane so that point evaluation = plane distance. }
-procedure NormalizePlane(var plane: THmgPlane); inline;
+procedure NormalizePlane(var plane: THmgPlane);
 
 { Calculates the cross-product between the plane normal and plane to point vector.
   This functions gives an hint as to were the point is, if the point is in the
@@ -2891,12 +2891,14 @@ asm
   fstp  dword ptr [ecx+$8]
 end;
 {$ELSE}
+
 function VectorCrossProduct(const V1, V2: TAffineVector): TAffineVector;
 begin
   result.V[X] := V1.V[Y] * V2.V[Z] - V1.V[Z] * V2.V[Y];
   result.V[Y] := V1.V[Z] * V2.V[X] - V1.V[X] * V2.V[Z];
   result.V[Z] := V1.V[X] * V2.V[Y] - V1.V[Y] * V2.V[X];
 end;
+
 {$ENDIF}
 
 {$IFDEF GLS_ASM}
@@ -2930,6 +2932,53 @@ asm
   mov   [ecx+$c], eax
 end;
 {$ELSE}
+
+{$codealign 16}
+function VectorCrossProduct(const V1, V2: TVector): TVector;
+asm
+  (*
+  movups xmm0, [v1]
+  movaps xmm1, xmm0
+  shufps xmm0, xmm0, 00010010b // 0102
+  shufps xmm1, xmm1, 00001001b // 0021
+
+  movups xmm2, [v2]
+  movaps xmm3, xmm2
+  shufps xmm2, xmm2, 00001001b // 0021
+  shufps xmm3, xmm3, 00010010b // 0102
+
+  mulps  xmm0, xmm2
+  mulps  xmm1, xmm3
+
+  subps  xmm0, xmm1
+
+  movups [Result], xmm0
+  *)
+
+  // Faster 3 shuffle optimization from http://threadlocalmutex.com/?p=8
+  // One movaps less also
+
+  movups xmm0, [v1]
+  movaps xmm1, xmm0
+  //shufps xmm0, xmm0, 00010010b // 0102
+  shufps xmm1, xmm1, 00010010b // 0102
+
+  movups xmm2, [v2]
+  //movaps xmm3, xmm2
+  mulps  xmm1, xmm2
+  shufps xmm2, xmm2, 00010010b // 0102
+  //shufps xmm3, xmm3, 00010010b // 0102
+
+  mulps  xmm0, xmm2
+
+  subps  xmm0, xmm1
+
+  shufps xmm0, xmm0, 00010010b // 0102
+
+  movups [Result], xmm0
+
+end;
+{
 function VectorCrossProduct(const V1, V2: TVector): TVector;
 begin
   result.V[X] := V1.V[Y] * V2.V[Z] - V1.V[Z] * V2.V[Y];
@@ -2937,6 +2986,7 @@ begin
   result.V[Z] := V1.V[X] * V2.V[Y] - V1.V[Y] * V2.V[X];
   result.V[W] := 0;
 end;
+}
 {$ENDIF}
 
 {$IFDEF GLS_ASM}
@@ -2970,6 +3020,55 @@ asm
   mov   [ecx+$c], eax
 end;
 {$ELSE}
+
+{$codealign 16}
+procedure VectorCrossProduct(const V1, V2: TVector; var vr: TVector);
+asm
+
+  (*
+  movups xmm0, [v1]
+  movaps xmm1, xmm0
+  shufps xmm0, xmm0, 00010010b // 0102
+  shufps xmm1, xmm1, 00001001b // 0021
+
+  movups xmm2, [v2]
+  movaps xmm3, xmm2
+  shufps xmm2, xmm2, 00001001b // 0021
+  shufps xmm3, xmm3, 00010010b // 0102
+
+  mulps  xmm0, xmm2
+  mulps  xmm1, xmm3
+
+  subps  xmm0, xmm1
+
+  movups [Result], xmm0
+  *)
+
+  // Faster 3 shuffle optimization from http://threadlocalmutex.com/?p=8
+
+  movups xmm0, [v1]
+  movaps xmm1, xmm0
+  //shufps xmm0, xmm0, 00010010b // 0102
+  shufps xmm1, xmm1, 00010010b // 0102
+
+  movups xmm2, [v2]
+  movaps xmm3, xmm2
+  shufps xmm2, xmm2, 00010010b // 0102
+  //shufps xmm3, xmm3, 00010010b // 0102
+
+  mulps  xmm0, xmm2
+  mulps  xmm1, xmm3
+
+  subps  xmm0, xmm1
+
+  shufps xmm0, xmm0, 00010010b // 0102
+
+  movups [vr], xmm0
+
+
+end;
+
+{
 procedure VectorCrossProduct(const V1, V2: TVector; var vr: TVector);
 begin
   vr.V[X] := V1.V[Y] * V2.V[Z] - V1.V[Z] * V2.V[Y];
@@ -2977,6 +3076,7 @@ begin
   vr.V[Z] := V1.V[X] * V2.V[Y] - V1.V[Y] * V2.V[X];
   vr.V[W] := 0;
 end;
+}
 {$ENDIF}
 
 {$IFDEF GLS_ASM}
@@ -5085,7 +5185,6 @@ end;
 {$codealign 16}
 function MatrixMultiply(const m1, m2: TMatrix): TMatrix;
 asm
-
   // Move 16 float32s into xmm-registers. Unaligned :/
   movups xmm4, [m2.X]
   movups xmm5, [m2.Y]
