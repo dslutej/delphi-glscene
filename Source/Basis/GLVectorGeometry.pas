@@ -2936,16 +2936,18 @@ end;
 {$codealign 16}
 function VectorCrossProduct(const V1, V2: TVector): TVector;
 asm
+
   (*
+
   movups xmm0, [v1]
   movaps xmm1, xmm0
-  shufps xmm0, xmm0, 00010010b // 0102
-  shufps xmm1, xmm1, 00001001b // 0021
+  shufps xmm0, xmm0, 00001001b // xXZY
+  shufps xmm1, xmm1, 00010010b // xYXZ
 
   movups xmm2, [v2]
   movaps xmm3, xmm2
-  shufps xmm2, xmm2, 00001001b // 0021
-  shufps xmm3, xmm3, 00010010b // 0102
+  shufps xmm2, xmm2, 00010010b // xYXZ
+  shufps xmm3, xmm3, 00001001b // xXZY
 
   mulps  xmm0, xmm2
   mulps  xmm1, xmm3
@@ -2953,29 +2955,27 @@ asm
   subps  xmm0, xmm1
 
   movups [Result], xmm0
-  *)
 
+  (**)
   // Faster 3 shuffle optimization from http://threadlocalmutex.com/?p=8
   // One movaps less also
 
   movups xmm0, [v1]
   movaps xmm1, xmm0
-  //shufps xmm0, xmm0, 00010010b // 0102
-  shufps xmm1, xmm1, 00010010b // 0102
+  shufps xmm1, xmm1, 11001001b // WXZY
 
   movups xmm2, [v2]
-  //movaps xmm3, xmm2
   mulps  xmm1, xmm2
-  shufps xmm2, xmm2, 00010010b // 0102
-  //shufps xmm3, xmm3, 00010010b // 0102
+  shufps xmm2, xmm2, 11001001b // WXZY
 
   mulps  xmm0, xmm2
 
   subps  xmm0, xmm1
 
-  shufps xmm0, xmm0, 00010010b // 0102
+  shufps xmm0, xmm0, 11001001b // WXZY
 
   movups [Result], xmm0
+  (**)
 
 end;
 {
@@ -2986,7 +2986,7 @@ begin
   result.V[Z] := V1.V[X] * V2.V[Y] - V1.V[Y] * V2.V[X];
   result.V[W] := 0;
 end;
-}
+{}
 {$ENDIF}
 
 {$IFDEF GLS_ASM}
@@ -3026,44 +3026,44 @@ procedure VectorCrossProduct(const V1, V2: TVector; var vr: TVector);
 asm
 
   (*
+
   movups xmm0, [v1]
   movaps xmm1, xmm0
-  shufps xmm0, xmm0, 00010010b // 0102
-  shufps xmm1, xmm1, 00001001b // 0021
+  shufps xmm0, xmm0, 00001001b // xXZY
+  shufps xmm1, xmm1, 00010010b // xYXZ
 
   movups xmm2, [v2]
   movaps xmm3, xmm2
-  shufps xmm2, xmm2, 00001001b // 0021
-  shufps xmm3, xmm3, 00010010b // 0102
+  shufps xmm2, xmm2, 00010010b // xYXZ
+  shufps xmm3, xmm3, 00001001b // xXZY
 
   mulps  xmm0, xmm2
   mulps  xmm1, xmm3
 
   subps  xmm0, xmm1
-
-  movups [Result], xmm0
-  *)
-
-  // Faster 3 shuffle optimization from http://threadlocalmutex.com/?p=8
-
-  movups xmm0, [v1]
-  movaps xmm1, xmm0
-  //shufps xmm0, xmm0, 00010010b // 0102
-  shufps xmm1, xmm1, 00010010b // 0102
-
-  movups xmm2, [v2]
-  movaps xmm3, xmm2
-  shufps xmm2, xmm2, 00010010b // 0102
-  //shufps xmm3, xmm3, 00010010b // 0102
-
-  mulps  xmm0, xmm2
-  mulps  xmm1, xmm3
-
-  subps  xmm0, xmm1
-
-  shufps xmm0, xmm0, 00010010b // 0102
 
   movups [vr], xmm0
+
+  (**)
+  // Faster 3 shuffle optimization from http://threadlocalmutex.com/?p=8
+  // One movaps less also
+
+  movups xmm0, [v1]
+  movaps xmm1, xmm0
+  shufps xmm1, xmm1, 11001001b // WXZY
+
+  movups xmm2, [v2]
+  mulps  xmm1, xmm2
+  shufps xmm2, xmm2, 11001001b // WXZY
+
+  mulps  xmm0, xmm2
+
+  subps  xmm0, xmm1
+
+  shufps xmm0, xmm0, 11001001b // WXZY
+
+  movups [vr], xmm0
+  (**)
 
 
 end;
