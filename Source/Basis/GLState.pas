@@ -33,7 +33,6 @@ uses
   System.SysUtils,
 
   OpenGLTokens,
-//  GLContext,
   GLCrossPlatform,
   GLVectorTypes,
   GLVectorGeometry,

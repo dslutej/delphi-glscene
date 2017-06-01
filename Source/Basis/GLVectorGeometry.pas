@@ -5182,6 +5182,7 @@ begin
   result.Z.Z := m1.Z.X * m2.X.Z + m1.Z.Y * m2.Y.Z + m1.Z.Z * m2.Z.Z;
 end;
 
+(**)
 {$codealign 16}
 function MatrixMultiply(const m1, m2: TMatrix): TMatrix;
 asm
@@ -5198,6 +5199,7 @@ asm
   movss  xmm2, [m1]+8
   movss  xmm3, [m1]+12
 
+  shufps xmm0, xmm0, 0
   shufps xmm1, xmm1, 0
   shufps xmm2, xmm2, 0
   shufps xmm3, xmm3, 0
@@ -5220,6 +5222,7 @@ asm
   movss  xmm2, [m1]+24
   movss  xmm3, [m1]+28
 
+  shufps xmm0, xmm0, 0
   shufps xmm1, xmm1, 0
   shufps xmm2, xmm2, 0
   shufps xmm3, xmm3, 0
@@ -5283,7 +5286,8 @@ asm
 
 end;
 
-{
+(**)
+(**
 function MatrixMultiply(const m1, m2: TMatrix): TMatrix;
 begin
   result.X.X := m1.X.X * m2.X.X + m1.X.Y * m2.Y.X + m1.X.Z * m2.Z.X +
@@ -5319,7 +5323,7 @@ begin
   result.W.W := m1.W.X * m2.X.W + m1.W.Y * m2.Y.W + m1.W.Z * m2.Z.W +
     m1.W.W * m2.W.W;
 end;
-}
+(**)
 
 {$codealign 16}
 procedure MatrixMultiply(const m1, m2: TMatrix; var MResult: TMatrix);

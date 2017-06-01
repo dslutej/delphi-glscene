@@ -35,6 +35,7 @@ uses
   GLStrings,
   GLVectorTypes,
   GLState,
+  XOpenGL,
   GLPipelineTransformation,
   GLTextureFormat;
 
@@ -64,17 +65,7 @@ type
     GThreadList < TServiceContextTask > ;
 {$ENDIF GLS_SERVICE_CONTEXT}
 
-  TGLContext = class;
   TGLContextManager = class;
-
-  TAbstractMultitextureCoordinator = class(TObject)
-  protected
-  public
-    FOwner: TGLContext;
-    constructor Create(AOwner: TGLContext); virtual;
-  end;
-
-  TAbstractMultitextureCoordinatorClass = class of TAbstractMultitextureCoordinator;
 
   TGLContextAcceleration = (chaUnknown, chaHardware, chaSoftware);
 
@@ -95,7 +86,6 @@ type
     subclasses must be used. All rendering context share the same lists. }
   TGLContext = class
   private
-     
     FColorBits, FAlphaBits: Integer;
     FDepthBits: Integer;
     FStencilBits: Integer;
@@ -123,7 +113,7 @@ type
   protected
     
     FGL: TGLExtensionsAndEntryPoints;
-    FXGL: TAbstractMultitextureCoordinator;
+    FXGL: TGLMultitextureCoordinator;
     FGLStates: TGLStateCache;
     FTransformation: TGLTransformation;
     FAcceleration: TGLContextAcceleration;
@@ -228,7 +218,7 @@ type
     function RenderOutputDevice: Pointer; virtual; abstract;
     {Access to OpenGL command and extension. }
     property GL: TGLExtensionsAndEntryPoints read FGL;
-    property MultitextureCoordinator: TAbstractMultitextureCoordinator read FXGL;
+    property MultitextureCoordinator: TGLMultitextureCoordinator read FXGL;
     property IsPraparationNeed: Boolean read FIsPraparationNeed;
   end;
 
@@ -241,16 +231,12 @@ type
      but most of the time they will be accessed through a specific viewer
      class/subclass. }
   TGLScreenControlingContext = class(TGLContext)
-  private
-     
+  strict private
     FWidth, FHeight: Integer;
     FFullScreen: Boolean;
-
   protected
-
-
   public
-    
+
     property Width: Integer read FWidth write FWidth;
     property Height: Integer read FHeight write FHeight;
     property FullScreen: Boolean read FFullScreen write FFullScreen;
@@ -271,7 +257,7 @@ type
      use the TGLListHandle and TGLTextureHandle subclasses. }
   TGLContextHandle = class
   private
-     
+
     FHandles: TList;
     FLastHandle : PGLRCHandle;
     FOnPrepare: TOnPrepareHandleData;
@@ -1040,15 +1026,16 @@ var
   GLContextManager: TGLContextManager;
   vIgnoreOpenGLErrors: Boolean = False;
   vContextActivationFailureOccurred: Boolean = false;
-  vMultitextureCoordinatorClass: TAbstractMultitextureCoordinatorClass;
 
 {$IFNDEF GLS_MULTITHREAD}
 var
 {$ELSE}
 threadvar
 {$ENDIF}
-  vGL: TGLExtensionsAndEntryPoints;
+
   vCurrentGLContext: TGLContext;
+  vGL:  TGLExtensionsAndEntryPoints;
+  vXGL: TGLMultitextureCoordinator;
   vMainThread: Boolean;
   GLwithoutContext: TGLExtensionsAndEntryPoints;
 
@@ -1139,16 +1126,10 @@ begin
   vContextClasses.Add(aGLContextClass);
 end;
 
-constructor TAbstractMultitextureCoordinator.Create(AOwner: TGLContext);
-begin
-  FOwner := AOwner;
-end;
-
 // ------------------
 // ------------------ TGLContext ------------------
 // ------------------
 
- 
 //
 
 constructor TGLContext.Create;
@@ -1176,12 +1157,11 @@ begin
   FTransformation.LoadMatricesEnabled := True;
   GLContextManager.RegisterContext(Self);
   FIsPraparationNeed := True;
-  FXGL := vMultitextureCoordinatorClass.Create(Self);
+  FXGL := TGLMultitextureCoordinator.Create;
 end;
 
 
 //
-
 destructor TGLContext.Destroy;
 begin
   if IsValid then
@@ -1550,6 +1530,7 @@ begin
       vContextActivationFailureOccurred := True;
     end;
     vGL := FGL;
+    vXGL := FXGL;
     vCurrentGLContext := Self;
   end
   else
@@ -1569,6 +1550,7 @@ begin
       DoDeactivate;
     vCurrentGLContext := nil;
     vGL := GLwithoutContext;
+    vXGL := nil;
   end
   else if FActivationCount < 0 then
     raise EGLContext.Create(strUnbalancedContexActivations);

@@ -176,6 +176,7 @@ uses
 
   GLCoordinates,
   GLPersistentClasses,
+  GLStrings,
   GLVectorTypes,
   OpenGLAdapter;
 //------------------------------------------------------------------------

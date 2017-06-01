@@ -48,9 +48,13 @@ var
   // global variable for accing the IDTF->U3D converter
   IDTFConverterFileName: string;
 
-//=========================================================  
+//=========================================================
 implementation
-//=========================================================  
+//=========================================================
+
+uses
+
+  GLVectorTypes;
 
 const
   ConstIDTFTemplate =

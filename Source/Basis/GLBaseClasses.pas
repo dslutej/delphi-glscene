@@ -121,7 +121,7 @@ end;
 
 function TGLUpdateAbleObject.GetOwner: TPersistent;
 begin
-  Result := Owner;
+  Result := FOwner;
 end;
 
 procedure TGLUpdateAbleObject.BeginUpdate;

@@ -665,6 +665,7 @@ implementation
 uses
   GLCoordinates,
   GLPersistentClasses,
+  GLStrings,
   GLTexture,
   GLVectorTypes,
   OpenGLAdapter

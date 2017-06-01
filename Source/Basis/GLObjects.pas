@@ -105,7 +105,7 @@ type
       the rendering of all of the dummycube's children objects into a
       single display list. This may provide a significant speed up in some
       situations, however, this means that changes to the children will
-      be ignored untill you call StructureChanged on the dummy cube.
+      be ignored until you call StructureChanged on the dummy cube.
       Some objects, that have their own display list management, may not
       be compatible with this behaviour. This will also prevents sorting
       and culling to operate as usual.

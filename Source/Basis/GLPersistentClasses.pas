@@ -275,7 +275,7 @@ type
     constructor Create(AOwner: TPersistent); virtual;
   end;
 
-  {TPersistent thet inplements IInterface. }
+  {TPersistent that inplements IInterface. }
   TGLInterfacedPersistent = class(TPersistent, IInterface)
   protected
     // Implementing IInterface.

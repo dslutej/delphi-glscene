@@ -7255,7 +7255,10 @@ begin
   begin
     bufferBits := bufferBits or GL_STENCIL_BUFFER_BIT;
   end;
-  GL.Clear(BufferBits);
+  if bufferBits<>0 then
+  begin
+    GL.Clear(BufferBits);
+  end;
 end;
 
 
