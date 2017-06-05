@@ -28,18 +28,26 @@ unit GLVectorGeometry;
 
 interface
 
+{$I GLScene.inc}
+
 uses
+
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath,
+{$ENDIF}
+
   System.SysUtils,
   System.Types,
   System.Math,
 
   GLVectorTypes;
 
+
+
 const
   cMaxArray = (MaxInt shr 4);
   cColinearBias = 1E-8;
 
-{$I GLScene.inc}
 
 type
   // data types needed for 3D graphics calculation,
@@ -1119,7 +1127,7 @@ function QuaternionSlerp(const source, dest: TQuaternion; const T: Single): TQua
 // Logarithmic and exponential functions
 // ------------------------------------------------------------------------------
 
-function Logarithm2(const X: Single): Single;
+function Logarithm2(const X: Single): Single; inline;
 
 // Raise base to any power. For fractional exponents, or |exponents| > MaxInt, base must be > 0
 function PowerSingle(const Base, Exponent: Single): Single; overload;
@@ -1945,10 +1953,14 @@ end;
 {$ELSE}
 function VectorAdd(const V1, V2: TVector): TVector;
 begin
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath.TVector4(Result) := Neslib.FastMath.TVector4(V1) + Neslib.FastMath.TVector4(V1);
+{$ELSE}
   result.X := V1.X + V2.X;
   result.Y := V1.Y + V2.Y;
   result.Z := V1.Z + V2.Z;
   result.W := V1.W + V2.W;
+{$ENDIF}
 end;
 {$ENDIF}
 
@@ -1987,10 +1999,14 @@ end;
 {$ELSE}
 procedure VectorAdd(const V1, V2: TVector; var vr: TVector);
 begin
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath.TVector4(vr) := Neslib.FastMath.TVector4(V1) + Neslib.FastMath.TVector4(V1);
+{$ELSE}
   vr.X := V1.X + V2.X;
   vr.Y := V1.Y + V2.Y;
   vr.Z := V1.Z + V2.Z;
   vr.W := V1.W + V2.W;
+{$ENDIF}
 end;
 {$ENDIF}
 
@@ -3239,33 +3255,49 @@ end;
 
 function VectorLerp(const V1, V2: TAffineVector; T: Single): TAffineVector;
 begin
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath.TVector3(Result) := Neslib.FastMath.TVector3(V1).Lerp(Neslib.FastMath.TVector3(V2),T);
+{$ELSE}
   result.V[X] := V1.V[X] + (V2.V[X] - V1.V[X]) * T;
   result.V[Y] := V1.V[Y] + (V2.V[Y] - V1.V[Y]) * T;
   result.V[Z] := V1.V[Z] + (V2.V[Z] - V1.V[Z]) * T;
+{$ENDIF}
 end;
 
 procedure VectorLerp(const V1, V2: TAffineVector; T: Single;
   var vr: TAffineVector);
 begin
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath.TVector3(vr) := Neslib.FastMath.TVector3(V1).Lerp(Neslib.FastMath.TVector3(V2),T);
+{$ELSE}
   vr.V[X] := V1.V[X] + (V2.V[X] - V1.V[X]) * T;
   vr.V[Y] := V1.V[Y] + (V2.V[Y] - V1.V[Y]) * T;
   vr.V[Z] := V1.V[Z] + (V2.V[Z] - V1.V[Z]) * T;
+{$ENDIF}
 end;
 
 function VectorLerp(const V1, V2: TVector; T: Single): TVector;
 begin
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath.TVector4(Result) := Neslib.FastMath.TVector4(V1).Lerp(Neslib.FastMath.TVector4(V2),T);
+{$ELSE}
   result.V[X] := V1.V[X] + (V2.V[X] - V1.V[X]) * T;
   result.V[Y] := V1.V[Y] + (V2.V[Y] - V1.V[Y]) * T;
   result.V[Z] := V1.V[Z] + (V2.V[Z] - V1.V[Z]) * T;
   result.V[W] := V1.V[W] + (V2.V[W] - V1.V[W]) * T;
+{$ENDIF}
 end;
 
 procedure VectorLerp(const V1, V2: TVector; T: Single; var vr: TVector);
 begin
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath.TVector4(vr) := Neslib.FastMath.TVector4(V1).Lerp(Neslib.FastMath.TVector4(V2),T);
+{$ELSE}
   vr.V[X] := V1.V[X] + (V2.V[X] - V1.V[X]) * T;
   vr.V[Y] := V1.V[Y] + (V2.V[Y] - V1.V[Y]) * T;
   vr.V[Z] := V1.V[Z] + (V2.V[Z] - V1.V[Z]) * T;
   vr.V[W] := V1.V[W] + (V2.V[W] - V1.V[W]) * T;
+{$ENDIF}
 end;
 
 function VectorAngleLerp(const V1, V2: TAffineVector; T: Single): TAffineVector;
@@ -3446,7 +3478,7 @@ begin
     result := (stop - start) * PowerInteger(delta, i) + start;
   end
   else
-    result := (stop - start) * Power(delta, DistortionDegree) + start;
+    result := (stop - start) * {$IFDEF GLS_FASTMATH}Neslib.FastMath.{$ENDIF}Power(delta, DistortionDegree) + start;
 end;
 
 function MatrixLerp(const m1, m2: TMatrix; const delta: Single): TMatrix;
@@ -3460,7 +3492,11 @@ end;
 
 function RSqrt(V: Single): Single;
 begin
+{$IFDEF GLS_FASTMATH}
+  Result := InverseSqrt(V);
+{$ELSE}
   result := 1 / Sqrt(V);
+{$ENDIF}
 end;
 
 
@@ -4556,8 +4592,13 @@ end;
 {$ELSE}
 function VectorEquals(const V1, V2: TVector): Boolean;
 begin
+{$IFDEF GLS_FASTMATH}
+  Result := Neslib.FastMath.TVector4(V1) = Neslib.FastMath.TVector4(V2);
+{$ELSE}
   result := (V1._1 = V2._1) and (V1._2 = V2._2) and (V1._3 = V2._3)
     and (V1._4 = V2._4);
+
+{$ENDIF}
 end;
 {$ENDIF}
 
@@ -4612,7 +4653,11 @@ end;
 {$ELSE}
 function AffineVectorEquals(const V1, V2: TVector): Boolean;
 begin
+{$IFDEF GLS_FASTMATH}
+  Result := Neslib.FastMath.TVector4(V1) = Neslib.FastMath.TVector4(V2);
+{$ELSE}
   result := (V1._1 = V2._1) and (V1._2 = V2._2) and (V1._3 = V2._3);
+{$ENDIF}
 end;
 {$ENDIF}
 
@@ -5182,7 +5227,7 @@ begin
   result.Z.Z := m1.Z.X * m2.X.Z + m1.Z.Y * m2.Y.Z + m1.Z.Z * m2.Z.Z;
 end;
 
-(**)
+(**
 {$codealign 16}
 function MatrixMultiply(const m1, m2: TMatrix): TMatrix;
 asm
@@ -5285,11 +5330,13 @@ asm
   movups [Result.W], xmm0
 
 end;
-
 (**)
-(**
+(**)
 function MatrixMultiply(const m1, m2: TMatrix): TMatrix;
 begin
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath.TMatrix4(Result) := Neslib.FastMath.TMatrix4(m1) * Neslib.FastMath.TMatrix4(m2);
+{$ELSE}
   result.X.X := m1.X.X * m2.X.X + m1.X.Y * m2.Y.X + m1.X.Z * m2.Z.X +
     m1.X.W * m2.W.X;
   result.X.Y := m1.X.X * m2.X.Y + m1.X.Y * m2.Y.Y + m1.X.Z * m2.Z.Y +
@@ -5322,9 +5369,10 @@ begin
     m1.W.W * m2.W.Z;
   result.W.W := m1.W.X * m2.X.W + m1.W.Y * m2.Y.W + m1.W.Z * m2.Z.W +
     m1.W.W * m2.W.W;
+{$ENDIF}
 end;
-(**)
 
+(**
 {$codealign 16}
 procedure MatrixMultiply(const m1, m2: TMatrix; var MResult: TMatrix);
 asm
@@ -5428,10 +5476,14 @@ asm
   movups [MResult.W], xmm0
 
 end;
+(**)
 
-{
+(**)
 procedure MatrixMultiply(const m1, m2: TMatrix; var MResult: TMatrix);
 begin
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath.TMatrix4(MResult) := Neslib.FastMath.TMatrix4(m1) * Neslib.FastMath.TMatrix4(m2);
+{$ELSE}
   MResult.X.X := m1.X.X * m2.X.X + m1.X.Y * m2.Y.X + m1.X.Z * m2.Z.X +
     m1.X.W * m2.W.X;
   MResult.X.Y := m1.X.X * m2.X.Y + m1.X.Y * m2.Y.Y + m1.X.Z * m2.Z.Y +
@@ -5464,8 +5516,9 @@ begin
     m1.W.W * m2.W.Z;
   MResult.W.W := m1.W.X * m2.X.W + m1.W.Y * m2.Y.W + m1.W.Z * m2.Z.W +
     m1.W.W * m2.W.W;
+{$ENDIF}
 end;
-}
+(**)
 
 function VectorTransform(const V: TVector; const M: TMatrix): TVector;
 begin
@@ -5950,12 +6003,12 @@ begin
   Tran[ttRotateY] := ArcSine(-row0.V[Z]);
   if Cos(Tran[ttRotateY]) <> 0 then
   begin
-    Tran[ttRotateX] := ArcTan2(row1.V[Z], row2.V[Z]);
-    Tran[ttRotateZ] := ArcTan2(row0.V[Y], row0.V[X]);
+    Tran[ttRotateX] := {$IFDEF GLS_FASTMATH}NesLib.FastMath.{$ENDIF}ArcTan2(row1.V[Z], row2.V[Z]);
+    Tran[ttRotateZ] := {$IFDEF GLS_FASTMATH}NesLib.FastMath.{$ENDIF}ArcTan2(row0.V[Y], row0.V[X]);
   end
   else
   begin
-    Tran[ttRotateX] := ArcTan2(row1.V[X], row1.V[Y]);
+    Tran[ttRotateX] := {$IFDEF GLS_FASTMATH}NesLib.FastMath.{$ENDIF}ArcTan2(row1.V[X], row1.V[Y]);
     Tran[ttRotateZ] := 0;
   end;
   // All done!
@@ -7035,7 +7088,7 @@ end;
 
 function Logarithm2(const X: Single): Single;
 begin
-  result := Log2(X);
+  result := {$IFDEF GLS_FASTMATH}NesLib.FastMath.{$ENDIF}Log2(X);
 end;
 
 function PowerSingle(const Base, Exponent: Single): Single;
@@ -7046,7 +7099,7 @@ begin
   else if (Base = cZero) and (Exponent > cZero) then
     result := cZero
   else if RoundInt(Exponent) = Exponent then
-    result := Power(Base, Integer(Round(Exponent)))
+    result := {$IFDEF GLS_FASTMATH}NesLib.FastMath.{$ENDIF}Power(Base, Integer(Round(Exponent)))
   else
     result := Exp(Exponent * Ln(Base));
 {$HINTS ON}
@@ -7055,7 +7108,7 @@ end;
 function PowerInteger(Base: Single; Exponent: Integer): Single;
 begin
 {$HINTS OFF}
-  result := Power(Base, Exponent);
+  result := {$IFDEF GLS_FASTMATH}NesLib.FastMath.{$ENDIF}Power(Base, Exponent);
 {$HINTS ON}
 end;
 

@@ -32,6 +32,9 @@
 // Activate Logging
 {$DEFINE GLS_LOGGING}
 
+// Use https://github.com/neslib/FastMath by Erik van Bilsen
+{$DEFINE GLS_FASTMATH}
+
 // Activate OpenGL debug mode
 {.$DEFINE GLS_OPENGL_DEBUG}
 

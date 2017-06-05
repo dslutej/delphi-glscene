@@ -16,6 +16,11 @@ interface
 {$I GLScene.inc}
 
 uses
+
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath,
+{$ENDIF}
+
   OpenGLAdapter,
 
   Winapi.Windows,
@@ -3068,8 +3073,7 @@ begin
     FUp.Normalize;
     FDirection.Rotate(rightVector, angle);
     FDirection.Normalize;
-    r := -RadToDeg(ArcTan2(FDirection.Y, VectorLength(FDirection.X,
-      FDirection.Z)));
+    r := -RadToDeg({$IFDEF GLS_FASTMATH}Neslib.FastMath.{$ENDIF}ArcTan2(FDirection.Y, VectorLength(FDirection.X, FDirection.Z)));
     if FDirection.X < 0 then
       if FDirection.Y < 0 then
         r := 180 - r
@@ -3125,7 +3129,7 @@ begin
 
     // calculate new rotation angle from vectors
     rightVector := Right;
-    r := -RadToDeg(ArcTan2(rightVector.Y,
+    r := -RadToDeg({$IFDEF GLS_FASTMATH}Neslib.FastMath.{$ENDIF}ArcTan2(rightVector.Y,
               VectorLength(rightVector.X,
                            rightVector.Z)));
     if rightVector.X < 0 then
@@ -3180,7 +3184,7 @@ begin
     FUp.Normalize;
     FDirection.Rotate(upVector, angle);
     FDirection.Normalize;
-    r := -RadToDeg(ArcTan2(FDirection.X, VectorLength(FDirection.Y,
+    r := -RadToDeg({$IFDEF GLS_FASTMATH}Neslib.FastMath.{$ENDIF}ArcTan2(FDirection.X, VectorLength(FDirection.Y,
       FDirection.Z)));
     if FDirection.X < 0 then
       if FDirection.Y < 0 then
@@ -3456,7 +3460,7 @@ begin
       NormalizeVector(normalCameraRight);
     // calculate the current pitch.
     // 0 is looking down and PI is looking up
-    pitchNow := ArcCos(VectorDotProduct(AbsoluteUp, normalT2C));
+    pitchNow := {$IFDEF GLS_FASTMATH}Neslib.FastMath.{$ENDIF}ArcCos(VectorDotProduct(AbsoluteUp, normalT2C));
     pitchNow := ClampValue(pitchNow + DegToRad(pitchDelta), 0 + 0.025, PI -
       0.025);
     // creates a new vector pointing up and then rotate it down
@@ -4784,7 +4788,7 @@ var
   rightVector, rotAxis: TVector;
   angle: Single;
 begin
-  angle := RadToDeg(arccos(VectorDotProduct(FUp.AsVector, YVector)));
+  angle := RadToDeg({$IFDEF GLS_FASTMATH}Neslib.FastMath.{$ENDIF}ArcCos(VectorDotProduct(FUp.AsVector, YVector)));
   rotAxis := VectorCrossProduct(YHmgVector, FUp.AsVector);
   if (angle > 1) and (VectorLength(rotAxis) > 0) then
   begin
@@ -4793,7 +4797,7 @@ begin
     FUp.Normalize;
     // adjust local coordinates
     FDirection.DirectVector := VectorCrossProduct(FUp.AsVector, rightVector);
-    FRotation.Z := -RadToDeg(ArcTan2(RightVector.Y,
+    FRotation.Z := -RadToDeg({$IFDEF GLS_FASTMATH}Neslib.FastMath.{$ENDIF}ArcTan2(RightVector.Y,
       VectorLength(RightVector.X, RightVector.Z)));
   end;
 end;
