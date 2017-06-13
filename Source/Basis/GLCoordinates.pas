@@ -13,17 +13,20 @@ unit GLCoordinates;
 
 interface
 
+{$I GLScene.inc}
+
 uses
-  System.Classes, 
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath,
+{$ENDIF}
+  System.Classes,
   System.SysUtils,
-   
-  GLVectorGeometry, 
-  GLVectorTypes, 
-  OpenGLTokens, 
+
+  GLVectorGeometry,
+  GLVectorTypes,
+  OpenGLTokens,
   GLBaseClasses,
   GLCrossPlatform;
-
-{$I GLScene.inc}
 
 type
 

@@ -12,7 +12,14 @@ unit GLStarRecord;
 
 interface
 
+{$I GLScene.inc}
+
 uses
+
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath,
+{$ENDIF}
+
   GLVectorGeometry;
 
 type

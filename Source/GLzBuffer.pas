@@ -32,6 +32,11 @@ interface
 {$I GLScene.inc}
 
 uses
+
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath,
+{$ENDIF}
+
   System.Classes,
   System.SysUtils,
   System.Math,
@@ -432,12 +437,12 @@ begin
   MakeVector(hnorm, normal);
 
   MakeVector(hcVec, lb); //---Corner Vector---
-  ang1 := ArcTan2(Hnorm.X, Hnorm.Z);
+  ang1 := {$IFDEF GLS_FASTMATH}NesLib.FastMath.{$ENDIF}ArcTan2(Hnorm.X, Hnorm.Z);
   SetVector(axs, 0, 1, 0);
   RotateVector(hnorm, axs, ang1);
   RotateVector(hcvec, axs, ang1);
 
-  ang2 := ArcTan2(Hnorm.Y, Hnorm.Z);
+  ang2 := {$IFDEF GLS_FASTMATH}NesLib.FastMath.{$ENDIF}ArcTan2(Hnorm.Y, Hnorm.Z);
   SetVector(axs, 1, 0, 0);
   RotateVector(hcvec, axs, -ang2);
 

@@ -18,6 +18,9 @@ interface
 {$I GLScene.inc}
 
 uses
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath,
+{$ENDIF}
   System.Classes,
   System.SysUtils,
   System.Math,
@@ -1008,21 +1011,21 @@ begin
       se1 := 0;
     end
     else
-      se1 := Sign(e1);
+      se1 := {$IFDEF GLS_FASTMATH}System.Math.{$ENDIF}Sign(e1);
     if Abs(e2) < cOwnTriangleEpsilon then
     begin
       e2 := 0;
       se2 := 0;
     end
     else
-      se2 := Sign(e2);
+      se2 := {$IFDEF GLS_FASTMATH}System.Math.{$ENDIF}Sign(e2);
     if Abs(e3) < cOwnTriangleEpsilon then
     begin
       e3 := 0;
       se3 := 0;
     end
     else
-      se3 := Sign(e3);
+      se3 := {$IFDEF GLS_FASTMATH}System.Math.{$ENDIF}Sign(e3);
     // case disjunction
     case se1 of
       - 1:

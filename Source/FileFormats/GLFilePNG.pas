@@ -100,12 +100,7 @@ end;
 procedure TGLPNGImage.LoadFromStream(AStream: TStream);
 var
   PngImage: TPngImage;
-  sig: array[0..7] of Byte;
-  colorType, bitDepth: Integer;
   rowBytes: Cardinal;
-  rowPointers: array of PGLUbyte;
-  ii: Integer;
-  use16: Boolean;
 
 begin
   try
