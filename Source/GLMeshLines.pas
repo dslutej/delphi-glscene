@@ -10,6 +10,8 @@ unit GLMeshLines;
 
 interface
 
+{$I GLScene.inc}
+
 uses
 
 {$IFDEF GLS_FASTMATH}

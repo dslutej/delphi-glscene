@@ -2119,65 +2119,29 @@ begin
 {$ENDIF}
 end;
 
-{$IFDEF GLS_ASM}
-procedure CombineVector(var vr: TAffineVector; const V: TAffineVector;
-  var f: Single);
-// EAX contains address of vr
-// EDX contains address of v
-// ECX contains address of f
-asm
-  FLD  DWORD PTR [EDX]
-  FMUL DWORD PTR [ECX]
-  FADD DWORD PTR [EAX]
-  FSTP DWORD PTR [EAX]
-  FLD  DWORD PTR [EDX+4]
-  FMUL DWORD PTR [ECX]
-  FADD DWORD PTR [EAX+4]
-  FSTP DWORD PTR [EAX+4]
-  FLD  DWORD PTR [EDX+8]
-  FMUL DWORD PTR [ECX]
-  FADD DWORD PTR [EAX+8]
-  FSTP DWORD PTR [EAX+8]
-end;
-{$ELSE}
 procedure CombineVector(var vr: TAffineVector; const V: TAffineVector;
   var f: Single);
 begin
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath.TVector3(vr) := Neslib.FastMath.TVector3(vr) + Neslib.FastMath.TVector3(V)*f;
+{$ELSE}
   vr.X := vr.X + V.X * f;
   vr.Y := vr.Y + V.Y * f;
   vr.Z := vr.Z + V.Z * f;
-end;
 {$ENDIF}
-
-{$IFDEF GLS_ASM}
-procedure CombineVector(var vr: TAffineVector; const V: TAffineVector;
-  pf: PFloat);
-// EAX contains address of vr
-// EDX contains address of v
-// ECX contains address of f
-asm
-  FLD  DWORD PTR [EDX]
-  FMUL DWORD PTR [ECX]
-  FADD DWORD PTR [EAX]
-  FSTP DWORD PTR [EAX]
-  FLD  DWORD PTR [EDX+4]
-  FMUL DWORD PTR [ECX]
-  FADD DWORD PTR [EAX+4]
-  FSTP DWORD PTR [EAX+4]
-  FLD  DWORD PTR [EDX+8]
-  FMUL DWORD PTR [ECX]
-  FADD DWORD PTR [EAX+8]
-  FSTP DWORD PTR [EAX+8]
 end;
-{$ELSE}
+
 procedure CombineVector(var vr: TAffineVector; const V: TAffineVector;
   pf: PFloat);
 begin
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath.TVector3(vr) := Neslib.FastMath.TVector3(vr) + Neslib.FastMath.TVector3(V)*pf^;
+{$ELSE}
   vr.X := vr.X + V.X * pf^;
   vr.Y := vr.Y + V.Y * pf^;
   vr.Z := vr.Z + V.Z * pf^;
-end;
 {$ENDIF}
+end;
 
 function TexPointCombine(const t1, t2: TTexPoint; f1, f2: Single): TTexPoint;
 begin
@@ -2359,74 +2323,20 @@ begin
   result := V1.X * V2.X + V1.Y * V2.Y;
 end;
 
-{$IFDEF GLS_ASM}
-function VectorDotProduct(const V1, V2: TAffineVector): Single;
-// EAX contains address of V1
-// EDX contains address of V2
-// result is stored in ST(0)
-asm
-  FLD DWORD PTR [eax]
-  FMUL DWORD PTR [edx]
-  FLD DWORD PTR [eax+4]
-  FMUL DWORD PTR [edx+4]
-  faddp
-  FLD DWORD PTR [eax+8]
-  FMUL DWORD PTR [edx+8]
-  faddp
-end;
-{$ELSE}
 function VectorDotProduct(const V1, V2: TAffineVector): Single;
 begin
   result := V1.X * V2.X + V1.Y * V2.Y + V1.Z * V2.Z;
 end;
-{$ENDIF}
 
-{$IFDEF GLS_ASM}
-function VectorDotProduct(const V1, V2: TVector): Single;
-// EAX contains address of V1
-// EDX contains address of V2
-// result is stored in ST(0)
-asm
-  FLD DWORD PTR [EAX]
-  FMUL DWORD PTR [EDX]
-  FLD DWORD PTR [EAX + 4]
-  FMUL DWORD PTR [EDX + 4]
-  FADDP
-  FLD DWORD PTR [EAX + 8]
-  FMUL DWORD PTR [EDX + 8]
-  FADDP
-  FLD DWORD PTR [EAX + 12]
-  FMUL DWORD PTR [EDX + 12]
-  FADDP
-end;
-{$ELSE}
 function VectorDotProduct(const V1, V2: TVector): Single;
 begin
   result := V1.X * V2.X + V1.Y * V2.Y + V1.Z * V2.Z + V1.W * V2.W;
 end;
-{$ENDIF}
 
-{$IFDEF GLS_ASM}
-function VectorDotProduct(const V1: TVector; const V2: TAffineVector): Single;
-// EAX contains address of V1
-// EDX contains address of V2
-// result is stored in ST(0)
-asm
-  FLD DWORD PTR [EAX]
-  FMUL DWORD PTR [EDX]
-  FLD DWORD PTR [EAX + 4]
-  FMUL DWORD PTR [EDX + 4]
-  FADDP
-  FLD DWORD PTR [EAX + 8]
-  FMUL DWORD PTR [EDX + 8]
-  FADDP
-end;
-{$ELSE}
 function VectorDotProduct(const V1: TVector; const V2: TAffineVector): Single;
 begin
   result := V1.X * V2.X + V1.Y * V2.Y + V1.Z * V2.Z;
 end;
-{$ENDIF}
 
 {$IFDEF GLS_ASM}
 function PointProject(const p, origin, direction: TAffineVector): Single;
