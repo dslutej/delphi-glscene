@@ -12,7 +12,12 @@ unit GLBumpMapping;
 
 interface
 
+{$I GLScene.inc}
+
 uses
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath,
+{$ENDIF}
   Vcl.Graphics,
   GLVectorGeometry,
   GLVectorLists,

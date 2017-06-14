@@ -58,7 +58,12 @@ unit GLRandomHDS;
 
 interface
 
+{$I GLScene.inc}
+
 uses
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath,
+{$ENDIF}
   Winapi.Windows,
   System.Classes, 
   System.Math, 
@@ -2515,8 +2520,8 @@ begin
   begin
     DataState := hdsPreparing;
 
-    if (abs(XLeft) mod (heightData.Size - 1) = 0) and
-      (abs(YTop) mod (heightData.Size - 1) = 0) then
+    if (System.abs(XLeft) mod (heightData.Size - 1) = 0) and
+      (System.abs(YTop) mod (heightData.Size - 1) = 0) then
     begin
       FindLandTile(XLeft, YTop, tx, tz);
 
@@ -2559,8 +2564,8 @@ end;
 function TGLTiledRndLandscape.TileDistanceSquared(const x1, z1, x2,
   z2: integer): integer;
 begin
-  Result := sqr(FExtentXhalf - abs(abs(x1 - x2) - FExtentXhalf)) +
-    sqr(FExtentZhalf - abs(abs(z1 - z2) - FExtentZhalf));
+  Result := sqr(FExtentXhalf - System.abs(System.abs(x1 - x2) - FExtentXhalf)) +
+    sqr(FExtentZhalf - System.abs(System.abs(z1 - z2) - FExtentZhalf));
 end;
 
 procedure TGLTiledRndLandscape.Update;
@@ -2764,7 +2769,7 @@ const
       alpha := (FSeaLevel - hd.SmallIntHeight(rx, ry)) * (1 / FSeaTransparency);
       alpha := ClampValue(alpha, 0.5, 1);
     end;
-    SinCos(WaterPhase(px, py) * FWaveSpeed, sa, ca);
+    {$IFDEF GLS_FASTMATH}NesLib.FastMath.{$ENDIF}SinCos(WaterPhase(px, py) * FWaveSpeed, sa, ca);
     colorRatio := 1 - alpha * 0.1;
     GL.Color4f(r * colorRatio, g * colorRatio, b, alpha);
     GL.TexCoord2f(px * 0.01 + 0.002 * sa, py * 0.01 + 0.0022 * ca - t * 0.01);

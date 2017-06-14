@@ -15,7 +15,12 @@ unit GLContouring;
 
 interface
 
+{$I GLScene.inc}
+
 uses
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath,
+{$ENDIF}
   System.SysUtils, 
   System.Classes, 
   System.Math,
@@ -597,12 +602,12 @@ begin
     for i := ilb to iub - 1 do
     begin // east - west coordinates of datafield    +for i
           // set casting bounds from array
-      temp1 := Min(Data[i, j], Data[i, j + 1]);
-      temp2 := Min(Data[i + 1, j], Data[i + 1, j + 1]);
-      dmin := Min(temp1, temp2);
-      temp1 := Max(Data[i, j], Data[i, j + 1]);
-      temp2 := Max(Data[i + 1, j], Data[i + 1, j + 1]);
-      dmax := Max(temp1, temp2);
+      temp1 := {$IFDEF GLS_FASTMATH}System.Math.{$ENDIF}Min(Data[i, j], Data[i, j + 1]);
+      temp2 := {$IFDEF GLS_FASTMATH}System.Math.{$ENDIF}Min(Data[i + 1, j], Data[i + 1, j + 1]);
+      dmin := {$IFDEF GLS_FASTMATH}System.Math.{$ENDIF}Min(temp1, temp2);
+      temp1 := {$IFDEF GLS_FASTMATH}System.Math.{$ENDIF}Max(Data[i, j], Data[i, j + 1]);
+      temp2 := {$IFDEF GLS_FASTMATH}System.Math.{$ENDIF}Max(Data[i + 1, j], Data[i + 1, j + 1]);
+      dmax := {$IFDEF GLS_FASTMATH}System.Math.{$ENDIF}Max(temp1, temp2);
       if (dmax >= HgtL[0]) and (dmin <= HgtL[nc - 1]) then
       begin // ask horizontal cut available ----  +If dmin && dmax in z[0] .. z[nc-1]
 

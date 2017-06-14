@@ -29,6 +29,11 @@ interface
 {.$DEFINE GLS_CACHE_MISS_CHECK}
 
 uses
+
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath,
+{$ENDIF}
+
   System.Classes,
   System.SysUtils,
 

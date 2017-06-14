@@ -48,7 +48,12 @@ unit GLCameraController;
 
 interface
 
+{$I GLScene.inc}
+
 uses
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath,
+{$ENDIF}
   System.Classes, System.SysUtils, System.Math, System.Contnrs, System.Types,
    
   GLScene, GLVectorGeometry,
@@ -743,7 +748,7 @@ begin
   end;
 
   //Compute Angle of Rotation
-  FAngle:= ArcCos(VectorAngleCosine(Vector3fMake(FFinalPos), Vector3fMake(FInitialPos)));
+  FAngle:= {$IFDEF GLS_FASTMATH}NesLib.FastMath.{$ENDIF}ArcCos(VectorAngleCosine(Vector3fMake(FFinalPos), Vector3fMake(FInitialPos)));
 
   lAbsVectorToTarget := VectorNormalize(VectorSubtract(
       FJobList.FController.FCameraTarget.AbsolutePosition,
@@ -841,7 +846,7 @@ begin
   end;
 
   //Compute Angle of Rotation
-  FAngle:= ArcCos(VectorAngleCosine(Vector3fMake(FFinalPos), Vector3fMake(FInitialPos)));
+  FAngle:= {$IFDEF GLS_FASTMATH}NesLib.FastMath.{$ENDIF}ArcCos(VectorAngleCosine(Vector3fMake(FFinalPos), Vector3fMake(FInitialPos)));
 
   Right := VectorNormalize(VectorCrossProduct(
 //    FJobList.FController.FCamera.AbsoluteVectorToTarget,

@@ -14,6 +14,9 @@ interface
 {$I GLScene.inc}
 
 uses
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath,
+{$ENDIF}
   System.Classes,
   System.SysUtils,
   System.Math,
@@ -284,7 +287,7 @@ begin
 
   v1 := AffineVectorMake(v.X, v.Y, 0);
   NormalizeVector(v1);
-  ang := ArcCos(VectorDotProduct(v, v1));
+  ang := {$IFDEF GLS_FASTMATH}NesLib.FastMath.{$ENDIF}ArcCos(VectorDotProduct(v, v1));
 
   rci.GLStates.PolygonMode := pmLines;
 

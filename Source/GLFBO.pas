@@ -28,6 +28,7 @@ uses
   GLMultisampleImage,
   GLGraphics,
   GLTextureFormat,
+  GLStrings,
   GLVectorTypes,
   GLSLog;
 

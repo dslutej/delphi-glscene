@@ -23,6 +23,9 @@ interface
 {$I GLScene.inc}
 
 uses
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath,
+{$ENDIF}
   System.SysUtils,
   System.Classes,
   System.Math,
