@@ -1954,7 +1954,7 @@ end;
 function VectorAdd(const V1, V2: TVector): TVector;
 begin
 {$IFDEF GLS_FASTMATH}
-  Neslib.FastMath.TVector4(Result) := Neslib.FastMath.TVector4(V1) + Neslib.FastMath.TVector4(V1);
+  Neslib.FastMath.TVector4(Result) := Neslib.FastMath.TVector4(V1) + Neslib.FastMath.TVector4(V2);
 {$ELSE}
   result.X := V1.X + V2.X;
   result.Y := V1.Y + V2.Y;
@@ -2000,7 +2000,7 @@ end;
 procedure VectorAdd(const V1, V2: TVector; var vr: TVector);
 begin
 {$IFDEF GLS_FASTMATH}
-  Neslib.FastMath.TVector4(vr) := Neslib.FastMath.TVector4(V1) + Neslib.FastMath.TVector4(V1);
+  Neslib.FastMath.TVector4(vr) := Neslib.FastMath.TVector4(V1) + Neslib.FastMath.TVector4(V2);
 {$ELSE}
   vr.X := V1.X + V2.X;
   vr.Y := V1.Y + V2.Y;
