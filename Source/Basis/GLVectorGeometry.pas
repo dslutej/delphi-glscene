@@ -525,13 +525,13 @@ procedure AddVector(var V1: TAffineVector; const V2: TVector); overload; inline
 // Adds V2 to V1, result is placed in V1
 procedure AddVector(var V1: TVector; const V2: TVector); overload; inline
 // Sums up f to each component of the vector
-procedure AddVector(var V: TAffineVector; const f: Single); overload;{$IFDEF GLS_INLINE_VICE_ASM}inline; {$ENDIF}
+procedure AddVector(var V: TAffineVector; const f: Single); overload; inline;
 // Sums up f to each component of the vector
-procedure AddVector(var V: TVector; const f: Single); overload;{$IFDEF GLS_INLINE_VICE_ASM}inline; {$ENDIF}
+procedure AddVector(var V: TVector; const f: Single); overload; inline;
 // Adds V2 to V1, result is placed in V1. W coordinate is always 1.
-procedure AddPoint(var V1: TVector; const V2: TVector); overload;{$IFDEF GLS_INLINE_VICE_ASM}inline; {$ENDIF}
+procedure AddPoint(var V1: TVector; const V2: TVector); overload; inline;
 // Returns the sum of two homogeneous vectors. W coordinate is always 1.
-function PointAdd(var V1: TVector; const V2: TVector): TVector; overload;{$IFDEF GLS_INLINE_VICE_ASM}inline; {$ENDIF}
+function PointAdd(var V1: TVector; const V2: TVector): TVector; overload; inline;
 // Adds delta to nb texpoints in src and places result in dest
 procedure TexPointArrayAdd(const src: PTexPointArray; const delta: TTexPoint; const nb: Integer; dest: PTexPointArray); overload;
 procedure TexPointArrayScaleAndAdd(const src: PTexPointArray; const delta: TTexPoint;
@@ -2032,7 +2032,7 @@ begin
   result.X := V1.X - V2.X;
   result.Y := V1.Y - V2.Y;
   result.Z := V1.Z - V2.Z;
-  result.W := V1.X;
+  result.W := V1.W;
 end;
 
 function VectorSubtract(const V1, V2: TVector): TVector;
