@@ -42,12 +42,9 @@ uses
 
   GLVectorTypes;
 
-
-
 const
   cMaxArray = (MaxInt shr 4);
   cColinearBias = 1E-8;
-
 
 type
   // data types needed for 3D graphics calculation,
@@ -1204,8 +1201,8 @@ procedure RandomPointOnSphere(var p: TAffineVector);
 
 // Rounds the floating point value to the closest integer.
 // Behaves like Round but returns a floating point value like Int.
-function RoundInt(V: Single): Single; overload;
-function RoundInt(V: Extended): Extended; overload;
+function RoundInt(V: Single): Single; overload; inline;
+function RoundInt(V: Extended): Extended; overload; inline;
 
 // Multiples i by s and returns the rounded result.
 function ScaleAndRound(i: Integer; var S: Single): Integer;
@@ -1622,7 +1619,6 @@ begin
 end;
 
 procedure SetAffineVector(out V: TAffineVector; const X, Y, Z: Single);
-  overload;
 begin
   V.X := X;
   V.Y := Y;
@@ -1784,33 +1780,13 @@ begin
   V.W := 0.0; // cZero;
 end;
 
-{$IFDEF GLS_ASM}
-procedure RstVector(var V: TAffineVector);
-asm
-  xor   edx, edx
-  mov   [eax], edx
-  mov   [eax+4], edx
-  mov   [eax+8], edx
-end;
-{$ELSE}
 procedure RstVector(var V: TAffineVector);
 begin
   V.X := 0;
   V.Y := 0;
   V.Z := 0;
 end;
-{$ENDIF}
 
-{$IFDEF GLS_ASM}
-procedure RstVector(var V: TVector);
-asm
-  xor   edx, edx
-  mov   [eax], edx
-  mov   [eax+4], edx
-  mov   [eax+8], edx
-  mov   [eax+12], edx
-end;
-{$ELSE}
 procedure RstVector(var V: TVector);
 begin
   V.X := 0;
@@ -1818,139 +1794,46 @@ begin
   V.Z := 0;
   V.W := 0;
 end;
-{$ENDIF}
 
-{$IFDEF GLS_ASM}
-function VectorAdd(const V1, V2: TVector2f): TVector2f;
-// EAX contains address of V1
-// EDX contains address of V2
-// ECX contains the result
-asm
-  FLD  DWORD PTR [EAX]
-  FADD DWORD PTR [EDX]
-  FSTP DWORD PTR [ECX]
-  FLD  DWORD PTR [EAX+4]
-  FADD DWORD PTR [EDX+4]
-  FSTP DWORD PTR [ECX+4]
-end;
-{$ELSE}
 function VectorAdd(const V1, V2: TVector2f): TVector2f;
 begin
   result.X := V1.X + V2.X;
   result.Y := V1.Y + V2.Y;
 end;
-{$ENDIF}
 
-{$IFDEF GLS_ASM}
-function VectorAdd(const V1, V2: TAffineVector): TAffineVector;
-// EAX contains address of V1
-// EDX contains address of V2
-// ECX contains the result
-asm
-  FLD  DWORD PTR [EAX]
-  FADD DWORD PTR [EDX]
-  FSTP DWORD PTR [ECX]
-  FLD  DWORD PTR [EAX+4]
-  FADD DWORD PTR [EDX+4]
-  FSTP DWORD PTR [ECX+4]
-  FLD  DWORD PTR [EAX+8]
-  FADD DWORD PTR [EDX+8]
-  FSTP DWORD PTR [ECX+8]
-end;
-{$ELSE}
 function VectorAdd(const V1, V2: TAffineVector): TAffineVector;
 begin
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath.TVector3(Result) := Neslib.FastMath.TVector3(V1) + Neslib.FastMath.TVector3(V2);
+{$ELSE}
   result.X := V1.X + V2.X;
   result.Y := V1.Y + V2.Y;
   result.Z := V1.Z + V2.Z;
-end;
 {$ENDIF}
-
-{$IFDEF GLS_ASM}
-procedure VectorAdd(const V1, V2: TAffineVector;
-  var vr: TAffineVector); overload;
-// EAX contains address of V1
-// EDX contains address of V2
-// ECX contains the result
-asm
-  FLD  DWORD PTR [EAX]
-  FADD DWORD PTR [EDX]
-  FSTP DWORD PTR [ECX]
-  FLD  DWORD PTR [EAX+4]
-  FADD DWORD PTR [EDX+4]
-  FSTP DWORD PTR [ECX+4]
-  FLD  DWORD PTR [EAX+8]
-  FADD DWORD PTR [EDX+8]
-  FSTP DWORD PTR [ECX+8]
 end;
-{$ELSE}
-procedure VectorAdd(const V1, V2: TAffineVector;
-  var vr: TAffineVector); overload;
+
+procedure VectorAdd(const V1, V2: TAffineVector; var vr: TAffineVector); overload;
 begin
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath.TVector3(vr) := Neslib.FastMath.TVector3(V1) + Neslib.FastMath.TVector3(V2);
+{$ELSE}
   vr.X := V1.X + V2.X;
   vr.Y := V1.Y + V2.Y;
   vr.Z := V1.Z + V2.Z;
-end;
 {$ENDIF}
-
-{$IFDEF GLS_ASM}
-procedure VectorAdd(const V1, V2: TAffineVector; vr: PAffineVector); overload;
-// EAX contains address of V1
-// EDX contains address of V2
-// ECX contains the result
-asm
-  FLD  DWORD PTR [EAX]
-  FADD DWORD PTR [EDX]
-  FSTP DWORD PTR [ECX]
-  FLD  DWORD PTR [EAX+4]
-  FADD DWORD PTR [EDX+4]
-  FSTP DWORD PTR [ECX+4]
-  FLD  DWORD PTR [EAX+8]
-  FADD DWORD PTR [EDX+8]
-  FSTP DWORD PTR [ECX+8]
 end;
-{$ELSE}
+
 procedure VectorAdd(const V1, V2: TAffineVector; vr: PAffineVector); overload;
 begin
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath.TVector3(vr^) := Neslib.FastMath.TVector3(V1) + Neslib.FastMath.TVector3(V2);
+{$ELSE}
   vr^.X := V1.X + V2.X;
   vr^.Y := V1.Y + V2.Y;
   vr^.Z := V1.Z + V2.Z;
-end;
 {$ENDIF}
-
-{$IFDEF GLS_ASM}
-function VectorAdd(const V1, V2: TVector): TVector;
-// EAX contains address of V1
-// EDX contains address of V2
-// ECX contains the result
-asm
-  test vSIMD, 1
-  jz @@FPU
-@@3DNow:
-  db $0F,$6F,$00           /// movq  mm0, [eax]
-  db $0F,$0F,$02,$9E       /// pfadd mm0, [edx]
-  db $0F,$7F,$01           /// movq  [ecx], mm0
-  db $0F,$6F,$48,$08       /// movq  mm1, [eax+8]
-  db $0F,$0F,$4A,$08,$9E   /// pfadd mm1, [edx+8]
-  db $0F,$7F,$49,$08       /// movq  [ecx+8], mm1
-  db $0F,$0E               /// femms
-  ret
-
-@@FPU:
-  FLD  DWORD PTR [EAX]
-  FADD DWORD PTR [EDX]
-  FSTP DWORD PTR [ECX]
-  FLD  DWORD PTR [EAX+4]
-  FADD DWORD PTR [EDX+4]
-  FSTP DWORD PTR [ECX+4]
-  FLD  DWORD PTR [EAX+8]
-  FADD DWORD PTR [EDX+8]
-  FSTP DWORD PTR [ECX+8]
-  FLD  DWORD PTR [EAX+12]
-  FADD DWORD PTR [EDX+12]
-  FSTP DWORD PTR [ECX+12]
 end;
-{$ELSE}
+
 function VectorAdd(const V1, V2: TVector): TVector;
 begin
 {$IFDEF GLS_FASTMATH}
@@ -1962,41 +1845,7 @@ begin
   result.W := V1.W + V2.W;
 {$ENDIF}
 end;
-{$ENDIF}
 
-{$IFDEF GLS_ASM}
-procedure VectorAdd(const V1, V2: TVector; var vr: TVector);
-// EAX contains address of V1
-// EDX contains address of V2
-// ECX contains the result
-asm
-  test vSIMD, 1
-  jz @@FPU
-@@3DNow:
-  db $0F,$6F,$00           /// movq  mm0, [eax]
-  db $0F,$0F,$02,$9E       /// pfadd mm0, [edx]
-  db $0F,$7F,$01           /// movq  [ecx], mm0
-  db $0F,$6F,$48,$08       /// movq  mm1, [eax+8]
-  db $0F,$0F,$4A,$08,$9E   /// pfadd mm1, [edx+8]
-  db $0F,$7F,$49,$08       /// movq  [ecx+8], mm1
-  db $0F,$0E               /// femms
-  ret
-
-@@FPU:
-  FLD  DWORD PTR [EAX]
-  FADD DWORD PTR [EDX]
-  FSTP DWORD PTR [ECX]
-  FLD  DWORD PTR [EAX+4]
-  FADD DWORD PTR [EDX+4]
-  FSTP DWORD PTR [ECX+4]
-  FLD  DWORD PTR [EAX+8]
-  FADD DWORD PTR [EDX+8]
-  FSTP DWORD PTR [ECX+8]
-  FLD  DWORD PTR [EAX+12]
-  FADD DWORD PTR [EDX+12]
-  FSTP DWORD PTR [ECX+12]
-end;
-{$ELSE}
 procedure VectorAdd(const V1, V2: TVector; var vr: TVector);
 begin
 {$IFDEF GLS_FASTMATH}
@@ -2008,21 +1857,28 @@ begin
   vr.W := V1.W + V2.W;
 {$ENDIF}
 end;
-{$ENDIF}
 
 function VectorAdd(const V: TAffineVector; const f: Single): TAffineVector;
 begin
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath.TVector3(Result) := Neslib.FastMath.TVector3(V) + f;
+{$ELSE}
   result.X := V.X + f;
   result.Y := V.Y + f;
   result.Z := V.Z + f;
+{$ENDIF}
 end;
 
 function VectorAdd(const V: TVector; const f: Single): TVector;
 begin
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath.TVector4(Result) := Neslib.FastMath.TVector4(V) + f;
+{$ELSE}
   result.X := V.X + f;
   result.Y := V.Y + f;
   result.Z := V.Z + f;
   result.W := V.W + f;
+{$ENDIF}
 end;
 
 function PointAdd(var V1: TVector; const V2: TVector): TVector;
@@ -2033,107 +1889,57 @@ begin
   result.W := 1;
 end;
 
-{$IFDEF GLS_ASM}
-procedure AddVector(var V1: TAffineVector; const V2: TAffineVector);
-// EAX contains address of V1
-// EDX contains address of V2
-asm
-  FLD  DWORD PTR [EAX]
-  FADD DWORD PTR [EDX]
-  FSTP DWORD PTR [EAX]
-  FLD  DWORD PTR [EAX+4]
-  FADD DWORD PTR [EDX+4]
-  FSTP DWORD PTR [EAX+4]
-  FLD  DWORD PTR [EAX+8]
-  FADD DWORD PTR [EDX+8]
-  FSTP DWORD PTR [EAX+8]
-end;
-{$ELSE}
 procedure AddVector(var V1: TAffineVector; const V2: TAffineVector);
 begin
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath.TVector3(V1) := Neslib.FastMath.TVector3(V1) + Neslib.FastMath.TVector3(V2);
+{$ELSE}
   V1.X := V1.X + V2.X;
   V1.Y := V1.Y + V2.Y;
   V1.Z := V1.Z + V2.Z;
-end;
 {$ENDIF}
-
-{$IFDEF GLS_ASM}
-procedure AddVector(var V1: TAffineVector; const V2: TVector);
-// EAX contains address of V1
-// EDX contains address of V2
-asm
-  FLD  DWORD PTR [EAX]
-  FADD DWORD PTR [EDX]
-  FSTP DWORD PTR [EAX]
-  FLD  DWORD PTR [EAX+4]
-  FADD DWORD PTR [EDX+4]
-  FSTP DWORD PTR [EAX+4]
-  FLD  DWORD PTR [EAX+8]
-  FADD DWORD PTR [EDX+8]
-  FSTP DWORD PTR [EAX+8]
 end;
-{$ELSE}
+
 procedure AddVector(var V1: TAffineVector; const V2: TVector);
 begin
   V1.X := V1.X + V2.X;
   V1.Y := V1.Y + V2.Y;
   V1.Z := V1.Z + V2.Z;
 end;
-{$ENDIF}
 
-{$IFDEF GLS_ASM}
-procedure AddVector(var V1: TVector; const V2: TVector);
-// EAX contains address of V1
-// EDX contains address of V2
-asm
-  test vSIMD, 1
-  jz @@FPU
-@@3DNow:
-  db $0F,$6F,$00           /// MOVQ  MM0, [EAX]
-  db $0F,$0F,$02,$9E       /// PFADD MM0, [EDX]
-  db $0F,$7F,$00           /// MOVQ  [EAX], MM0
-  db $0F,$6F,$48,$08       /// MOVQ  MM1, [EAX+8]
-  db $0F,$0F,$4A,$08,$9E   /// PFADD MM1, [EDX+8]
-  db $0F,$7F,$48,$08       /// MOVQ  [EAX+8], MM1
-  db $0F,$0E               /// FEMMS
-  ret
-@@FPU:
-  FLD  DWORD PTR [EAX]
-  FADD DWORD PTR [EDX]
-  FSTP DWORD PTR [EAX]
-  FLD  DWORD PTR [EAX+4]
-  FADD DWORD PTR [EDX+4]
-  FSTP DWORD PTR [EAX+4]
-  FLD  DWORD PTR [EAX+8]
-  FADD DWORD PTR [EDX+8]
-  FSTP DWORD PTR [EAX+8]
-  FLD  DWORD PTR [EAX+12]
-  FADD DWORD PTR [EDX+12]
-  FSTP DWORD PTR [EAX+12]
-end;
-  {$ELSE}
 procedure AddVector(var V1: TVector; const V2: TVector);
 begin
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath.TVector4(V1) := Neslib.FastMath.TVector4(V1) + Neslib.FastMath.TVector4(V2);
+{$ELSE}
   V1.X := V1.X + V2.X;
   V1.Y := V1.Y + V2.Y;
   V1.Z := V1.Z + V2.Z;
   V1.W := V1.W + V2.W;
-end;
 {$ENDIF}
+end;
 
 procedure AddVector(var V: TAffineVector; const f: Single);
 begin
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath.TVector3(V) := Neslib.FastMath.TVector3(V) + f;
+{$ELSE}
   V.X := V.X + f;
   V.Y := V.Y + f;
   V.Z := V.Z + f;
+{$ENDIF}
 end;
 
 procedure AddVector(var V: TVector; const f: Single);
 begin
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath.TVector4(V) := Neslib.FastMath.TVector4(V) + f;
+{$ELSE}
   V.X := V.X + f;
   V.Y := V.Y + f;
   V.Z := V.Z + f;
   V.W := V.W + f;
+{$ENDIF}
 end;
 
 procedure AddPoint(var V1: TVector; const V2: TVector);
@@ -2183,98 +1989,35 @@ begin
   end;
 end;
 
-{$IFDEF GLS_ASM}
-function VectorSubtract(const V1, V2: TAffineVector): TAffineVector;
-// EAX contains address of V1
-// EDX contains address of V2
-// ECX contains the result
-asm
-  FLD  DWORD PTR [EAX]
-  FSUB DWORD PTR [EDX]
-  FSTP DWORD PTR [ECX]
-  FLD  DWORD PTR [EAX+4]
-  FSUB DWORD PTR [EDX+4]
-  FSTP DWORD PTR [ECX+4]
-  FLD  DWORD PTR [EAX+8]
-  FSUB DWORD PTR [EDX+8]
-  FSTP DWORD PTR [ECX+8]
-end;
-{$ELSE}
 function VectorSubtract(const V1, V2: TAffineVector): TAffineVector;
 begin
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath.TVector3(Result) := Neslib.FastMath.TVector3(V1) - Neslib.FastMath.TVector3(V2);
+{$ELSE}
   result.X := V1.X - V2.X;
   result.Y := V1.Y - V2.Y;
   result.Z := V1.Z - V2.Z;
-end;
 {$ENDIF}
-
-{$IFDEF GLS_ASM}
-function VectorSubtract(const V1, V2: TVector2f): TVector2f;
-// EAX contains address of V1
-// EDX contains address of V2
-// ECX contains the result
-asm
-  FLD  DWORD PTR [EAX]
-  FSUB DWORD PTR [EDX]
-  FSTP DWORD PTR [ECX]
-  FLD  DWORD PTR [EAX+4]
-  FSUB DWORD PTR [EDX+4]
-  FSTP DWORD PTR [ECX+4]
 end;
-{$ELSE}
+
 function VectorSubtract(const V1, V2: TVector2f): TVector2f;
 begin
   result.X := V1.X - V2.X;
   result.Y := V1.Y - V2.Y;
 end;
-{$ENDIF}
 
-{$IFDEF GLS_ASM}
-procedure VectorSubtract(const V1, V2: TAffineVector;
-  var result: TAffineVector);
-// EAX contains address of V1
-// EDX contains address of V2
-// ECX contains the result
-asm
-  FLD  DWORD PTR [EAX]
-  FSUB DWORD PTR [EDX]
-  FSTP DWORD PTR [ECX]
-  FLD  DWORD PTR [EAX+4]
-  FSUB DWORD PTR [EDX+4]
-  FSTP DWORD PTR [ECX+4]
-  FLD  DWORD PTR [EAX+8]
-  FSUB DWORD PTR [EDX+8]
-  FSTP DWORD PTR [ECX+8]
-end;
-{$ELSE}
 procedure VectorSubtract(const V1, V2: TAffineVector;
   var result: TAffineVector);
 begin
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath.TVector3(Result) := Neslib.FastMath.TVector3(V1) - Neslib.FastMath.TVector3(V2);
+{$ELSE}
   result.X := V1.X - V2.X;
   result.Y := V1.Y - V2.Y;
   result.Z := V1.Z - V2.Z;
-end;
 {$ENDIF}
-
-{$IFDEF GLS_ASM}
-procedure VectorSubtract(const V1, V2: TAffineVector; var result: TVector);
-// EAX contains address of V1
-// EDX contains address of V2
-// ECX contains the result
-asm
-  FLD  DWORD PTR [EAX]
-  FSUB DWORD PTR [EDX]
-  FSTP DWORD PTR [ECX]
-  FLD  DWORD PTR [EAX+4]
-  FSUB DWORD PTR [EDX+4]
-  FSTP DWORD PTR [ECX+4]
-  FLD  DWORD PTR [EAX+8]
-  FSUB DWORD PTR [EDX+8]
-  FSTP DWORD PTR [ECX+8]
-  xor   eax, eax
-  mov   [ECX+12], eax
 end;
-{$ELSE}
+
 procedure VectorSubtract(const V1, V2: TAffineVector; var result: TVector);
 begin
   result.X := V1.X - V2.X;
@@ -2282,28 +2025,7 @@ begin
   result.Z := V1.Z - V2.Z;
   result.W := 0;
 end;
-{$ENDIF}
 
-{$IFDEF GLS_ASM}
-procedure VectorSubtract(const V1: TVector; V2: TAffineVector;
-  var result: TVector);
-// EAX contains address of V1
-// EDX contains address of V2
-// ECX contains the result
-asm
-  FLD  DWORD PTR [EAX]
-  FSUB DWORD PTR [EDX]
-  FSTP DWORD PTR [ECX]
-  FLD  DWORD PTR [EAX+4]
-  FSUB DWORD PTR [EDX+4]
-  FSTP DWORD PTR [ECX+4]
-  FLD  DWORD PTR [EAX+8]
-  FSUB DWORD PTR [EDX+8]
-  FSTP DWORD PTR [ECX+8]
-  mov   edx, [eax+12]
-  mov   [ECX+12], edx
-end;
-{$ELSE}
 procedure VectorSubtract(const V1: TVector; const V2: TAffineVector;
   var result: TVector);
 begin
@@ -2312,108 +2034,31 @@ begin
   result.Z := V1.Z - V2.Z;
   result.W := V1.X;
 end;
-{$ENDIF}
 
-{$IFDEF GLS_ASM}
-function VectorSubtract(const V1, V2: TVector): TVector;
-// EAX contains address of V1
-// EDX contains address of V2
-// ECX contains the result
-asm
-  test vSIMD, 1
-  jz @@FPU
-@@3DNow:
-  db $0F,$6F,$00           /// MOVQ  MM0, [EAX]
-  db $0F,$0F,$02,$9A       /// PFSUB MM0, [EDX]
-  db $0F,$7F,$01           /// MOVQ  [ECX], MM0
-  db $0F,$6F,$48,$08       /// MOVQ  MM1, [EAX+8]
-  db $0F,$0F,$4A,$08,$9A   /// PFSUB MM1, [EDX+8]
-  db $0F,$7F,$49,$08       /// MOVQ  [ECX+8], MM1
-  db $0F,$0E               /// FEMMS
-  ret
-@@FPU:
-  FLD  DWORD PTR [EAX]
-  FSUB DWORD PTR [EDX]
-  FSTP DWORD PTR [ECX]
-  FLD  DWORD PTR [EAX+4]
-  FSUB DWORD PTR [EDX+4]
-  FSTP DWORD PTR [ECX+4]
-  FLD  DWORD PTR [EAX+8]
-  FSUB DWORD PTR [EDX+8]
-  FSTP DWORD PTR [ECX+8]
-  FLD  DWORD PTR [EAX+12]
-  FSUB DWORD PTR [EDX+12]
-  FSTP DWORD PTR [ECX+12]
-end;
-{$ELSE}
 function VectorSubtract(const V1, V2: TVector): TVector;
 begin
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath.TVector4(Result) := Neslib.FastMath.TVector4(V1) - Neslib.FastMath.TVector4(V2);
+{$ELSE}
   result.X := V1.X - V2.X;
   result.Y := V1.Y - V2.Y;
   result.Z := V1.Z - V2.Z;
   result.W := V1.W - V2.W;
-end;
 {$ENDIF}
-
-{$IFDEF GLS_ASM}
-procedure VectorSubtract(const V1, V2: TVector; var result: TVector);
-// EAX contains address of V1
-// EDX contains address of V2
-// ECX contains the result
-asm
-  test vSIMD, 1
-  jz @@FPU
-@@3DNow:
-  db $0F,$6F,$00           /// MOVQ  MM0, [EAX]
-  db $0F,$0F,$02,$9A       /// PFSUB MM0, [EDX]
-  db $0F,$7F,$01           /// MOVQ  [ECX], MM0
-  db $0F,$6F,$48,$08       /// MOVQ  MM1, [EAX+8]
-  db $0F,$0F,$4A,$08,$9A   /// PFSUB MM1, [EDX+8]
-  db $0F,$7F,$49,$08       /// MOVQ  [ECX+8], MM1
-  db $0F,$0E               /// FEMMS
-  ret
-@@FPU:
-  FLD  DWORD PTR [EAX]
-  FSUB DWORD PTR [EDX]
-  FSTP DWORD PTR [ECX]
-  FLD  DWORD PTR [EAX+4]
-  FSUB DWORD PTR [EDX+4]
-  FSTP DWORD PTR [ECX+4]
-  FLD  DWORD PTR [EAX+8]
-  FSUB DWORD PTR [EDX+8]
-  FSTP DWORD PTR [ECX+8]
-  FLD  DWORD PTR [EAX+12]
-  FSUB DWORD PTR [EDX+12]
-  FSTP DWORD PTR [ECX+12]
 end;
-{$ELSE}
+
 procedure VectorSubtract(const V1, V2: TVector; var result: TVector);
 begin
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath.TVector4(Result) := Neslib.FastMath.TVector4(V1) - Neslib.FastMath.TVector4(V2);
+{$ELSE}
   result.X := V1.X - V2.X;
   result.Y := V1.Y - V2.Y;
   result.Z := V1.Z - V2.Z;
   result.W := V1.W - V2.W;
-end;
 {$ENDIF}
-
-{$IFDEF GLS_ASM}
-procedure VectorSubtract(const V1, V2: TVector;
-  var result: TAffineVector); overload;
-// EAX contains address of V1
-// EDX contains address of V2
-// ECX contains the result
-asm
-  FLD  DWORD PTR [EAX]
-  FSUB DWORD PTR [EDX]
-  FSTP DWORD PTR [ECX]
-  FLD  DWORD PTR [EAX+4]
-  FSUB DWORD PTR [EDX+4]
-  FSTP DWORD PTR [ECX+4]
-  FLD  DWORD PTR [EAX+8]
-  FSUB DWORD PTR [EDX+8]
-  FSTP DWORD PTR [ECX+8]
 end;
-{$ELSE}
+
 procedure VectorSubtract(const V1, V2: TVector;
   var result: TAffineVector); overload;
 begin
@@ -2421,106 +2066,58 @@ begin
   result.Y := V1.Y - V2.Y;
   result.Z := V1.Z - V2.Z;
 end;
-{$ENDIF}
 
 function VectorSubtract(const V1: TAffineVector; delta: Single): TAffineVector;
 begin
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath.TVector3(Result) := Neslib.FastMath.TVector3(V1) - delta;
+{$ELSE}
   result.X := V1.X - delta;
   result.Y := V1.Y - delta;
   result.Z := V1.Z - delta;
+{$ENDIF}
 end;
 
 function VectorSubtract(const V1: TVector; delta: Single): TVector;
 begin
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath.TVector4(Result) := Neslib.FastMath.TVector4(V1) - delta;
+{$ELSE}
   result.X := V1.X - delta;
   result.Y := V1.Y - delta;
   result.Z := V1.Z - delta;
   result.W := V1.W - delta;
+{$ENDIF}
 end;
 
-{$IFDEF GLS_ASM}
-procedure SubtractVector(var V1: TAffineVector; const V2: TAffineVector);
-// EAX contains address of V1
-// EDX contains address of V2
-asm
-  FLD  DWORD PTR [EAX]
-  FSUB DWORD PTR [EDX]
-  FSTP DWORD PTR [EAX]
-  FLD  DWORD PTR [EAX+4]
-  FSUB DWORD PTR [EDX+4]
-  FSTP DWORD PTR [EAX+4]
-  FLD  DWORD PTR [EAX+8]
-  FSUB DWORD PTR [EDX+8]
-  FSTP DWORD PTR [EAX+8]
-end;
-{$ELSE}
 procedure SubtractVector(var V1: TAffineVector; const V2: TAffineVector);
 begin
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath.TVector3(V1) := Neslib.FastMath.TVector3(V1) - Neslib.FastMath.TVector3(V2);
+{$ELSE}
   V1.X := V1.X - V2.X;
   V1.Y := V1.Y - V2.Y;
   V1.Z := V1.Z - V2.Z;
-end;
 {$ENDIF}
-
-{$IFDEF GLS_ASM}
-procedure SubtractVector(var V1: TVector2f; const V2: TVector2f);
-// EAX contains address of V1
-// EDX contains address of V2
-asm
-  FLD  DWORD PTR [EAX]
-  FSUB DWORD PTR [EDX]
-  FSTP DWORD PTR [EAX]
-  FLD  DWORD PTR [EAX+4]
-  FSUB DWORD PTR [EDX+4]
-  FSTP DWORD PTR [EAX+4]
 end;
-{$ELSE}
+
 procedure SubtractVector(var V1: TVector2f; const V2: TVector2f);
 begin
   V1.X := V1.X - V2.X;
   V1.Y := V1.Y - V2.Y;
 end;
-{$ENDIF}
 
-{$IFDEF GLS_ASM}
-procedure SubtractVector(var V1: TVector; const V2: TVector);
-// EAX contains address of V1
-// EDX contains address of V2
-asm
-  test vSIMD, 1
-  jz @@FPU
-@@3DNow:
-  db $0F,$6F,$00           /// MOVQ  MM0, [EAX]
-  db $0F,$0F,$02,$9A       /// PFSUB MM0, [EDX]
-  db $0F,$7F,$00           /// MOVQ  [EAX], MM0
-  db $0F,$6F,$48,$08       /// MOVQ  MM1, [EAX+8]
-  db $0F,$0F,$4A,$08,$9A   /// PFSUB MM1, [EDX+8]
-  db $0F,$7F,$48,$08       /// MOVQ  [EAX+8], MM1
-  db $0F,$0E               /// FEMMS
-  ret
-@@FPU:
-  FLD  DWORD PTR [EAX]
-  FSUB DWORD PTR [EDX]
-  FSTP DWORD PTR [EAX]
-  FLD  DWORD PTR [EAX+4]
-  FSUB DWORD PTR [EDX+4]
-  FSTP DWORD PTR [EAX+4]
-  FLD  DWORD PTR [EAX+8]
-  FSUB DWORD PTR [EDX+8]
-  FSTP DWORD PTR [EAX+8]
-  FLD  DWORD PTR [EAX+12]
-  FSUB DWORD PTR [EDX+12]
-  FSTP DWORD PTR [EAX+12]
-end;
-{$ELSE}
 procedure SubtractVector(var V1: TVector; const V2: TVector);
 begin
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath.TVector4(V1) := Neslib.FastMath.TVector4(V1) - Neslib.FastMath.TVector4(V2);
+{$ELSE}
   V1.X := V1.X - V2.X;
   V1.Y := V1.Y - V2.Y;
   V1.Z := V1.Z - V2.Z;
   V1.W := V1.W - V2.W;
-end;
 {$ENDIF}
+end;
 
 {$IFDEF GLS_ASM}
 procedure CombineVector(var vr: TAffineVector; const V: TAffineVector;
@@ -2953,26 +2550,6 @@ end;
 function VectorCrossProduct(const V1, V2: TVector): TVector;
 asm
 
-  (*
-
-  movups xmm0, [v1]
-  movaps xmm1, xmm0
-  shufps xmm0, xmm0, 00001001b // xXZY
-  shufps xmm1, xmm1, 00010010b // xYXZ
-
-  movups xmm2, [v2]
-  movaps xmm3, xmm2
-  shufps xmm2, xmm2, 00010010b // xYXZ
-  shufps xmm3, xmm3, 00001001b // xXZY
-
-  mulps  xmm0, xmm2
-  mulps  xmm1, xmm3
-
-  subps  xmm0, xmm1
-
-  movups [Result], xmm0
-
-  (**)
   // Faster 3 shuffle optimization from http://threadlocalmutex.com/?p=8
   // One movaps less also
 
@@ -2991,7 +2568,6 @@ asm
   shufps xmm0, xmm0, 11001001b // WXZY
 
   movups [Result], xmm0
-  (**)
 
 end;
 {
@@ -3041,26 +2617,6 @@ end;
 procedure VectorCrossProduct(const V1, V2: TVector; var vr: TVector);
 asm
 
-  (*
-
-  movups xmm0, [v1]
-  movaps xmm1, xmm0
-  shufps xmm0, xmm0, 00001001b // xXZY
-  shufps xmm1, xmm1, 00010010b // xYXZ
-
-  movups xmm2, [v2]
-  movaps xmm3, xmm2
-  shufps xmm2, xmm2, 00010010b // xYXZ
-  shufps xmm3, xmm3, 00001001b // xXZY
-
-  mulps  xmm0, xmm2
-  mulps  xmm1, xmm3
-
-  subps  xmm0, xmm1
-
-  movups [vr], xmm0
-
-  (**)
   // Faster 3 shuffle optimization from http://threadlocalmutex.com/?p=8
   // One movaps less also
 
@@ -3079,7 +2635,6 @@ asm
   shufps xmm0, xmm0, 11001001b // WXZY
 
   movups [vr], xmm0
-  (**)
 
 
 end;
@@ -3543,33 +3098,22 @@ begin
 end;
 
 function VectorLength(const V: TAffineVector): Single;
-// EAX contains address of V
-// result is passed in ST(0)
 begin
+{$IFDEF GLS_FASTMATH}
+  Result := Neslib.FastMath.TVector3(V).Length;
+{$ELSE}
   result := Sqrt(VectorNorm(V));
+{$ENDIF}
 end;
 
-{$IFDEF GLS_ASM}
-function VectorLength(const V: TVector): Single;
-// EAX contains address of V
-// result is passed in ST(0)
-asm
-  FLD  DWORD PTR [EAX]
-  FMUL ST, ST
-  FLD  DWORD PTR [EAX+4]
-  FMUL ST, ST
-  FADDP
-  FLD  DWORD PTR [EAX+8]
-  FMUL ST, ST
-  FADDP
-  FSQRT
-end;
-{$ELSE}
 function VectorLength(const V: TVector): Single;
 begin
+{$IFDEF GLS_FASTMATH}
+  Result := Neslib.FastMath.TVector4(V).Length;
+{$ELSE}
   result := Sqrt(VectorNorm(V));
-end;
 {$ENDIF}
+end;
 
 function VectorNorm(const X, Y: Single): Single;
 begin
@@ -4597,7 +4141,6 @@ begin
 {$ELSE}
   result := (V1._1 = V2._1) and (V1._2 = V2._2) and (V1._3 = V2._3)
     and (V1._4 = V2._4);
-
 {$ENDIF}
 end;
 {$ENDIF}
@@ -4748,111 +4291,41 @@ begin
 end;
 {$ENDIF}
 
-{$IFDEF GLS_ASM}
-function VectorDistance(const V1, V2: TAffineVector): Single;
-// EAX contains address of v1
-// EDX contains highest of v2
-// Result  is passed on the stack
-asm
-  FLD  DWORD PTR [EAX]
-  FSUB DWORD PTR [EDX]
-  FMUL ST, ST
-  FLD  DWORD PTR [EAX+4]
-  FSUB DWORD PTR [EDX+4]
-  FMUL ST, ST
-  FADD
-  FLD  DWORD PTR [EAX+8]
-  FSUB DWORD PTR [EDX+8]
-  FMUL ST, ST
-  FADD
-  FSQRT
-end;
-{$ELSE}
 function VectorDistance(const V1, V2: TAffineVector): Single;
 begin
-  result := Sqrt(Sqr(V2.X - V1.X) + Sqr(V2.Y - V1.Y) +
-    Sqr(V2.Z - V1.Z));
-end;
-{$ENDIF}
-
-{$IFDEF GLS_ASM}
-function VectorDistance(const V1, V2: TVector): Single;
-// EAX contains address of v1
-// EDX contains highest of v2
-// Result  is passed on the stack
-asm
-  FLD  DWORD PTR [EAX]
-  FSUB DWORD PTR [EDX]
-  FMUL ST, ST
-  FLD  DWORD PTR [EAX+4]
-  FSUB DWORD PTR [EDX+4]
-  FMUL ST, ST
-  FADD
-  FLD  DWORD PTR [EAX+8]
-  FSUB DWORD PTR [EDX+8]
-  FMUL ST, ST
-  FADD
-  FSQRT
-end;
+{$IFDEF GLS_FASTMATH}
+  Result := NesLib.FastMath.TVector3(V1).Distance(NesLib.FastMath.TVector3(V2));
 {$ELSE}
+  result := Sqrt(Sqr(V2.X - V1.X) + Sqr(V2.Y - V1.Y) + Sqr(V2.Z - V1.Z));
+{$ENDIF}
+end;
+
 function VectorDistance(const V1, V2: TVector): Single;
 begin
-  result := Sqrt(Sqr(V2.X - V1.X) + Sqr(V2.Y - V1.Y) +
-    Sqr(V2.Z - V1.Z));
-end;
-{$ENDIF}
-
-{$IFDEF GLS_ASM}
-function VectorDistance2(const V1, V2: TAffineVector): Single;
-// EAX contains address of v1
-// EDX contains highest of v2
-// Result is passed on the stack
-asm
-  FLD  DWORD PTR [EAX]
-  FSUB DWORD PTR [EDX]
-  FMUL ST, ST
-  FLD  DWORD PTR [EAX+4]
-  FSUB DWORD PTR [EDX+4]
-  FMUL ST, ST
-  FADD
-  FLD  DWORD PTR [EAX+8]
-  FSUB DWORD PTR [EDX+8]
-  FMUL ST, ST
-  FADD
-end;
+{$IFDEF GLS_FASTMATH}
+  Result := NesLib.FastMath.TVector4(V1).Distance(NesLib.FastMath.TVector4(V2));
 {$ELSE}
+  result := Sqrt(Sqr(V2.X - V1.X) + Sqr(V2.Y - V1.Y) + Sqr(V2.Z - V1.Z));
+{$ENDIF}
+end;
+
 function VectorDistance2(const V1, V2: TAffineVector): Single;
 begin
-  result := Sqr(V2.X - V1.X) + Sqr(V2.Y - V1.Y) +
-    Sqr(V2.Z - V1.Z);
-end;
-{$ENDIF}
-
-{$IFDEF GLS_ASM}
-function VectorDistance2(const V1, V2: TVector): Single;
-// EAX contains address of v1
-// EDX contains highest of v2
-// Result is passed on the stack
-asm
-  FLD  DWORD PTR [EAX]
-  FSUB DWORD PTR [EDX]
-  FMUL ST, ST
-  FLD  DWORD PTR [EAX+4]
-  FSUB DWORD PTR [EDX+4]
-  FMUL ST, ST
-  FADD
-  FLD  DWORD PTR [EAX+8]
-  FSUB DWORD PTR [EDX+8]
-  FMUL ST, ST
-  FADD
-end;
+{$IFDEF GLS_FASTMATH}
+  Result := NesLib.FastMath.TVector3(V1).DistanceSquared(NesLib.FastMath.TVector3(V2));
 {$ELSE}
+  result := Sqr(V2.X - V1.X) + Sqr(V2.Y - V1.Y) + Sqr(V2.Z - V1.Z);
+{$ENDIF}
+end;
+
 function VectorDistance2(const V1, V2: TVector): Single;
 begin
-  result := Sqr(V2.X - V1.X) + Sqr(V2.Y - V1.Y) +
-    Sqr(V2.Z - V1.Z);
-end;
+{$IFDEF GLS_FASTMATH}
+  Result := NesLib.FastMath.TVector4(V1).DistanceSquared(NesLib.FastMath.TVector4(V2));
+{$ELSE}
+  result := Sqr(V2.X - V1.X) + Sqr(V2.Y - V1.Y) + Sqr(V2.Z - V1.Z);
 {$ENDIF}
+end;
 
 function VectorPerpendicular(const V, n: TAffineVector): TAffineVector;
 var
@@ -4866,7 +4339,11 @@ end;
 
 function VectorReflect(const V, n: TAffineVector): TAffineVector;
 begin
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath.TVector3(Result) := Neslib.FastMath.TVector3(V).Reflect(Neslib.FastMath.TVector3(n));
+{$ELSE}
   result := VectorCombine(V, n, 1, -2 * VectorDotProduct(V, n));
+{$ENDIF}
 end;
 
 procedure RotateVector(var Vector: TVector; const axis: TAffineVector;
@@ -7386,7 +6863,7 @@ end;
 function RoundInt(V: Single): Single;
 begin
 {$HINTS OFF}
-  result := Int(V + cOneDotFive);
+  result := Int(V + 0.5);
 {$HINTS ON}
 end;
 

@@ -11,6 +11,10 @@ unit GLMeshLines;
 interface
 
 uses
+
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath,
+{$ENDIF}
   System.Classes, 
   System.SysUtils,
   OpenGLTokens, 
