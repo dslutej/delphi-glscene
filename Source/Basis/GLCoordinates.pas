@@ -44,18 +44,17 @@ type
     Handles dynamic default values to save resource file space.  }
   TGLCustomCoordinates = class(TGLUpdateAbleObject)
   private
-     
     FCoords: TVector;
     FStyle: TGLCoordinatesStyle; // NOT Persistent
     FPDefaultCoords: PVector;
     procedure SetAsPoint2D(const Value: TVector2f);
     procedure SetAsVector(const Value: TVector);
     procedure SetAsAffineVector(const Value: TAffineVector);
-    function GetAsAffineVector: TAffineVector;
+    function GetAsAffineVector: TAffineVector; inline;
     function GetAsPoint2D: TVector2f;
     function GetAsString: String;
     function GetCoordinate(const AIndex: Integer): TGLFloat; inline;
-    procedure SetCoordinate(const AIndex: Integer; const AValue: TGLFloat);
+    procedure SetCoordinate(const AIndex: Integer; const AValue: TGLFloat); inline;
     function GetDirectCoordinate(const Index: Integer): TGLFloat; inline;
     procedure SetDirectCoordinate(const Index: Integer; const AValue: TGLFloat);
   protected
@@ -108,7 +107,7 @@ type
     procedure SetPoint2D(const Vector: TVector); overload;
     procedure SetPoint2D(const Vector: TVector2f); overload;
     procedure SetToZero;
-    function AsAddress: PGLFloat;
+    function AsAddress: PGLFloat; inline;
 
     {  The coordinates viewed as a vector. 
       Assigning a value to this property will trigger notification events,

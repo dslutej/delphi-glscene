@@ -894,7 +894,7 @@ function CreateRotationMatrixZ(const sine, cosine: Single): TMatrix; overload;
 function CreateRotationMatrixZ(const angle: Single): TMatrix; overload;
 // Creates a rotation matrix along the given Axis by the given Angle in radians.
 function CreateRotationMatrix(const anAxis: TAffineVector; angle: Single): TMatrix; overload;
-function CreateRotationMatrix(const anAxis: TVector; angle: Single): TMatrix; overload;
+function CreateRotationMatrix(const anAxis: TVector; angle: Single): TMatrix; overload; inline;
 // Creates a rotation matrix along the given Axis by the given Angle in radians.
 function CreateAffineRotationMatrix(const anAxis: TAffineVector; angle: Single): TAffineMatrix;
 
@@ -915,7 +915,7 @@ function VectorTransform(const V: TAffineVector; const M: TMatrix): TAffineVecto
 function VectorTransform(const V: TAffineVector; const M: TAffineMatrix): TAffineVector; overload; inline;
 
 // Determinant of a 3x3 matrix
-function MatrixDeterminant(const M: TAffineMatrix): Single; overload;
+function MatrixDeterminant(const M: TAffineMatrix): Single; overload; inline;
 // Determinant of a 4x4 matrix
 function MatrixDeterminant(const M: TMatrix): Single; overload;
 
@@ -1151,9 +1151,9 @@ function NormalizeDegAngle(angle: Single): Single;
 procedure SinCosine(const Theta: Extended; out Sin, Cos: Extended); overload;
 {$ENDIF}
 // Calculates sine and cosine from the given angle Theta
-procedure SinCosine(const Theta: Double; out Sin, Cos: Double); overload;
+procedure SinCosine(const Theta: Double; out Sin, Cos: Double); overload; inline;
 // Calculates sine and cosine from the given angle Theta
-procedure SinCosine(const Theta: Single; out Sin, Cos: Single); overload;
+procedure SinCosine(const Theta: Single; out Sin, Cos: Single); overload; inline;
 { Calculates sine and cosine from the given angle Theta and Radius.
   sin and cos values calculated from theta are multiplicated by radius. }
 {$IFDEF GLS_PLATFORM_HAS_EXTENDED}
@@ -1161,7 +1161,7 @@ procedure SinCosine(const Theta, radius: Double; out Sin, Cos: Extended); overlo
 {$ENDIF}
 { Calculates sine and cosine from the given angle Theta and Radius.
   sin and cos values calculated from theta are multiplicated by radius. }
-procedure SinCosine(const Theta, radius: Double; out Sin, Cos: Double); overload;
+procedure SinCosine(const Theta, radius: Double; out Sin, Cos: Double); overload; inline;
 { Calculates sine and cosine from the given angle Theta and Radius.
   sin and cos values calculated from theta are multiplicated by radius. }
 procedure SinCosine(const Theta, radius: Single; out Sin, Cos: Single); overload; inline;
@@ -4909,6 +4909,10 @@ end;
 
 function VectorTransform(const V: TVector; const M: TMatrix): TVector;
 begin
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath.TVector4(Result) := Neslib.FastMath.TVector4(V) * NesLib.FastMath.TMatrix4(M);
+{$ELSE}
+
   result.V[X] := V.V[X] * M.X.X + V.V[Y] * M.Y.X + V.V[Z] * M.Z.X +
     V.V[W] * M.W.X;
   result.V[Y] := V.V[X] * M.X.Y + V.V[Y] * M.Y.Y + V.V[Z] * M.Z.Y +
@@ -4917,6 +4921,7 @@ begin
     V.V[W] * M.W.Z;
   result.V[W] := V.V[X] * M.X.W + V.V[Y] * M.Y.W + V.V[Z] * M.Z.W +
     V.V[W] * M.W.W;
+{$ENDIF}
 end;
 
 function VectorTransform(const V: TVector; const M: TAffineMatrix): TVector;
@@ -4938,15 +4943,23 @@ end;
 function VectorTransform(const V: TAffineVector; const M: TAffineMatrix)
   : TAffineVector;
 begin
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath.TVector3(Result) := Neslib.FastMath.TVector3(V) * NesLib.FastMath.TMatrix3(M);
+{$ELSE}
   result.V[X] := V.V[X] * M.X.X + V.V[Y] * M.Y.X + V.V[Z] * M.Z.X;
   result.V[Y] := V.V[X] * M.X.Y + V.V[Y] * M.Y.Y + V.V[Z] * M.Z.Y;
   result.V[Z] := V.V[X] * M.X.Z + V.V[Y] * M.Y.Z + V.V[Z] * M.Z.Z;
+{$ENDIF}
 end;
 
 function MatrixDeterminant(const M: TAffineMatrix): Single;
 begin
+{$IFDEF GLS_FASTMATH}
+  Result := NesLib.FastMath.TMatrix3(M).Determinant;
+{$ELSE}
   result := M.X.X * (M.Y.Y * M.Z.Z - M.Z.Y * M.Y.Z) - M.X.Y *
     (M.Y.X * M.Z.Z - M.Z.X * M.Y.Z) + M.X.Z * (M.Y.X * M.Z.Y - M.Z.X * M.Y.Y);
+{$ENDIF}
 end;
 
 function MatrixDetInternal(const a1, a2, a3, b1, b2, b3, c1, c2,

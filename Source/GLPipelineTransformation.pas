@@ -75,7 +75,7 @@ type
     function GetModelMatrix: TMatrix; inline;
     function GetViewMatrix: TMatrix; inline;
     function GetProjectionMatrix: TMatrix; inline;
-    function GetModelViewMatrix: TMatrix;
+    function GetModelViewMatrix: TMatrix; inline;
     function GetInvModelViewMatrix: TMatrix; inline;
     function GetInvModelMatrix: TMatrix; inline;
     function GetNormalModelMatrix: TAffineMatrix; inline;

@@ -101,20 +101,17 @@ type
 
   TGLRagdoll = class(TPersistentObject)
 	private
-     
+
     FOwner : TGLBaseMesh;
     FRootBone : TGLRagdolBone;
     FEnabled: Boolean;
     FBuilt: Boolean;
   protected
-    
+
   public
-    
+
     constructor Create(AOwner : TGLBaseMesh); reintroduce;
     destructor Destroy; override;
-
-    procedure WriteToFiler(writer : TVirtualWriter); override;
-    procedure ReadFromFiler(reader : TVirtualReader); override;
 
     {Must be set before build the ragdoll }
     procedure SetRootBone(RootBone: TGLRagdolBone);
@@ -359,11 +356,6 @@ begin
   inherited Destroy;
 end;
 
-procedure TGLRagdoll.ReadFromFiler(reader: TVirtualReader);
-begin
-  inherited;
-end;
-
 procedure TGLRagdoll.SetRootBone(RootBone: TGLRagdolBone);
 begin
   FRootBone := RootBone;
@@ -401,11 +393,6 @@ begin
   FOwner.Skeleton.MorphMesh(true);
 end;
 
-procedure TGLRagdoll.WriteToFiler(writer: TVirtualWriter);
-begin
-  inherited;
-
-end;
 
 procedure TGLRagdoll.BuildRagdoll;
 begin

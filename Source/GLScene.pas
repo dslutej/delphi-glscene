@@ -3096,7 +3096,7 @@ begin
     if not (csLoading in ComponentState) then
     begin
       FIsCalculating := True;
-      try
+//      try
         diff := DegToRadian(FRotation.X - AValue);
         rotMatrix := CreateRotationMatrix(Right, diff);
         FUp.DirectVector := VectorTransform(FUp.AsVector, rotMatrix);
@@ -3105,9 +3105,9 @@ begin
           rotMatrix);
         FDirection.Normalize;
         TransformationChanged;
-      finally
+//      finally
         FIsCalculating := False;
-      end;
+//      end;
     end;
     FRotation.DirectX := NormalizeDegAngle(AValue);
   end;
@@ -3154,7 +3154,7 @@ begin
     if not (csLoading in ComponentState) then
     begin
       FIsCalculating := True;
-      try
+//      try
         diff := DegToRadian(FRotation.Z - AValue);
         rotMatrix := CreateRotationMatrix(Direction.AsVector, diff);
         FUp.DirectVector := VectorTransform(FUp.AsVector, rotMatrix);
@@ -3163,9 +3163,9 @@ begin
           rotMatrix);
         FDirection.Normalize;
         TransformationChanged;
-      finally
+//      finally
         FIsCalculating := False;
-      end;
+//      end;
     end;
     FRotation.DirectZ := NormalizeDegAngle(AValue);
   end;
@@ -3208,7 +3208,7 @@ begin
     if not (csLoading in ComponentState) then
     begin
       FIsCalculating := True;
-      try
+//      try
         diff := DegToRadian(FRotation.Y - AValue);
         rotMatrix := CreateRotationMatrix(Up.AsVector, diff);
         FUp.DirectVector := VectorTransform(FUp.AsVector, rotMatrix);
@@ -3217,9 +3217,9 @@ begin
           rotMatrix);
         FDirection.Normalize;
         TransformationChanged;
-      finally
+//      finally
         FIsCalculating := False;
-      end;
+//      end;
     end;
     FRotation.DirectY := NormalizeDegAngle(AValue);
   end;

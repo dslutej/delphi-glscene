@@ -53,7 +53,8 @@ uses
   System.SysUtils, System.Classes,
   VCL.StdCtrls,
 
-  
+
+  GLVectorTypes,
   GLTexture, GLTextureFormat, GLGraphics, GLUtils, GLColor, GLCoordinates,
   GLMaterial, GLState;
 

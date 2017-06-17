@@ -67,16 +67,15 @@ type
   end;
 
   {A base class describing the "update" interface.  }
-  TGLUpdateAbleComponent = class (TGLCadenceAbleComponent, IGLNotifyAble)
+  TGLUpdateAbleComponent = class(TGLCadenceAbleComponent, IGLNotifyAble)
   public
     procedure NotifyChange(Sender: TObject); virtual;
   end;
 
-
-  TGLNotifyCollection = class (TOwnedCollection)
-  private
+  TGLNotifyCollection = class(TOwnedCollection)
+  strict private
     FOnNotifyChange: TNotifyEvent;
-  protected
+  strict protected
     procedure Update(item: TCollectionItem); override;
   public
     constructor Create(AOwner: TPersistent; AItemClass: TCollectionItemClass);
@@ -167,7 +166,7 @@ constructor TGLNotifyCollection.Create(AOwner: TPersistent; AItemClass: TCollect
 begin
   inherited Create(AOwner, AItemClass);
   if Assigned(AOwner) and (AOwner is TGLUpdateAbleComponent) then
-    OnNotifyChange := TGLUpdateAbleComponent(AOwner).NotifyChange;
+    FOnNotifyChange := TGLUpdateAbleComponent(AOwner).NotifyChange;
 end;
 
 procedure TGLNotifyCollection.Update(Item: TCollectionItem);

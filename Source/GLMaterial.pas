@@ -340,7 +340,7 @@ type
       The TGLLibMaterial has more adavanced properties (like texture transforms)
       and provides a standard way of sharing definitions and texture maps. }
   TGLMaterial = class(TGLUpdateAbleObject, IGLMaterialLibrarySupported,
-      IGLNotifyAble, IGLTextureNotifyAble)
+      IGLTextureNotifyAble)
   private
     FFrontProperties, FBackProperties: TGLFaceProperties;
     FDepthProperties: TGLDepthProperties;

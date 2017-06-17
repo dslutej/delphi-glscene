@@ -536,7 +536,7 @@ type
     destructor Destroy; override;
     procedure PushAttrib(const stateTypes: TGLStateTypes); inline;
     procedure PopAttrib(); inline;
-    procedure Enable(const aState: TGLState);
+    procedure Enable(const aState: TGLState); inline;
     procedure Disable(const aState: TGLState);
     procedure PerformEnable(const aState: TGLState); inline;
     procedure PerformDisable(const aState: TGLState); inline;
