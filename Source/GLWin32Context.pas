@@ -425,7 +425,7 @@ begin
     AddIAttrib(WGL_ACCUM_BITS_ARB, AccumBits);
   if AuxBuffers > 0 then
     AddIAttrib(WGL_AUX_BUFFERS_ARB, AuxBuffers);
-  if (AntiAliasing <> aaDefault) and GL.W_ARB_multisample then
+  if (AntiAliasing <> aaDefault) and FGL.W_ARB_multisample then
   begin
     if AntiAliasing = aaNone then
       AddIAttrib(WGL_SAMPLE_BUFFERS_ARB, GL_FALSE)
