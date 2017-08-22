@@ -217,7 +217,7 @@ type
     procedure DestroyAllHandles;
     function RenderOutputDevice: Pointer; virtual; abstract;
     {Access to OpenGL command and extension. }
-    property GL: TGLExtensionsAndEntryPoints read FGL;
+//    property GL: TGLExtensionsAndEntryPoints read FGL;
     property MultitextureCoordinator: TGLMultitextureCoordinator read FXGL;
     property IsPraparationNeed: Boolean read FIsPraparationNeed;
   end;
@@ -1014,7 +1014,6 @@ procedure RegisterGLContextClass(aGLContextClass: TGLContextClass);
    Returns nil if no context is active. }
 function CurrentGLContext: TGLContext; inline;
 function SafeCurrentGLContext: TGLContext; inline;
-function GL: TGLExtensionsAndEntryPoints; inline;
 function IsMainThread: Boolean;
 function IsServiceContextAvaible: Boolean;
 function GetServiceWindow: TForm;
@@ -1034,8 +1033,8 @@ threadvar
 {$ENDIF}
 
   vCurrentGLContext: TGLContext;
-  vGL:  TGLExtensionsAndEntryPoints;
-  vXGL: TGLMultitextureCoordinator;
+  GL: TGLExtensionsAndEntryPoints;
+  XGL: TGLMultitextureCoordinator;
   vMainThread: Boolean;
   GLwithoutContext: TGLExtensionsAndEntryPoints;
 
@@ -1093,11 +1092,6 @@ begin
    {$ENDIF}
     Abort;
   end;
-end;
-
-function GL: TGLExtensionsAndEntryPoints; inline;
-begin
-  Result := vGL;
 end;
 
 function IsMainThread: Boolean;
@@ -1529,8 +1523,8 @@ begin
     except
       vContextActivationFailureOccurred := True;
     end;
-    vGL := FGL;
-    vXGL := FXGL;
+    GL := FGL;
+    XGL := FXGL;
     vCurrentGLContext := Self;
   end
   else
@@ -1549,8 +1543,8 @@ begin
     if not vContextActivationFailureOccurred then
       DoDeactivate;
     vCurrentGLContext := nil;
-    vGL := GLwithoutContext;
-    vXGL := nil;
+    GL := GLwithoutContext;
+    XGL := nil;
   end
   else if FActivationCount < 0 then
     raise EGLContext.Create(strUnbalancedContexActivations);
@@ -1593,7 +1587,7 @@ end;
 
 procedure TGLContext.MakeGLCurrent;
 begin
-  vGL := FGL;
+  GL := FGL;
 end;
 
 

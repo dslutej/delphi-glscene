@@ -1127,11 +1127,6 @@ uses
   GLColor;
 
 
-function GL: TGLExtensionsAndEntryPoints; inline;
-begin
-  Result := vGL;
-end;
-
 // ------------------
 // ------------------ TGLStateCache ------------------
 // ------------------

@@ -790,9 +790,9 @@ function VectorScale(const V: TVector; const factor: TVector): TVector; overload
 
 { Divides given vector by another vector.
   v[x]:=v[x]/divider[x], v[y]:=v[y]/divider[y] etc. }
-procedure DivideVector(var V: TVector; const divider: TVector); overload;{$IFDEF GLS_INLINE_VICE_ASM}inline; {$ENDIF}
-procedure DivideVector(var V: TAffineVector; const divider: TAffineVector); overload; {$IFDEF GLS_INLINE_VICE_ASM}inline; {$ENDIF}
-function VectorDivide(const V: TVector; const divider: TVector): TVector; overload; {$IFDEF GLS_INLINE_VICE_ASM}inline; {$ENDIF}
+procedure DivideVector(var V: TVector; const divider: TVector); overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
+procedure DivideVector(var V: TAffineVector; const divider: TAffineVector); overload; {$IFDEF GLS_INLINE}inline; {$ENDIF}
+function VectorDivide(const V: TVector; const divider: TVector): TVector; overload; {$IFDEF GLS_INLINE}inline; {$ENDIF}
 function VectorDivide(const V: TAffineVector; const divider: TAffineVector): TAffineVector; overload; {$IFDEF GLS_INLINE_VICE_ASM}inline; {$ENDIF}
 // True if all components are equal.
 function TexpointEquals(const p1, p2: TTexPoint): Boolean;
@@ -801,9 +801,9 @@ function TexpointEquals(const p1, p2: TTexPoint): Boolean;
 function RectEquals(const Rect1, Rect2: TRect): Boolean;
 {$IFDEF GLS_INLINE_VICE_ASM}inline; {$ENDIF}
 // True if all components are equal.
-function VectorEquals(const V1, V2: TVector): Boolean; overload;{$IFDEF GLS_INLINE_VICE_ASM}inline; {$ENDIF}
+function VectorEquals(const V1, V2: TVector): Boolean; overload;{$IFDEF GLS_INLINE}inline;{$ENDIF}
 // True if all components are equal.
-function VectorEquals(const V1, V2: TAffineVector): Boolean; overload;{$IFDEF GLS_INLINE_VICE_ASM}inline; {$ENDIF}
+function VectorEquals(const V1, V2: TAffineVector): Boolean; overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
 // True if X, Y and Z components are equal.
 function AffineVectorEquals(const V1, V2: TVector): Boolean; overload; inline;
 // True if x=y=z=0, w ignored
@@ -4020,99 +4020,29 @@ begin
     (Rect1.Top = Rect2.Top) and (Rect1.Bottom = Rect2.Left);
 end;
 
-{$IFDEF GLS_ASM}
-function VectorEquals(const V1, V2: TVector): Boolean;
-// EAX contains address of v1
-// EDX contains highest of v2
-asm
-  mov ecx, [edx]
-  cmp ecx, [eax]
-  jne @@Diff
-  mov ecx, [edx+$4]
-  cmp ecx, [eax+$4]
-  jne @@Diff
-  mov ecx, [edx+$8]
-  cmp ecx, [eax+$8]
-  jne @@Diff
-  mov ecx, [edx+$C]
-  cmp ecx, [eax+$C]
-  jne @@Diff
-@@Equal:
-  mov eax, 1
-  ret
-@@Diff:
-  xor eax, eax
-end;
-{$ELSE}
 function VectorEquals(const V1, V2: TVector): Boolean;
 begin
-{$IFDEF GLS_FASTMATH}
+{$IFDEF _GLS_FASTMATH}
   Result := Neslib.FastMath.TVector4(V1) = Neslib.FastMath.TVector4(V2);
 {$ELSE}
   result := (V1._1 = V2._1) and (V1._2 = V2._2) and (V1._3 = V2._3)
     and (V1._4 = V2._4);
 {$ENDIF}
 end;
-{$ENDIF}
 
-{$IFDEF GLS_ASM}
-function VectorEquals(const V1, V2: TAffineVector): Boolean;
-// EAX contains address of v1
-// EDX contains highest of v2
-asm
-  mov ecx, [edx]
-  cmp ecx, [eax]
-  jne @@Diff
-  mov ecx, [edx+$4]
-  cmp ecx, [eax+$4]
-  jne @@Diff
-  mov ecx, [edx+$8]
-  cmp ecx, [eax+$8]
-  jne @@Diff
-@@Equal:
-  mov al, 1
-  ret
-@@Diff:
-  xor eax, eax
-@@End:
-end;
-{$ELSE}
 function VectorEquals(const V1, V2: TAffineVector): Boolean;
 begin
   result := (V1._1 = V2._1) and (V1._2 = V2._2) and (V1._3 = V2._3);
 end;
-{$ENDIF}
 
-{$IFDEF GLS_ASM}
-function AffineVectorEquals(const V1, V2: TVector): Boolean;
-// EAX contains address of v1
-// EDX contains highest of v2
-asm
-  mov ecx, [edx]
-  cmp ecx, [eax]
-  jne @@Diff
-  mov ecx, [edx+$4]
-  cmp ecx, [eax+$4]
-  jne @@Diff
-  mov ecx, [edx+$8]
-  cmp ecx, [eax+$8]
-  jne @@Diff
-@@Equal:
-  mov eax, 1
-  ret
-@@Diff:
-  xor eax, eax
-end;
-{$ELSE}
 function AffineVectorEquals(const V1, V2: TVector): Boolean;
 begin
-{$IFDEF GLS_FASTMATH}
+{$IFDEF _GLS_FASTMATH}
   Result := Neslib.FastMath.TVector4(V1) = Neslib.FastMath.TVector4(V2);
 {$ELSE}
   result := (V1._1 = V2._1) and (V1._2 = V2._2) and (V1._3 = V2._3);
 {$ENDIF}
 end;
-{$ENDIF}
 
 function VectorIsNull(const V: TVector): Boolean;
 begin

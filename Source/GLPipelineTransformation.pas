@@ -128,11 +128,6 @@ uses
 
   GLContext;
 
-function GL: TGLExtensionsAndEntryPoints; inline;
-begin
-  Result := vGL;
-end;
-
 constructor TGLTransformation.Create;
 begin
   FStackPos := 0;

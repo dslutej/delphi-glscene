@@ -2315,16 +2315,30 @@ end;
 
 procedure TGLCube.BuildList(var rci: TGLRenderContextInfo);
 var
-  hw, hh, hd, nd: TGLFloat;
+  x1, x2, y1, y2, z1, z2: TGLfloat;
+  x1d, x2d, y1d, y2d, z1d, z2d: TGLfloat;
+  nd: TGLFloat;
   TanLoc, BinLoc: Integer;
 begin
   if FNormalDirection = ndInside then
     nd := -1
   else
     nd := 1;
-  hw := FCubeHalfSize.X;
-  hh := FCubeHalfSize.Y;
-  hd := FCubeHalfSize.Z;
+
+  x1 := -FCubeHalfSize.X;
+  x2 := -x1;
+  x1d := x1*nd;
+  x2d := x2*nd;
+
+  y1 := -FCubeHalfSize.Y;
+  y2 := -y1;
+  y1d := y1*nd;
+  y2d := y2*nd;
+
+  z1 := -FCubeHalfSize.Z;
+  z2 := -z1;
+  z1d := z1*nd;
+  z2d := z2*nd;
 
   if GL.ARB_shader_objects and (rci.GLStates.CurrentProgram > 0) then
   begin
@@ -2342,98 +2356,68 @@ begin
   if cpFront in FParts then
   begin
     GL.Normal3f(0, 0, nd);
-    if TanLoc > -1 then
-      GL.VertexAttrib3f(TanLoc, nd, 0, 0);
-    if BinLoc > -1 then
-      GL.VertexAttrib3f(BinLoc, 0, nd, 0);
-    xgl.TexCoord2fv(@XYTexPoint);
-    GL.Vertex3f(hw, hh, hd);
-    xgl.TexCoord2fv(@YTexPoint);
-    GL.Vertex3f(-hw * nd, hh * nd, hd);
-    xgl.TexCoord2fv(@NullTexPoint);
-    GL.Vertex3f(-hw, -hh, hd);
-    xgl.TexCoord2fv(@XTexPoint);
-    GL.Vertex3f(hw * nd, -hh * nd, hd);
+    if TanLoc > -1 then GL.VertexAttrib3f(TanLoc, nd, 0, 0);
+    if BinLoc > -1 then GL.VertexAttrib3f(BinLoc, 0, nd, 0);
+
+    xgl.TexCoord2fv(@XYTexPoint);    GL.Vertex3f(x2,  y2,   z2);
+    xgl.TexCoord2fv(@YTexPoint);     GL.Vertex3f(x1d, y2d,  z2);
+    xgl.TexCoord2fv(@NullTexPoint);  GL.Vertex3f(x1,  y1,   z2);
+    xgl.TexCoord2fv(@XTexPoint);     GL.Vertex3f(x2d, y1d,  z2);
   end;
   if cpBack in FParts then
   begin
     GL.Normal3f(0, 0, -nd);
-    if TanLoc > -1 then
-      GL.VertexAttrib3f(TanLoc, -nd, 0, 0);
-    if BinLoc > -1 then
-      GL.VertexAttrib3f(BinLoc, 0, nd, 0);
-    xgl.TexCoord2fv(@YTexPoint);
-    GL.Vertex3f(hw, hh, -hd);
-    xgl.TexCoord2fv(@NullTexPoint);
-    GL.Vertex3f(hw * nd, -hh * nd, -hd);
-    xgl.TexCoord2fv(@XTexPoint);
-    GL.Vertex3f(-hw, -hh, -hd);
-    xgl.TexCoord2fv(@XYTexPoint);
-    GL.Vertex3f(-hw * nd, hh * nd, -hd);
+    if TanLoc > -1 then GL.VertexAttrib3f(TanLoc, -nd, 0, 0);
+    if BinLoc > -1 then GL.VertexAttrib3f(BinLoc, 0, nd, 0);
+
+    xgl.TexCoord2fv(@YTexPoint);    GL.Vertex3f(x2,   y2,   z1);
+    xgl.TexCoord2fv(@NullTexPoint); GL.Vertex3f(x2d,  y1d,  z1);
+    xgl.TexCoord2fv(@XTexPoint);    GL.Vertex3f(x1,   y1,   z1);
+    xgl.TexCoord2fv(@XYTexPoint);   GL.Vertex3f(x1d,  y2d,  z1);
   end;
   if cpLeft in FParts then
   begin
     GL.Normal3f(-nd, 0, 0);
-    if TanLoc > -1 then
-      GL.VertexAttrib3f(TanLoc, 0, 0, nd);
-    if BinLoc > -1 then
-      GL.VertexAttrib3f(BinLoc, 0, nd, 0);
-    xgl.TexCoord2fv(@XYTexPoint);
-    GL.Vertex3f(-hw, hh, hd);
-    xgl.TexCoord2fv(@YTexPoint);
-    GL.Vertex3f(-hw, hh * nd, -hd * nd);
-    xgl.TexCoord2fv(@NullTexPoint);
-    GL.Vertex3f(-hw, -hh, -hd);
-    xgl.TexCoord2fv(@XTexPoint);
-    GL.Vertex3f(-hw, -hh * nd, hd * nd);
+    if TanLoc > -1 then GL.VertexAttrib3f(TanLoc, 0, 0, nd);
+    if BinLoc > -1 then GL.VertexAttrib3f(BinLoc, 0, nd, 0);
+
+    xgl.TexCoord2fv(@XYTexPoint);   GL.Vertex3f(x1,   y2,   z2);
+    xgl.TexCoord2fv(@YTexPoint);    GL.Vertex3f(x1,   y2d,  z1d);
+    xgl.TexCoord2fv(@NullTexPoint); GL.Vertex3f(x1,   y1,   z1);
+    xgl.TexCoord2fv(@XTexPoint);    GL.Vertex3f(x1,   y1d,  z2d);
   end;
   if cpRight in FParts then
   begin
     GL.Normal3f(nd, 0, 0);
-    if TanLoc > -1 then
-      GL.VertexAttrib3f(TanLoc, 0, 0, -nd);
-    if BinLoc > -1 then
-      GL.VertexAttrib3f(BinLoc, 0, nd, 0);
-    xgl.TexCoord2fv(@YTexPoint);
-    GL.Vertex3f(hw, hh, hd);
-    xgl.TexCoord2fv(@NullTexPoint);
-    GL.Vertex3f(hw, -hh * nd, hd * nd);
-    xgl.TexCoord2fv(@XTexPoint);
-    GL.Vertex3f(hw, -hh, -hd);
-    xgl.TexCoord2fv(@XYTexPoint);
-    GL.Vertex3f(hw, hh * nd, -hd * nd);
+    if TanLoc > -1 then GL.VertexAttrib3f(TanLoc, 0, 0, -nd);
+    if BinLoc > -1 then GL.VertexAttrib3f(BinLoc, 0, nd, 0);
+
+    xgl.TexCoord2fv(@YTexPoint);    GL.Vertex3f(x2,   y2,   z2);
+    xgl.TexCoord2fv(@NullTexPoint); GL.Vertex3f(x2,   y1d,  z2d);
+    xgl.TexCoord2fv(@XTexPoint);    GL.Vertex3f(x2,   y1,   z1);
+    xgl.TexCoord2fv(@XYTexPoint);   GL.Vertex3f(x2,   y2d,  z1d);
   end;
   if cpTop in FParts then
   begin
     GL.Normal3f(0, nd, 0);
-    if TanLoc > -1 then
-      GL.VertexAttrib3f(TanLoc, nd, 0, 0);
-    if BinLoc > -1 then
-      GL.VertexAttrib3f(BinLoc, 0, 0, -nd);
-    xgl.TexCoord2fv(@YTexPoint);
-    GL.Vertex3f(-hw, hh, -hd);
-    xgl.TexCoord2fv(@NullTexPoint);
-    GL.Vertex3f(-hw * nd, hh, hd * nd);
-    xgl.TexCoord2fv(@XTexPoint);
-    GL.Vertex3f(hw, hh, hd);
-    xgl.TexCoord2fv(@XYTexPoint);
-    GL.Vertex3f(hw * nd, hh, -hd * nd);
+    if TanLoc > -1 then GL.VertexAttrib3f(TanLoc, nd, 0, 0);
+    if BinLoc > -1 then GL.VertexAttrib3f(BinLoc, 0, 0, -nd);
+
+    xgl.TexCoord2fv(@YTexPoint);    GL.Vertex3f(x1,   y2,   z1);
+    xgl.TexCoord2fv(@NullTexPoint); GL.Vertex3f(x1d,  y2,   z2d);
+    xgl.TexCoord2fv(@XTexPoint);    GL.Vertex3f(x2,   y2,   z2);
+    xgl.TexCoord2fv(@XYTexPoint);   GL.Vertex3f(x2d,  y2,   z1d);
   end;
   if cpBottom in FParts then
   begin
     GL.Normal3f(0, -nd, 0);
-    if TanLoc > -1 then
-      GL.VertexAttrib3f(TanLoc, -nd, 0, 0);
-    if BinLoc > -1 then
-      GL.VertexAttrib3f(BinLoc, 0, 0, nd);
-    xgl.TexCoord2fv(@NullTexPoint);
-    GL.Vertex3f(-hw, -hh, -hd);
-    xgl.TexCoord2fv(@XTexPoint);
-    GL.Vertex3f(hw * nd, -hh, -hd * nd);
-    xgl.TexCoord2fv(@XYTexPoint);
-    GL.Vertex3f(hw, -hh, hd);
-    xgl.TexCoord2fv(@YTexPoint);
-    GL.Vertex3f(-hw * nd, -hh, hd * nd);
+    if TanLoc > -1 then GL.VertexAttrib3f(TanLoc, -nd, 0, 0);
+    if BinLoc > -1 then GL.VertexAttrib3f(BinLoc, 0, 0, nd);
+
+    xgl.TexCoord2fv(@NullTexPoint); GL.Vertex3f(x1,   y1,   z1);
+    xgl.TexCoord2fv(@XTexPoint);    GL.Vertex3f(x2d,  y1,   z1d);
+    xgl.TexCoord2fv(@XYTexPoint);   GL.Vertex3f(x2,   y1,   z2);
+    xgl.TexCoord2fv(@YTexPoint);    GL.Vertex3f(x1d,  y1,   z2d);
   end;
   GL.End_;
 end;
