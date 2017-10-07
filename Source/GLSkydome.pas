@@ -18,7 +18,8 @@ interface
 uses
 {$IFDEF GLS_FASTMATH}
   Neslib.FastMath,
-{$ENDIF}  System.Classes,
+{$ENDIF}  
+  System.Classes,
   System.SysUtils,
   System.Math,
   Vcl.Graphics,

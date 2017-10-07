@@ -217,7 +217,7 @@ type
     procedure DestroyAllHandles;
     function RenderOutputDevice: Pointer; virtual; abstract;
     {Access to OpenGL command and extension. }
-//    property GL: TGLExtensionsAndEntryPoints read FGL;
+    property GL: TGLExtensionsAndEntryPoints read FGL;
     property MultitextureCoordinator: TGLMultitextureCoordinator read FXGL;
     property IsPraparationNeed: Boolean read FIsPraparationNeed;
   end;
@@ -1523,7 +1523,7 @@ begin
     except
       vContextActivationFailureOccurred := True;
     end;
-    GL := FGL;
+    GLContext.GL := FGL;
     XGL := FXGL;
     vCurrentGLContext := Self;
   end
@@ -1543,7 +1543,7 @@ begin
     if not vContextActivationFailureOccurred then
       DoDeactivate;
     vCurrentGLContext := nil;
-    GL := GLwithoutContext;
+    GLContext.GL := GLwithoutContext;
     XGL := nil;
   end
   else if FActivationCount < 0 then
@@ -1587,7 +1587,7 @@ end;
 
 procedure TGLContext.MakeGLCurrent;
 begin
-  GL := FGL;
+  GLContext.GL := FGL;
 end;
 
 

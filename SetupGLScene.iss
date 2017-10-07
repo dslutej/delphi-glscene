@@ -68,6 +68,14 @@ Name: "Custom"; Description: "Choose comps"; Flags: iscustom
 ;Name: "Utilities"; Description: "Utilities for GLScene"; Types: Full Custom 
 
 [Code]
+
+function InitializeSetup: Boolean;
+begin
+  Result := IsAdminLoggedOn;
+  if (not Result) then
+    MsgBox(SetupMessage(msgAdminPrivilegesRequired), mbCriticalError, MB_OK);
+end;
+
 function IsPackageDir: Boolean;
 begin
 //if DirExist()
