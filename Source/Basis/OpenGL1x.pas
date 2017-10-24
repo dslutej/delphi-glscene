@@ -7101,7 +7101,7 @@ function IsOpenGLInitialized: Boolean;
 // compatibility routines
 procedure UnloadOpenGL;
 function LoadOpenGL : Boolean;
-function LoadOpenGLFromLibrary(GLName, GLUName: String): Boolean;
+function LoadOpenGLFromLibrary(const GLName, GLUName: String): Boolean;
 function IsOpenGLLoaded : Boolean;
 
 function IsMesaGL : Boolean;
@@ -8970,7 +8970,7 @@ begin
   Result := InitOpenGL;
 end;
 
-function LoadOpenGLFromLibrary(GLName, GLUName: String): Boolean;
+function LoadOpenGLFromLibrary(const GLName, GLUName: String): Boolean;
 begin
   Result := InitOpenGLFromLibrary(GLName, GLUName);
 end;

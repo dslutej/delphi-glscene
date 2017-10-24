@@ -412,7 +412,7 @@ type
       Y: Integer); override;
     procedure InternalMouseUp(Shift: TShiftState; Button: TGLMouseButton; X, Y:
       Integer); override;
-    procedure SetGuiLayoutNameChecked(newName: TGLGuiComponentName);
+    procedure SetGuiLayoutNameChecked(const newName: TGLGuiComponentName);
     procedure SetGuiLayout(NewGui: TGLGuiLayout); override;
     procedure SetGroup(const val: Integer);
   public
@@ -450,7 +450,7 @@ type
     procedure InternalKeyDown(var Key: Word; Shift: TShiftState); override;
     procedure InternalKeyUp(var Key: Word; Shift: TShiftState); override;
     procedure SetFocused(Value: Boolean); override;
-    procedure SetGuiLayoutNamePressed(newName: TGLGuiComponentName);
+    procedure SetGuiLayoutNamePressed(const newName: TGLGuiComponentName);
     procedure SetGuiLayout(NewGui: TGLGuiLayout); override;
     procedure SetBitBtn(AValue: TGLMaterial);
     procedure DestroyHandle; override;
@@ -551,7 +551,7 @@ type
     procedure SetPos(const val: Single);
     procedure SetPageSize(const val: Single);
     procedure SetHorizontal(const val: Boolean);
-    procedure SetGuiLayoutKnobName(newName: TGLGuiComponentName);
+    procedure SetGuiLayoutKnobName(const newName: TGLGuiComponentName);
     procedure SetGuiLayout(NewGui: TGLGuiLayout); override;
 
     function GetScrollPosY(ScrollPos: Single): Single;
@@ -2405,7 +2405,7 @@ begin
   inherited;
 end;
 
-procedure TGLCheckBox.SetGuiLayoutNameChecked(newName: TGLGuiComponentName);
+procedure TGLCheckBox.SetGuiLayoutNameChecked(const newName: TGLGuiComponentName);
 
 begin
   if FGuiLayoutNameChecked <> NewName then
@@ -2581,7 +2581,7 @@ begin
     Pressed := False;
 end;
 
-procedure TGLButton.SetGuiLayoutNamePressed(newName: TGLGuiComponentName);
+procedure TGLButton.SetGuiLayoutNamePressed(const newName: TGLGuiComponentName);
 
 begin
   if FGuiLayoutNamePressed <> NewName then
@@ -3143,7 +3143,7 @@ begin
   end;
 end;
 
-procedure TGLScrollbar.SetGuiLayoutKnobName(newName: TGLGuiComponentName);
+procedure TGLScrollbar.SetGuiLayoutKnobName(const newName: TGLGuiComponentName);
 
 begin
   if newName <> FGuiLayoutKnobName then

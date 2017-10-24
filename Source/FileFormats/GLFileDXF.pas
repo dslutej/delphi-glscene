@@ -28,6 +28,8 @@ unit GLFileDXF;
 
 interface
 
+{$I GLScene.inc}
+
 uses
   System.Classes, System.SysUtils,
   
@@ -81,7 +83,9 @@ type
 implementation
 
 uses
-
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath,
+{$ENDIF}
   GLVectorTypes;
 
 procedure BuildNormals(m: TMeshObject); FORWARD;
@@ -667,14 +671,14 @@ const
             70:
               i70 := ReadInt;
             71:
-              i71 := abs(ReadInt);
+              i71 := System.Abs(ReadInt);
               // negative values should hide points... we cannot
             72:
-              i72 := abs(ReadInt);
+              i72 := System.abs(ReadInt);
             73:
-              i73 := abs(ReadInt);
+              i73 := System.abs(ReadInt);
             74:
-              i74 := abs(ReadInt);
+              i74 := System.abs(ReadInt);
             100:
               ReadLine; // Subclass Marker
             330:

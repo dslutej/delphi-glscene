@@ -945,7 +945,7 @@ var
         ver_Platform_Win32_NT: Result := ver.dwMajorVersion >= 4;
       end;
     { Quick and dirty temporary hack for Windows 98 beta 3 }
-    if (Result = False) and (ver.szCSDVersion = ' Beta 3') then
+    if (not Result) and (ver.szCSDVersion = ' Beta 3') then
       Result := True;
   end;
   //--------------------------------------------

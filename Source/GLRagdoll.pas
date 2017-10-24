@@ -13,12 +13,14 @@ unit GLRagdoll;
 
 interface
 
+{$I GLScene.inc}
+
 uses
   GLScene, 
   GLPersistentClasses, 
   GLVectorGeometry, 
   GLVectorFileObjects,
-  GLVectorLists, 
+  GLVectorLists,
   GLObjects;
 
 type
@@ -136,6 +138,10 @@ implementation
 //------------------------------------------------------------------------	
 
 uses
+
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath,
+{$ENDIF}
   GLVectorTypes;
 
 { TGLRagdolBoneList }

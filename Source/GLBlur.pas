@@ -270,9 +270,10 @@ var
     x, y: integer;
     lin, linu, lind, linuu, lindd: PGLPixel32Array;
     r, g, b: single;
-    ir, ig, ib: Smallint;
 
     procedure ApplyBlurClampAndSetPixel;
+    var
+      ir, ig, ib: Smallint;
     begin
       // 0.1111 = 1/7 (where 7 is the times each pixel is summed with neighbours or self)
       ir := round(r * FAdvancedBlurAmp * 0.1111);

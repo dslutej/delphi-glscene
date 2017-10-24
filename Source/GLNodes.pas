@@ -2,12 +2,12 @@
 // This unit is part of the GLScene Project, http://glscene.org
 //
 {
-  Nodes are used to describe lines, polygons + more. 
+  Nodes are used to describe lines, polygons + more.
 
-   History :  
+   History :
      05/10/08 - DanB - Created from GLMisc.pas split
      The whole history is logged in previous version of the unit.
-   
+
 }
 unit GLNodes;
 
@@ -16,10 +16,6 @@ interface
 {$I GLScene.inc}
 
 uses
-
-{$IFDEF GLS_FASTMATH}
-  Neslib.FastMath,
-{$ENDIF}
 
   System.Classes,
   System.SysUtils,
@@ -159,12 +155,15 @@ type
 
 implementation
 
+uses
+  System.Math,
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath;
+{$ENDIF}
+
 // ------------------
 // ------------------ TGLNode ------------------
 // ------------------
-
- 
-//
 
 constructor TGLNode.Create(ACollection: TCollection);
 begin

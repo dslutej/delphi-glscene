@@ -599,7 +599,7 @@ end;
 
 //Intersection between two lines, return true or false
 //converted from http://doc-for-prog.narod.ru/topics/math/crossing.html
-function IsLineIntLine(p11, p12, p21, p22: TPoint; var p: TPoint): Boolean;  // координаты второго отрезка
+function IsLineIntLine(const p11, p12, p21, p22: TPoint; var p: TPoint): Boolean;  // координаты второго отрезка
 var
   Z, ca, cb, ua, ub: Single;
 begin

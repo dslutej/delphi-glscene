@@ -100,7 +100,7 @@ procedure GetObjectNodeNameList(const Source: TFile3DS; var DB: TDatabase3DS;
   List: TStringList);
 function GetObjectNodeCount(const Source: TFile3DS; var DB: TDatabase3DS): integer;
 function GetObjectMotionByName(const Source: TFile3DS; var DB: TDatabase3DS;
-  Name: string): TKFMesh3DS;
+  const Name: string): TKFMesh3DS;
 function GetObjectMotionByIndex(const Source: TFile3DS; var DB: TDatabase3DS;
   Index: cardinal): TKFMesh3DS;
 
@@ -109,7 +109,7 @@ procedure GetOmnilightNodeNameList(const Source: TFile3DS; var DB: TDatabase3DS;
   List: TStringList);
 function GetOmnilightNodeCount(const Source: TFile3DS; var DB: TDatabase3DS): cardinal;
 function GetOmnilightMotionByName(const Source: TFile3DS; var DB: TDatabase3DS;
-  Name: string): TKFOmni3DS;
+  const Name: string): TKFOmni3DS;
 function GetOmnilightMotionByIndex(const Source: TFile3DS; var DB: TDatabase3DS;
   Index: cardinal): TKFOmni3DS;
 
@@ -118,7 +118,7 @@ procedure GetSpotlightNodeNameList(const Source: TFile3DS; var DB: TDatabase3DS;
   List: TStringList);
 function GetSpotlightNodeCount(const Source: TFile3DS; var DB: TDatabase3DS): cardinal;
 function GetSpotlightMotionByName(const Source: TFile3DS; var DB: TDatabase3DS;
-  Name: string): TKFSpot3DS;
+  const Name: string): TKFSpot3DS;
 function GetSpotlightMotionByIndex(const Source: TFile3DS; var DB: TDatabase3DS;
   Index: cardinal): TKFSpot3DS;
 
@@ -142,8 +142,8 @@ function FindNamedObjectByIndex(Source: TFile3DS; DB: TDatabase3DS;
   AType: word; Index: integer): PChunk3DS;
 
 // error message routines
-procedure ShowError(ErrorMessage: string);
-procedure ShowErrorFormatted(ErrorMessage: string; const Args: array of const);
+procedure ShowError(const ErrorMessage: string);
+procedure ShowErrorFormatted(const ErrorMessage: string; const Args: array of const);
 
 //---------------------------------------------------------------------------------------------------------------------
 
@@ -157,14 +157,14 @@ type
 
 //----------------- error handling ------------------------------------------------------------------------------------
 
-procedure ShowError(ErrorMessage: string);
+procedure ShowError(const ErrorMessage: string);
 begin
   raise E3DSError.Create(ErrorMessage);
 end;
 
 //---------------------------------------------------------------------------------------------------------------------
 
-procedure ShowErrorFormatted(ErrorMessage: string; const Args: array of const);
+procedure ShowErrorFormatted(const ErrorMessage: string; const Args: array of const);
 begin
   raise E3DSError.CreateFmt(ErrorMessage, Args);
 end;
@@ -3112,7 +3112,7 @@ end;
 //---------------------------------------------------------------------------------------------------------------------
 
 function FindNamedAndTaggedChunk(const Source: TFile3DS; var DB: TDatabase3DS;
-  Name: string; TagID: word): PChunk3DS;
+  const Name: string; TagID: word): PChunk3DS;
 
   // Look through the keyframer stuff and find named chunk of the tag type TagID.
   // Has to be a chunk that has a node header: CAMERA_NODE, LIGHT_NODE, , .
@@ -6008,7 +6008,7 @@ end;
 //---------------------------------------------------------------------------------------------------------------------
 
 function GetObjectMotionByName(const Source: TFile3DS; var DB: TDatabase3DS;
-  Name: string): TKFMesh3DS;
+  const Name: string): TKFMesh3DS;
 
 var
   ObjectChunk: PChunk3DS;
@@ -6217,7 +6217,7 @@ end;
 //---------------------------------------------------------------------------------------------------------------------
 
 function GetOmnilightMotionByName(const Source: TFile3DS; var DB: TDatabase3DS;
-  Name: string): TKFOmni3DS;
+  const Name: string): TKFOmni3DS;
 
 var
   Chunk: PChunk3DS;
@@ -6642,7 +6642,7 @@ end;
 //---------------------------------------------------------------------------------------------------------------------
 
 function GetSpotlightMotionByName(const Source: TFile3DS; var DB: TDatabase3DS;
-  Name: string): TKFSpot3DS;
+  const Name: string): TKFSpot3DS;
 
 var
   SpotlightChunk, TargetChunk: PChunk3DS;

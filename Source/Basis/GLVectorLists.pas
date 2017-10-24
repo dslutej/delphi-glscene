@@ -104,9 +104,9 @@ type
     procedure WriteToFiler(writer: TVirtualWriter); override;
     procedure ReadFromFiler(reader: TVirtualReader); override;
     procedure GetExtents(out min, max: TAffineVector); dynamic;
-    function Sum: TAffineVector; dynamic;
+    function Sum: TAffineVector;
     procedure Normalize; dynamic;
-    function MaxSpacing(list2: TBaseVectorList): Single; dynamic;
+    function MaxSpacing(list2: TBaseVectorList): Single;
     procedure Translate(const delta: TAffineVector); overload; dynamic;
     procedure Translate(const delta: TBaseVectorList); overload; dynamic;
     procedure TranslateInv(const delta: TBaseVectorList); overload; dynamic;

@@ -35,9 +35,9 @@ type
       FNumFrames : Integer;
     function GetTag(index: integer): TMD3Tag;
     public
-      procedure LoadFromFile(FileName:String);
+      procedure LoadFromFile(const FileName:String);
       procedure LoadFromStream(AStream:TStream);
-      function GetTransform(TagName:string; Frame:integer):TMatrix;
+      function GetTransform(const TagName:string; Frame:integer):TMatrix;
       property TagCount : integer read FNumTags;
       property FrameCount : integer read FNumFrames;
       property Tags[index:integer]:TMD3Tag read GetTag;
@@ -48,7 +48,7 @@ type
 // which class of animation is extracted. eg NamePrefix='TORSO' will load
 // all animations starting with 'TORSO_' like 'TORSO_STAND'
 procedure LoadQ3Anims(Animations:TGLActorAnimations;
-            FileName:string; const NamePrefix:string); overload;
+            const FileName:string; const NamePrefix:string); overload;
 procedure LoadQ3Anims(Animations:TGLActorAnimations;
             Strings:TStrings; const NamePrefix:string); overload;
 
@@ -63,7 +63,7 @@ implementation
 // LoadQ3Anims
 //
 procedure LoadQ3Anims(Animations:TGLActorAnimations;
-            FileName:string; const NamePrefix:string);
+            const FileName:string; const NamePrefix:string);
 var
   AnimStrings:TStrings;
 begin
@@ -175,7 +175,7 @@ var
   meshFound    : Boolean;
 
   function GetMeshObjectByName(MeshObjects:TGLMeshObjectList; const Name:string;
-    var mesh:TMeshObject):Boolean;
+    out mesh:TMeshObject):Boolean;
   var
     i : integer;
   begin
@@ -245,7 +245,7 @@ end;
 
  
 //
-procedure TMD3TagList.LoadFromFile(FileName:String);
+procedure TMD3TagList.LoadFromFile(const FileName:String);
 var
   fs : TStream;
 begin
@@ -289,7 +289,7 @@ end;
 
 // GetTransform
 //
-function TMD3TagList.GetTransform(TagName: string;
+function TMD3TagList.GetTransform(const TagName: string;
   Frame: integer): TMatrix;
 var
   TagIdx,i,j : integer;

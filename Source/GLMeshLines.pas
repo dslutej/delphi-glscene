@@ -165,7 +165,7 @@ type
     procedure SetLightmapBounds(const value: TLightmapBounds);
     procedure DoChanged;
     procedure AddIndex;
-    procedure AddVertices(Up, Inner, Outer: TAffineVector; S: Single; Correction: Single; UseDegenerate: Boolean; LineItem: TLineItem);
+    procedure AddVertices(const Up, Inner, Outer: TAffineVector; S: Single; Correction: Single; UseDegenerate: Boolean; LineItem: TLineItem);
     procedure BuildLineItem(LineItem: TLineItem);
     procedure BuildGeometry;
     procedure DrawNode(var rci : TGLRenderContextInfo; Node: TLineNode; LineWidth: Single);
@@ -192,7 +192,7 @@ type
   published
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
-    property Updating: Boolean Read GetUpdating;
+    property Updating: Boolean read GetUpdating;
     property Lines: TLineCollection read FLines;
     property Material;
     property LightmapBounds: TLightmapBounds read FLightmapBounds write SetLightmapBounds;
@@ -845,7 +845,7 @@ begin
   inc(FIndex);
 end;
 
-procedure TGLMeshLines.AddVertices(Up,Inner,Outer: TAffineVector; S: Single; Correction: Single; UseDegenerate: Boolean; LineItem: TLineItem);
+procedure TGLMeshLines.AddVertices(const Up,Inner,Outer: TAffineVector; S: Single; Correction: Single; UseDegenerate: Boolean; LineItem: TLineItem);
 begin
   if not LineItem.TextureCorrection then
     Correction := 0

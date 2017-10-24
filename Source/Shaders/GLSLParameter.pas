@@ -258,7 +258,7 @@ type
 
 function GLSLTypeEnum(AType: TGLSLDataType): Cardinal;
 function GLSLTypeComponentCount(AType: TGLSLDataType): Integer;
-procedure RegisterUniformAutoSetMethod(AMethodName: string;
+procedure RegisterUniformAutoSetMethod(const AMethodName: string;
   AType: TGLSLDataType; AMethod: TUniformAutoSetMethod);
 procedure FillUniformAutoSetMethodList(AList: TStrings;
   TypeFilter: TGLSLDataType); overload;
@@ -335,7 +335,7 @@ begin
   Result := cGLSLTypeComponents[AType];
 end;
 
-procedure RegisterUniformAutoSetMethod(AMethodName: string;
+procedure RegisterUniformAutoSetMethod(const AMethodName: string;
   AType: TGLSLDataType; AMethod: TUniformAutoSetMethod);
 var
   I: Integer;

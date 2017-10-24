@@ -315,7 +315,7 @@ end;
 function TGLzBuffer.GetDepthBuffer(CalcVectors: Boolean; ContextIsActive:
   boolean): PZArray;
 begin
-  if ContextIsActive = True then
+  if ContextIsActive then
   begin
     GL.ReadPixels(0, 0, FWidth, FHeight, GL_DEPTH_COMPONENT, GL_FLOAT, FData);
   end
@@ -329,7 +329,7 @@ begin
     end;
   end;
 
-  if CalcVectors = True then
+  if CalcVectors then
     DoCalcVectors;
   Result := FData;
 end;
@@ -1144,7 +1144,7 @@ var
   function ComputeIlum: Integer;
   begin
     //---Lighting---
-    if FDepthFade = True then
+    if FDepthFade then
     begin
       Result := Round(SCol.a * (pixZ * 10 - 9));
       if Result < 0 then
@@ -1178,7 +1178,7 @@ begin
     begin
       ipixX := Trunc(pixX);
       ipixY := Trunc(pixY);
-      if (FSoft = True) and (ipixY > 0) then
+      if (FSoft ) and (ipixY > 0) then
       begin //---soft shadows---
         modx := Frac(pixX);
         //extract the fraction part only - used to interpolate soft shadow edges

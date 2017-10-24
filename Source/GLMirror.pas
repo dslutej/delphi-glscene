@@ -142,7 +142,9 @@ type
 implementation
 
 uses
-
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath,
+{$ENDIF}
   GLPersistentClasses,
   GLPipelineTransformation,
   GLXCollection

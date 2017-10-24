@@ -321,12 +321,13 @@ type
       default PmGetPickedObjects;
   end;
 
-//=========================================================
 implementation
-//=========================================================
 
 uses
 
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath,
+{$ENDIF}
   GLPersistentClasses;
 
 procedure RotateAroundArbitraryAxis(const AnObject: TGLBaseSceneObject;

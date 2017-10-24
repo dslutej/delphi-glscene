@@ -460,7 +460,7 @@ type
     procedure SetDepthTextureMode(const val: TGLDepthTextureMode);
     function StoreNormalMapScale: Boolean;
     function StoreImageClassName: Boolean;
-    function GetHandle: Cardinal; virtual;
+    function GetHandle: Cardinal;
     // Load texture to OpenGL subsystem
     procedure PrepareImage(target: Cardinal); virtual;
     // Setup OpenGL texture parameters

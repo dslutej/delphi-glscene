@@ -41,6 +41,8 @@ unit GLIsosurface;
 
 interface
 
+{$I GLScene.inc}
+
 uses
   GLVectorGeometry,
   GLMesh,
@@ -182,7 +184,7 @@ type
     Dimensions: array ['x' .. 'z'] of Integer;
 
     function BuildIndex(var ADatavals: array of Single; Isovalue: Single): word;
-    function Interpolate(V0, V1: TAffineVector;
+    function Interpolate(const V0, V1: TAffineVector;
       var Val0, Val1, Isovalue: Single; isPolished: boolean): TVertex;
 
   public
@@ -232,6 +234,9 @@ const
 implementation
 
 uses
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath,
+{$ENDIF}
   GLVectorLists;
 
 // -------------------------------------------------------------------------
@@ -700,7 +705,7 @@ begin
   Result.Z := w0 * V0.Z + w1 * V1.Z;
 end;
 
-function TIsoSurfaceExtractor.Interpolate(V0, V1: TAffineVector;
+function TIsoSurfaceExtractor.Interpolate(const V0, V1: TAffineVector;
   var Val0, Val1, Isovalue: Single; isPolished: boolean): TVertex;
 begin
   if isPolished then

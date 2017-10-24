@@ -144,9 +144,9 @@ type
       procedure LoadFromStream(aStream : TStream);
   end;
 
-function G2_GetVertWeights(vert:TGLMVertex):Integer;
-function G2_GetVertBoneIndex(vert:TGLMVertex; iWeightNum:Integer):Integer;
-function G2_GetVertBoneWeight(vert:TGLMVertex; iWeightNum:Cardinal; 
+function G2_GetVertWeights(const vert:TGLMVertex):Integer;
+function G2_GetVertBoneIndex(const vert:TGLMVertex; iWeightNum:Integer):Integer;
+function G2_GetVertBoneWeight(const vert:TGLMVertex; iWeightNum:Cardinal;
   var fTotalWeight:Single; const iNumWeights:Cardinal):single;
 
 procedure MC_UnCompressQuat(var mat : TMatrix; const comp : TGLACompQuatBone);
@@ -168,19 +168,19 @@ implementation
 // static inline int G2_GetVertBoneIndex( const mdxmVertex_t *pVert, const int iWeightNum)
 // static inline float G2_GetVertBoneWeight( const mdxmVertex_t *pVert, const int iWeightNum, float &fTotalWeight, int iNumWeights )
 
-function G2_GetVertWeights(vert:TGLMVertex):Integer;
+function G2_GetVertWeights(const vert:TGLMVertex):Integer;
 begin
   // Get number of bones per vertex (0..3)+1 = (1..4)
   result:=(vert.uiNumWeightsAndBoneIndices shr 30)+1;
 end;
 
-function G2_GetVertBoneIndex(vert:TGLMVertex; iWeightNum:Integer):Integer;
+function G2_GetVertBoneIndex(const vert:TGLMVertex; iWeightNum:Integer):Integer;
 begin
   // Extract the bone reference array index, a 5-bit integer
   result:=(vert.uiNumWeightsAndBoneIndices shr (5*iWeightNum)) and 31;
 end;
 
-function G2_GetVertBoneWeight(vert:TGLMVertex; iWeightNum:Cardinal;
+function G2_GetVertBoneWeight(const vert:TGLMVertex; iWeightNum:Cardinal;
   var fTotalWeight:Single; const iNumWeights:Cardinal):single;
 var
   fBoneWeight : Single;

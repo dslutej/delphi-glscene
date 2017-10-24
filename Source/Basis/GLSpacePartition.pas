@@ -30,7 +30,7 @@
   sectored space partitions so Quadtrees will be easy
   to add.
    20/06/03 - MF - Created
-   
+
 }
 
 unit GLSpacePartition;
@@ -40,8 +40,8 @@ interface
 {$I GLScene.inc}
 
 uses
-  System.Classes, System.SysUtils, System.Math,
-   
+  System.Classes, System.SysUtils,
+
   GLVectorTypes, GLVectorGeometry,  GLGeometryBB, GLPersistentClasses;
 
 const
@@ -561,7 +561,7 @@ type
     function GetChildForAABB(const AABB: TAABB): TSectorNode; override;
   end;
 
-  {  Implements quadtrees. 
+  {  Implements quadtrees.
     Quadtrees are hardcoded to completely ignore the Y axis, only using X and Z
     to determine positioning. 
     This means that they're well suited for 2d-ish situations (landscapes with
@@ -590,6 +590,13 @@ function ExtendedFrustumMake(const AFrustum: TFrustum;
     const AScreenWidth, AScreenHeight : integer { } ): TExtendedFrustum;
 
 implementation
+
+uses
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath;
+{$ELSE}
+  System.Math;
+{$ENDIF}
 
 // This was copied from Octree.pas!
 //

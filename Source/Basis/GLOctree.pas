@@ -19,7 +19,6 @@ interface
 
 uses
   System.Classes,
-  System.Math,
   GLVectorTypes,
   GLVectorGeometry,
   GLVectorLists,
@@ -134,7 +133,7 @@ type
     function GetTrianglesFromNodesIntersectingCube(const ObjAABB: TAABB;
       const ObjToSelf, SelfToObj: TMatrix): TAffineVectorList;
     {  Checks if an AABB intersects a face on the octree }
-    function AABBIntersect(const AABB: TAABB; M1to2, M2to1: TMatrix;
+    function AABBIntersect(const AABB: TAABB; const M1to2, M2to1: TMatrix;
       Triangles: TAffineVectorList = nil): Boolean;
     // function SphereIntersect(position:TAffineVector; radius:single);
   end;
@@ -143,6 +142,14 @@ type
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
 implementation
+
+uses
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath;
+{$ELSE}
+  System.Math;
+{$ENDIF}
+
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
@@ -1434,7 +1441,7 @@ begin
   end; // end for i nodes
 end;
 
-function TGLOctree.AABBIntersect(const AABB: TAABB; M1to2, M2to1: TMatrix;
+function TGLOctree.AABBIntersect(const AABB: TAABB; const M1to2, M2to1: TMatrix;
   Triangles: TAffineVectorList = nil): Boolean;
 var
   TriList: TAffineVectorList;

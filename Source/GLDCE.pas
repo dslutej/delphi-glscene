@@ -262,6 +262,12 @@ function GetOrCreateDCEDynamic(obj : TGLBaseSceneObject) : TGLDCEDynamic; overlo
 
 implementation
 
+{$IFDEF GLS_FASTMATH}
+uses
+  Neslib.FastMath;
+{$ENDIF}
+
+
 function RotateVectorByObject(Obj: TGLBaseSceneObject; const v: TAffineVector): TAffineVector;
 var v2: TVector;
 begin
@@ -432,9 +438,9 @@ begin
     //Check if it is static or dynamic
     if oi < 0 then
     begin
-      tFriction := TGLDCEDynamic(FDynamics[abs(oi) - 1]).Friction;
-      tBounceFactor := TGLDCEDynamic(FDynamics[abs(oi) - 1]).BounceFactor;
-      tObject := TGLDCEDynamic(FDynamics[abs(oi) - 1]).OwnerBaseSceneObject;
+      tFriction := TGLDCEDynamic(FDynamics[System.abs(oi) - 1]).Friction;
+      tBounceFactor := TGLDCEDynamic(FDynamics[System.abs(oi) - 1]).BounceFactor;
+      tObject := TGLDCEDynamic(FDynamics[System.abs(oi) - 1]).OwnerBaseSceneObject;
     end else
     begin
       tFriction := TGLDCEStatic(FStatics[oi]).Friction;

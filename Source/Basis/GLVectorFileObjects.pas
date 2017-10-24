@@ -252,7 +252,7 @@ type
     {Set the bone's matrix. Becareful using this. }
     procedure SetGlobalMatrix(const Matrix: TMatrix); // Ragdoll
     {Set the bone's GlobalMatrix. Used for Ragdoll. }
-    procedure SetGlobalMatrixForRagDoll(RagDollMatrix: TMatrix); // Ragdoll
+    procedure SetGlobalMatrixForRagDoll(const RagDollMatrix: TMatrix); // Ragdoll
     {Calculates the global matrix for the bone and its sub-bone.
        Call this function directly only the RootBone. }
     procedure PrepareGlobalMatrices; override;
@@ -2365,7 +2365,7 @@ begin
   FGlobalMatrix := Matrix;
 end;
 
-procedure TGLSkeletonBone.SetGlobalMatrixForRagDoll(RagDollMatrix: TMatrix);
+procedure TGLSkeletonBone.SetGlobalMatrixForRagDoll(const RagDollMatrix: TMatrix);
   // ragdoll
 begin
   FGlobalMatrix := MatrixMultiply(RagDollMatrix,

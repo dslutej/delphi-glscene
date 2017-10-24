@@ -94,8 +94,8 @@ type
     // SetTex() sets texture with automatic book-keeping of texture unit indices.
     // Users can just call SetTex() in the OnApply event without keeping track of texture unit indices.
     // Call from OnApply() only.
-    procedure SetTex(TexParamName : String; Tex : TGLTexture); overload;
-    procedure SetTex(TexParamName : String; Mat : TGLLibMaterial); overload;
+    procedure SetTex(const TexParamName : String; Tex : TGLTexture); overload;
+    procedure SetTex(const TexParamName : String; Mat : TGLLibMaterial); overload;
     procedure SetTex(TexParam : TGLSLShaderParameter; Tex : TGLTexture); overload;
     procedure SetTex(TexParam : TGLSLShaderParameter; Mat : TGLLibMaterial); overload;
 
@@ -461,12 +461,12 @@ begin
   SetTex(TexParam, Mat.Material.Texture);
 end;
 
-procedure TGLCustomGLSLShader.SetTex(TexParamName: String; Tex: TGLTexture);
+procedure TGLCustomGLSLShader.SetTex(const TexParamName: String; Tex: TGLTexture);
 begin
   SetTex(Param[TexParamName], Tex);
 end;
 
-procedure TGLCustomGLSLShader.SetTex(TexParamName: String; Mat: TGLLibMaterial);
+procedure TGLCustomGLSLShader.SetTex(const TexParamName: String; Mat: TGLLibMaterial);
 begin
   SetTex(TexParamName, Mat.Material.Texture);
 end;

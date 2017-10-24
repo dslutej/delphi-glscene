@@ -122,7 +122,7 @@ type
       procedure RemoveFile(FileName: string); overload;
 
       procedure Extract(index: integer; NewName: string); overload;
-      procedure Extract(FileName, NewName: string); overload;
+      procedure Extract(const FileName, NewName: string); overload;
 
    end;
 
@@ -138,7 +138,7 @@ implementation
 var
    Dir: TFileSection;
 
-function BackToSlash(s: string): string;
+function BackToSlash(const s: string): string;
 var
    i: integer;
 begin
@@ -551,7 +551,7 @@ begin
    s.Free;
 end;
 
-procedure TGLVfsPAK.Extract(FileName, NewName: string);
+procedure TGLVfsPAK.Extract(const FileName, NewName: string);
 begin
    if Self.FileExists(FileName) then
       Extract(FFiles.IndexOf(FileName), NewName);

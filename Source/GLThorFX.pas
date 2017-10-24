@@ -18,8 +18,7 @@ uses
   System.Classes,
   System.SysUtils,
   System.Types,
-  System.Math,
-  
+
   OpenGLTokens,
   GLScene,
   GLXCollection,
@@ -153,7 +152,11 @@ function GetOrCreateThorFX(obj: TGLBaseSceneObject; const name: String = '')
 implementation
 
 uses
-
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath,
+{$ELSE}
+  System.Math,
+{$ENDIF}
   GLPipelineTransformation,
   OpenGLAdapter;
 

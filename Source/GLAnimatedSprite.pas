@@ -18,21 +18,23 @@ unit GLAnimatedSprite;
 
 interface
 
+{$I GLScene.inc}
+
 uses
-  System.Classes, 
+  System.Classes,
   System.SysUtils,
   System.Math,
-   
-  GLScene, 
-  GLVectorGeometry, 
-  OpenGLTokens, 
+
+  GLScene,
+  GLVectorGeometry,
+  OpenGLTokens,
   GLMaterial,
-  GLPersistentClasses, 
-  GLXCollection, 
+  GLPersistentClasses,
+  GLXCollection,
   GLCrossPlatform,
   GLRenderContextInfo,
-  GLBaseClasses, 
-  GLContext, 
+  GLBaseClasses,
+  GLContext,
   GLState;
 
 type
@@ -155,7 +157,7 @@ type
     function GetFrameRate: Single;
 
     // Implementing IGLMaterialLibrarySupported.
-    function GetMaterialLibrary: TGLAbstractMaterialLibrary; virtual;
+    function GetMaterialLibrary: TGLAbstractMaterialLibrary;
   public
     constructor Create(aOwner: TGLXCollection); override;
     destructor Destroy; override;
@@ -323,6 +325,9 @@ type
 implementation
 
 uses
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath,
+{$ENDIF}
 
   GLVectorTypes,
   OpenGLAdapter;

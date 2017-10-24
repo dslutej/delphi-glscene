@@ -24,7 +24,6 @@ uses
   GLBaseClasses,
   GLSLog;
 
-
 const
   GLS_RC_DDS_Type = RT_RCDATA;
   GLS_RC_JPG_Type = RT_RCDATA;

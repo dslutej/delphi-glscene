@@ -359,8 +359,8 @@ type
     procedure StrafeVertical(const Plus, Minus: Boolean; ADeltaTime: Double; const Accelerate: Boolean = False); virtual;
 
     // Uses MoveAroundParams. Returns True, if object was actually moved.
-    function MoveAroundTarget(const PitchDelta, TurnDelta : Single; const ADeltaTime: Double): Boolean; virtual;
-    function MoveObjectAround(const AObject: TGLBaseSceneObject; PitchDelta, TurnDelta : Single; ADeltaTime: Double): Boolean; virtual;
+    function MoveAroundTarget(const PitchDelta, TurnDelta : Single; const ADeltaTime: Double): Boolean;
+    function MoveObjectAround(const AObject: TGLBaseSceneObject; PitchDelta, TurnDelta : Single; ADeltaTime: Double): Boolean;
 
     // Uses AdjustDistanceParams.
     function AdjustDistanceToPoint(const  APoint: TVector; const DistanceRatio : Single; ADeltaTime: Double): Boolean; virtual;

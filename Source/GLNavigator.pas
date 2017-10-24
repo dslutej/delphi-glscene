@@ -17,7 +17,6 @@ interface
 uses
   System.Classes,
   System.SysUtils,
-  System.Math,
 
   GLVectorGeometry,
   GLScene,
@@ -161,6 +160,12 @@ implementation
 
 uses
 
+  System.Math,
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath,
+{$ELSE}
+{$ENDIF}
+
   System.Types,
   Vcl.Forms,
   Winapi.Windows;
@@ -245,7 +250,7 @@ Begin
   If (FCurrentHAngle < 0) or (FCurrentHAngle > 360) then
   Begin
     TempVal := (FCurrentHAngle)/360;
-    FCurrentHAngle :=  (TempVal - Floor(TempVal))*360;
+    FCurrentHAngle :=  (TempVal - {$IFDEF GLS_FASTMATH}Neslib.FastMath.{$ENDIF}Floor(TempVal))*360;
   End;
 
   Angle := DegToRadian(Angle); {make it ready for Cos and Sin }
@@ -294,7 +299,7 @@ Begin
   If (FCurrentVAngle < -180) or (FCurrentVAngle > 180) then
   Begin
     TempVal := (FCurrentVAngle+180)/360;
-    FCurrentVAngle := (TempVal-Floor(TempVal))*360-180;
+    FCurrentVAngle := (TempVal-{$IFDEF GLS_FASTMATH}Neslib.FastMath.{$ENDIF}Floor(TempVal))*360-180;
   End;
 
   Angle := DegToRadian(Angle); {make it ready for Cos and Sin }

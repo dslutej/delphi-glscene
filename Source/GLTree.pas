@@ -313,6 +313,10 @@ implementation
 
 uses
 
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath,
+{$ENDIF}
+
   GLState,
   OpenGLAdapter;
 // -----------------------------------------------------------------------------
@@ -569,6 +573,9 @@ begin
   TexCoordY := TexCoordY + 2 * radius;
 
   // BuildMatrices
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath.
+{$ENDIF}
   SinCos(DegToRad(BranchTwist), s, c);
 
   if Level = 0 then

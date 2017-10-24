@@ -85,9 +85,9 @@ type
     procedure ReadEGLExtensions;
     procedure ReadEGLImplementationProperties;
 {$ENDIF}
-    function GetAddress(ProcName: string): Pointer;
-    function GetAddressNoSuffixes(ProcName: string): Pointer;
-    function GetAddressAlt(ProcName1, ProcName2: string): Pointer;
+    function GetAddress(const ProcName: string): Pointer;
+    function GetAddressNoSuffixes(const ProcName: string): Pointer;
+    function GetAddressAlt(const ProcName1, ProcName2: string): Pointer;
     function GetCapAddress: Pointer;
   public
     VERSION_1_0, VERSION_1_1, VERSION_1_2, VERSION_1_3, VERSION_1_4,
@@ -2277,7 +2277,7 @@ function IsOpenGLInitialized: boolean;
 // compatibility routines
 procedure UnloadOpenGL;
 function LoadOpenGL: boolean;
-function LoadOpenGLFromLibrary(GLName, GLUName: string): boolean;
+function LoadOpenGLFromLibrary(const GLName, GLUName: string): boolean;
 function IsOpenGLLoaded: boolean;
 
 function IsMesaGL: boolean; inline;
@@ -2448,7 +2448,7 @@ begin
   Abort;
 end;
 
-function TGLExtensionsAndEntryPoints.GetAddress(ProcName: string): Pointer;
+function TGLExtensionsAndEntryPoints.GetAddress(const ProcName: string): Pointer;
 var
   vName: string;
 begin
@@ -2507,7 +2507,7 @@ begin
 {$ENDIF}
 end;
 
-function TGLExtensionsAndEntryPoints.GetAddressAlt(ProcName1,
+function TGLExtensionsAndEntryPoints.GetAddressAlt(const ProcName1,
   ProcName2: string): Pointer;
 begin
   Result := GetAddress(ProcName1);
@@ -2516,7 +2516,7 @@ begin
 end;
 
 function TGLExtensionsAndEntryPoints.GetAddressNoSuffixes
-  (ProcName: string): Pointer;
+  (const ProcName: string): Pointer;
 var
   vName: string;
 begin
@@ -6093,7 +6093,7 @@ end;
 
 // LoadOpenGLFromLibrary
 
-function LoadOpenGLFromLibrary(GLName, GLUName: string): boolean;
+function LoadOpenGLFromLibrary(const GLName, GLUName: string): boolean;
 begin
   Result := InitOpenGLFromLibrary(GLName, GLUName);
 end;

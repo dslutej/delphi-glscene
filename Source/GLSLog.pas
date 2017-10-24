@@ -152,13 +152,13 @@ type
     procedure AppendLog(const AString: string; const ALevel: TLogLevel; const ALogTime: Boolean = True);
 
     {Writes string to log. Returns True if everything went ok.}
-    function DoWriteToLog(const AString: string): Boolean; virtual;
+    function DoWriteToLog(const AString: string): Boolean;
 
     {Writes FBuffer to log. Returns True if everything went ok.}
-    function DoWriteBufferToLog(): Boolean; virtual;
+    function DoWriteBufferToLog(): Boolean;
 
     {Resets log. Returns True if everything went ok.}
-    function DoResetLog: Boolean; virtual;
+    function DoResetLog: Boolean;
   public
     { Initializes a log session with the specified log file name, time and level settings }
     constructor Init(const AFileName: string;
@@ -329,7 +329,7 @@ const
                   'WideString  : ', 'Int64       : ', '#HLType     : ');
 
 {Function from HotLog by Olivier Touzot "QnnO".}
-Function GetOriginalValue(s:String):String;
+Function GetOriginalValue(const s:String):String;
 //  Called to remove the false 'AnsiString :' assertion, for pointers and objects
 Begin
   result := RightStr(s,Length(s)-19);
@@ -375,7 +375,7 @@ Begin
 end;
 
 {Function from HotLog by Olivier Touzot "QnnO".}
-Function GetBasicValue(s:String; vKind:Byte):String;
+Function GetBasicValue(const s:String; vKind:Byte):String;
 var iTmp : Integer;
     wasTObject: Boolean;
 Begin

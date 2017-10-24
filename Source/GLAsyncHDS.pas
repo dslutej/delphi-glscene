@@ -253,7 +253,7 @@ end;
 procedure TGLAsyncHDS.WaitFor(TimeOut:Integer=2000);
 var OutTime:TDateTime;
 begin
-  Assert(self.active=false);
+  Assert(not self.active);
   OutTime:=now+TimeOut;
   While ((now<OutTime)and(ThreadCount>0)) do begin
     sleep(0);

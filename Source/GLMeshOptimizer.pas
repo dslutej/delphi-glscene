@@ -14,6 +14,8 @@ unit GLMeshOptimizer;
 
 interface
 
+{$I GLScene.inc}
+
 uses
   System.Classes, System.Sysutils,
   
@@ -51,6 +53,9 @@ implementation
 // ------------------------------------------------------------------
 
 uses
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath,
+{$ENDIF}
   GLPersistentClasses,
   GLVectorLists,
   GLVectorTypes,

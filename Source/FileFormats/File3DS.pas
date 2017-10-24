@@ -184,7 +184,7 @@ type
     function GetChunkNodeID(Chunk: PChunk3DS): SmallInt;
     procedure InitDatabase;
     function IsNode(Tag: Word): Boolean;
-    procedure KFAddParentName(Chunk: PChunk3DS; Name: String3DS);
+    procedure KFAddParentName(Chunk: PChunk3DS; const Name: String3DS);
     procedure MakeNode(var Node: PNodeList);
     procedure ParseDatabase;
     procedure ReadChildren(Parent: PChunk3DS);
@@ -1012,7 +1012,7 @@ end;
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-procedure TFile3DS.KFAddParentName(Chunk: PChunk3DS; Name: String3DS);
+procedure TFile3DS.KFAddParentName(Chunk: PChunk3DS; const Name: String3DS);
 var
   Temp: PChunk3DS;
 begin

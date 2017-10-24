@@ -11,6 +11,8 @@ unit GLSpatialPartitioning;
 
 interface
 
+{$I GLScene.inc}
+
 uses
   Winapi.OpenGL,
   
@@ -57,7 +59,9 @@ procedure RenderAABB(var rci: TGLRenderContextInfo; const AABB: TAABB); overload
 implementation
 
 uses
-
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath,
+{$ENDIF}
   OpenGLAdapter;
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------

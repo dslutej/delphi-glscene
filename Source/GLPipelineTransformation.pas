@@ -164,7 +164,6 @@ begin
   GL.LoadMatrixf(PGLFloat(@M));
 end;
 
-
 procedure TGLTransformation.IdentityAll;
 begin
   with FStack[FStackPos] do

@@ -550,7 +550,7 @@ type
     {$IFDEF GLS_INLINE}inline;{$ENDIF}
   public
     function MakeUniqueName(const nameRoot: TGLLibMaterialName):
-      TGLLibMaterialName; virtual;
+      TGLLibMaterialName;
   end;
 
   {A collection of materials, mainly used in material libraries. }
@@ -604,11 +604,11 @@ type
        If a material is already applied, and has not yet been unapplied,
        an assertion will be triggered. }
     function ApplyMaterial(const AName: string;
-      var ARci: TGLRenderContextInfo): Boolean; virtual;
+      var ARci: TGLRenderContextInfo): Boolean;
     {Un-applies the last applied material.
        Use this function in conjunction with ApplyMaterial.
        If no material was applied, an assertion will be triggered. }
-    function UnApplyMaterial(var ARci: TGLRenderContextInfo): Boolean; virtual;
+    function UnApplyMaterial(var ARci: TGLRenderContextInfo): Boolean;
   end;
 
   {Stores a set of materials, to be used and shared by scene objects.

@@ -13,6 +13,8 @@ unit GLSound;
 
 interface
 
+{$I GLScene.inc}
+
 uses
   System.Classes,
   System.SysUtils,
@@ -26,8 +28,6 @@ uses
   GLBaseClasses,
   GLCrossPlatform,
   GLUtils;
-
-{$I GLScene.inc}
 
 type
 
@@ -540,7 +540,9 @@ var
 implementation
 
 uses
-
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath,
+{$ENDIF}
   GLVectorTypes,
 
   Vcl.Dialogs

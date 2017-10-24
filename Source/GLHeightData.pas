@@ -403,11 +403,11 @@ type
       Sub classes may provide normal cacheing, the default implementation
       being rather blunt. }
     function Normal(x, y: Integer; const scale: TAffineVector)
-      : TAffineVector; virtual;
+      : TAffineVector;
 
     {  Calculates and returns the normal for cell x, y.(between vertexes)   }
     function NormalAtNode(x, y: Integer; const scale: TAffineVector)
-      : TAffineVector; virtual;
+      : TAffineVector;
 
     {  Returns True if the data tile overlaps the area. }
     function OverlapsArea(const Area: TGLRect): boolean;

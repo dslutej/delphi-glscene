@@ -1245,7 +1245,7 @@ type
        will be returned. }
     function RayCastIntersect(const rayStart, rayVector: TVector;
       intersectPoint: PVector = nil;
-      intersectNormal: PVector = nil): TGLBaseSceneObject; virtual;
+      intersectNormal: PVector = nil): TGLBaseSceneObject;
     procedure ShutdownAllLights;
     {Saves the scene to a file (recommended extension : .GLS) }
     procedure SaveToFile(const fileName: string);

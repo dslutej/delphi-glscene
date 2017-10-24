@@ -218,17 +218,17 @@ var
   Cursor : Integer;
   Buffer : String;
 
-  function ContainsColon(Buffer : String) : Boolean;
+  function ContainsColon(const Buffer : String) : Boolean;
   begin
     Result:=Pos(';', Buffer)>0;
   end;
 
-  function ContainsBegin(Buffer : String) : Boolean;
+  function ContainsBegin(const Buffer : String) : Boolean;
   begin
     Result:=Pos('{', Buffer)>0;
   end;
 
-  function ContainsEnd(Buffer : String) : Boolean;
+  function ContainsEnd(const Buffer : String) : Boolean;
   begin
     Result:=Pos('}', Buffer)>0;
   end;

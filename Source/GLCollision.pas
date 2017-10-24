@@ -160,6 +160,9 @@ function GetOrCreateCollision(obj : TGLBaseSceneObject) : TGLBCollision; overloa
 implementation
 
 uses
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath,
+{$ENDIF}
 
   GLPersistentClasses,
   OpenGLAdapter;
