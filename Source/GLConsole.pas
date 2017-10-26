@@ -421,6 +421,7 @@ type
 implementation
 
 uses
+  GLCoordinates,
 
   Winapi.Windows;
 

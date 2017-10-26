@@ -317,6 +317,7 @@ uses
   Neslib.FastMath,
 {$ENDIF}
 
+  GLPersistentClasses,
   GLState,
   OpenGLAdapter;
 // -----------------------------------------------------------------------------

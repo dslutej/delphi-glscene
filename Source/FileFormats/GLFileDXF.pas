@@ -86,6 +86,7 @@ uses
 {$IFDEF GLS_FASTMATH}
   Neslib.FastMath,
 {$ENDIF}
+  GLPersistentClasses,
   GLVectorTypes;
 
 procedure BuildNormals(m: TMeshObject); FORWARD;

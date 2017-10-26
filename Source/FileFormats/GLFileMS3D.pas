@@ -37,8 +37,7 @@ interface
 uses
   System.Classes, 
   System.SysUtils, 
-  System.Math,
-   
+
   GLCrossPlatform, 
   GLVectorFileObjects,
   GLVectorTypes, 
@@ -278,24 +277,25 @@ type
 
   {$A+}
 
-// ------------------------------------------------------------------
-// ------------------------------------------------------------------
-// ------------------------------------------------------------------
 implementation
-// ------------------------------------------------------------------
-// ------------------------------------------------------------------
-// ------------------------------------------------------------------
+
+{$IFDEF GLS_FASTMATH}
+uses
+  Neslib.FastMath;
+{$ELSE}
+  System.Math;
+{$ENDIF}
 
 { TMS3DGroup }
 
- 
+
 //
 constructor TMS3DGroup.Create;
 begin
   TriangleIndices := TList.Create;
 end;
 
- 
+
 //
 destructor TMS3DGroup.Destroy;
 begin

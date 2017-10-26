@@ -180,7 +180,10 @@ type
 
 implementation
 
-uses OpenGLAdapter;
+uses
+
+  GLPersistentClasses,
+  OpenGLAdapter;
 
 { TFaceExtractor }
 

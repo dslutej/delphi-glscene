@@ -144,6 +144,7 @@ implementation
 
 uses
 
+  GLPersistentClasses,
   GLVectorTypes;
 
 // ------------------------------------------------------------------

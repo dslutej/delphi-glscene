@@ -122,7 +122,7 @@ procedure UbyteToImf(ASource: Pointer; ADest: PIntermediateFormatArray; AColorFo
     n: Integer;
     c0: Single;
 
-    function GetChannel: Single;
+    function GetChannel: Single; //PALOFF
       begin
         Result := pSource^;
         Inc(pSource);
@@ -243,7 +243,7 @@ procedure Ubyte332ToImf(ASource: Pointer; ADest: PIntermediateFormatArray; AColo
     c0, c1, c2, c3: Byte;
     n: Integer;
 
-    procedure GetChannel;
+    procedure GetChannel; //PALOFF
       begin
         c0 := pSource^;
         c1 := $E0 and c0;
@@ -285,7 +285,7 @@ procedure Ubyte233RToImf(ASource: Pointer; ADest: PIntermediateFormatArray; ACol
     c0, c1, c2, c3: Byte;
     n: Integer;
 
-    procedure GetChannel;
+    procedure GetChannel; //PALOFF
       begin
         c0 := pSource^;
         c3 := $E0 and c0;
@@ -327,7 +327,7 @@ procedure ByteToImf(ASource: Pointer; ADest: PIntermediateFormatArray; AColorFor
     n: Integer;
     c0: Single;
 
-    function GetChannel: Single;
+    function GetChannel: Single; //PALOFF
       begin
         Result := pSource^;
         Inc(pSource);
@@ -447,7 +447,7 @@ procedure UShortToImf(ASource: Pointer; ADest: PIntermediateFormatArray; AColorF
     n: Integer;
     c0: Single;
 
-    function GetChannel: Single;
+    function GetChannel: Single; //PALOFF
       begin
         Result := pSource^ / $100;
         Inc(pSource);
@@ -567,7 +567,7 @@ procedure ShortToImf(ASource: Pointer; ADest: PIntermediateFormatArray; AColorFo
     n: Integer;
     c0: Single;
 
-    function GetChannel: Single;
+    function GetChannel: Single; //PALOFF
       begin
         Result := pSource^ / $100;
         Inc(pSource);
@@ -687,7 +687,7 @@ procedure UIntToImf(ASource: Pointer; ADest: PIntermediateFormatArray; AColorFor
     n: Integer;
     c0: Single;
 
-    function GetChannel: Single;
+    function GetChannel: Single; //PALOFF
       begin
         Result := pSource^ / $1000000;
         Inc(pSource);
@@ -807,7 +807,7 @@ procedure IntToImf(ASource: Pointer; ADest: PIntermediateFormatArray; AColorForm
     n: Integer;
     c0: Single;
 
-    function GetChannel: Single;
+    function GetChannel: Single; //PALOFF
       begin
         Result := pSource^ / $1000000;
         Inc(pSource);
@@ -927,7 +927,7 @@ procedure FloatToImf(ASource: Pointer; ADest: PIntermediateFormatArray; AColorFo
     n: Integer;
     c0: Single;
 
-    function GetChannel: Single;
+    function GetChannel: Single; //PALOFF
       begin
         Result := pSource^ * 255.0;
         Inc(pSource);
@@ -1047,7 +1047,7 @@ procedure HalfFloatToImf(ASource: Pointer; ADest: PIntermediateFormatArray; ACol
     n: Integer;
     c0: Single;
 
-    function GetChannel: Single;
+    function GetChannel: Single; //PALOFF
       begin
         Result := HalfToFloat(pSource^) * 255.0;
         Inc(pSource);
@@ -1167,7 +1167,7 @@ procedure UInt8888ToImf(ASource: Pointer; ADest: PIntermediateFormatArray; AColo
     n: Integer;
     c0, c1, c2, c3: Byte;
 
-    procedure GetChannel;
+    procedure GetChannel; //PALOFF
       begin
         c0 := pSource^;
         Inc(pSource);
@@ -1214,7 +1214,7 @@ procedure UInt8888RevToImf(ASource: Pointer; ADest: PIntermediateFormatArray; AC
     n: Integer;
     c0, c1, c2, c3: Byte;
 
-    procedure GetChannel;
+    procedure GetChannel; //PALOFF
       begin
         c3 := pSource^;
         Inc(pSource);
@@ -1261,7 +1261,7 @@ procedure UShort4444ToImf(ASource: Pointer; ADest: PIntermediateFormatArray; ACo
     n: Integer;
     c0, c1, c2, c3, c4: Byte;
 
-    procedure GetChannel;
+    procedure GetChannel; //PALOFF
       begin
         c0 := pSource^;
         c3 := $F0 and (c0 shl 4);
@@ -1308,7 +1308,7 @@ procedure UShort4444RevToImf(ASource: Pointer; ADest: PIntermediateFormatArray; 
     n: Integer;
     c0, c1, c2, c3, c4: Byte;
 
-    procedure GetChannel;
+    procedure GetChannel; //PALOFF
       begin
         c0 := pSource^;
         c1 := $F0 and (c0 shl 4);
@@ -1356,7 +1356,7 @@ procedure UShort565ToImf(ASource: Pointer; ADest: PIntermediateFormatArray; ACol
     c0: Word;
     c1, c2, c3: Byte;
 
-    procedure GetChannel;
+    procedure GetChannel; //PALOFF
       begin
         c0 := pSource^;
         c3 := (c0 and $001F) shl 3;
@@ -1399,7 +1399,7 @@ procedure UShort565RevToImf(ASource: Pointer; ADest: PIntermediateFormatArray; A
     c0: Word;
     c1, c2, c3: Byte;
 
-    procedure GetChannel;
+    procedure GetChannel; //PALOFF
       begin
         c0 := pSource^;
         c1 := (c0 and $001F) shl 3;
@@ -1442,7 +1442,7 @@ procedure UShort5551ToImf(ASource: Pointer; ADest: PIntermediateFormatArray; ACo
     c0: Word;
     c1, c2, c3, c4: Byte;
 
-    procedure GetChannel;
+    procedure GetChannel; //PALOFF
       begin
         c0 := pSource^;
         c4 := (c0 and $001F) shl 3;
@@ -1488,7 +1488,7 @@ procedure UShort5551RevToImf(ASource: Pointer; ADest: PIntermediateFormatArray; 
     c0: Word;
     c1, c2, c3, c4: Byte;
 
-    procedure GetChannel;
+    procedure GetChannel; //PALOFF
       begin
         c0 := pSource^;
         c1 := (c0 and $001F) shl 3;
@@ -1534,7 +1534,7 @@ procedure UInt_10_10_10_2_ToImf(ASource: Pointer; ADest: PIntermediateFormatArra
     c0: LongWord;
     c1, c2, c3, c4: Word;
 
-    procedure GetChannel;
+    procedure GetChannel; //PALOFF
       begin
         c0 := pSource^;
         c1 := (c0 and $000003FF) shl 6;
@@ -1580,7 +1580,7 @@ procedure UInt_10_10_10_2_Rev_ToImf(ASource: Pointer; ADest: PIntermediateFormat
     c0: LongWord;
     c1, c2, c3, c4: Word;
 
-    procedure GetChannel;
+    procedure GetChannel; //PALOFF
       begin
         c0 := pSource^;
         c1 := (c0 and $000003FF) shl 6;
@@ -2816,13 +2816,13 @@ procedure ImfToUbyte(ASource: PIntermediateFormatArray; ADest: Pointer; AColorFo
     pDest: PByte;
     n: Integer;
 
-    procedure SetChannel(AValue: Single);
+    procedure SetChannel(AValue: Single); //PALOFF
       begin
         pDest^ := Trunc(ClampValue(AValue, 0.0, 255.0));
         Inc(pDest);
       end;
 
-    procedure SetChannelI(AValue: Single);
+    procedure SetChannelI(AValue: Single); //PALOFF
       begin
         pDest^ := Trunc(AValue);
         Inc(pDest);
@@ -2981,13 +2981,13 @@ procedure ImfToByte(ASource: PIntermediateFormatArray; ADest: Pointer; AColorFor
     pDest: PShortInt;
     n: Integer;
 
-    procedure SetChannel(AValue: Single);
+    procedure SetChannel(AValue: Single); //PALOFF
       begin
         pDest^ := Trunc(ClampValue(AValue, -127.0, 127.0));
         Inc(pDest);
       end;
 
-    procedure SetChannelI(AValue: Single);
+    procedure SetChannelI(AValue: Single); //PALOFF
       begin
         pDest^ := Trunc(AValue);
         Inc(pDest);
@@ -3146,13 +3146,13 @@ procedure ImfToUShort(ASource: PIntermediateFormatArray; ADest: Pointer; AColorF
     pDest: PWord;
     n: Integer;
 
-    procedure SetChannel(AValue: Single);
+    procedure SetChannel(AValue: Single); //PALOFF
       begin
         pDest^ := Trunc(ClampValue(AValue, 0.0, 65535.0));
         Inc(pDest);
       end;
 
-    procedure SetChannelI(AValue: Single);
+    procedure SetChannelI(AValue: Single); //PALOFF
       begin
         pDest^ := Trunc(AValue);
         Inc(pDest);
@@ -3311,13 +3311,13 @@ procedure ImfToShort(ASource: PIntermediateFormatArray; ADest: Pointer; AColorFo
     pDest: PSmallInt;
     n: Integer;
 
-    procedure SetChannel(AValue: Single);
+    procedure SetChannel(AValue: Single); //PALOFF
       begin
         pDest^ := Trunc(ClampValue(AValue, -32767.0, 32767.0));
         Inc(pDest);
       end;
 
-    procedure SetChannelI(AValue: Single);
+    procedure SetChannelI(AValue: Single); //PALOFF
       begin
         pDest^ := Trunc(AValue);
         Inc(pDest);
@@ -3476,13 +3476,13 @@ procedure ImfToUInt(ASource: PIntermediateFormatArray; ADest: Pointer; AColorFor
     pDest: PLongWord;
     n: Integer;
 
-    procedure SetChannel(AValue: Single);
+    procedure SetChannel(AValue: Single); //PALOFF
       begin
         pDest^ := Trunc(ClampValue(AValue, 0.0, $FFFFFFFF));
         Inc(pDest);
       end;
 
-    procedure SetChannelI(AValue: Single);
+    procedure SetChannelI(AValue: Single); //PALOFF
       begin
         pDest^ := Trunc(AValue);
         Inc(pDest);
@@ -3641,13 +3641,13 @@ procedure ImfToInt(ASource: PIntermediateFormatArray; ADest: Pointer; AColorForm
     pDest: PLongInt;
     n: Integer;
 
-    procedure SetChannel(AValue: Single);
+    procedure SetChannel(AValue: Single); //PALOFF
       begin
         pDest^ := Trunc(ClampValue(AValue, -$7FFFFFFF, $7FFFFFFF));
         Inc(pDest);
       end;
 
-    procedure SetChannelI(AValue: Single);
+    procedure SetChannelI(AValue: Single); //PALOFF
       begin
         pDest^ := Trunc(AValue);
         Inc(pDest);
@@ -3809,13 +3809,13 @@ procedure ImfToFloat(ASource: PIntermediateFormatArray; ADest: Pointer; AColorFo
     pDest: PSingle;
     n: Integer;
 
-    procedure SetChannel(AValue: Single);
+    procedure SetChannel(AValue: Single); //PALOFF
       begin
         pDest^ := AValue * cInv255;
         Inc(pDest);
       end;
 
-    procedure SetChannelI(AValue: Single);
+    procedure SetChannelI(AValue: Single); //PALOFF
       begin
         pDest^ := AValue * cInv255;
         Inc(pDest);
@@ -3977,13 +3977,13 @@ procedure ImfToHalf(ASource: PIntermediateFormatArray; ADest: Pointer; AColorFor
     pDest: PHalfFloat;
     n: Integer;
 
-    procedure SetChannel(AValue: Single);
+    procedure SetChannel(AValue: Single); //PALOFF
       begin
         pDest^ := FloatToHalf(AValue * cInv255);
         Inc(pDest);
       end;
 
-    procedure SetChannelI(AValue: Single);
+    procedure SetChannelI(AValue: Single); //PALOFF
       begin
         pDest^ := FloatToHalf(AValue * cInv255);
         Inc(pDest);

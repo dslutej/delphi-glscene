@@ -75,6 +75,12 @@ const
 
 implementation
 
+{$IFDEF GLS_FASTMATH}
+uses
+  Neslib.FastMath;
+{$ENDIF}
+
+
 procedure ECSetCollisionRange(var MovePack: TECMovePack);
 var  N: TAffineVector;
 begin

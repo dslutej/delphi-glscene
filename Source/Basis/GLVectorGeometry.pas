@@ -801,15 +801,15 @@ function TexpointEquals(const p1, p2: TTexPoint): Boolean;
 function RectEquals(const Rect1, Rect2: TRect): Boolean;
 {$IFDEF GLS_INLINE_VICE_ASM}inline; {$ENDIF}
 // True if all components are equal.
-function VectorEquals(const V1, V2: TVector): Boolean; overload;{$IFDEF GLS_INLINE}inline;{$ENDIF}
+function VectorEquals(const V1, V2: TVector): Boolean; overload; inline;
 // True if all components are equal.
-function VectorEquals(const V1, V2: TAffineVector): Boolean; overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
+function VectorEquals(const V1, V2: TAffineVector): Boolean; overload; inline;
 // True if X, Y and Z components are equal.
 function AffineVectorEquals(const V1, V2: TVector): Boolean; overload; inline;
 // True if x=y=z=0, w ignored
-function VectorIsNull(const V: TVector): Boolean; overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
+function VectorIsNull(const V: TVector): Boolean; overload; inline;
 // True if x=y=z=0, w ignored
-function VectorIsNull(const V: TAffineVector): Boolean; overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
+function VectorIsNull(const V: TAffineVector): Boolean; overload; inline;
 { Calculates Abs(v1[x]-v2[x])+Abs(v1[y]-v2[y]), also know as "Norm1". }
 function VectorSpacing(const V1, V2: TTexPoint): Single; overload; inline
 { Calculates Abs(v1[x]-v2[x])+Abs(v1[y]-v2[y])+..., also know as "Norm1". }
@@ -899,11 +899,12 @@ function CreateRotationMatrix(const anAxis: TVector; angle: Single): TMatrix; ov
 function CreateAffineRotationMatrix(const anAxis: TAffineVector; angle: Single): TAffineMatrix;
 
 // Multiplies two 3x3 matrices
-function MatrixMultiply(const m1, m2: TAffineMatrix): TAffineMatrix; overload;
+function MatrixMultiply(const m1, m2: TAffineMatrix): TAffineMatrix; overload; {$IFDEF GLS_FASTMATH}inline;{$ENDIF}
+
 // Multiplies two 4x4 matrices
-function MatrixMultiply(const m1, m2: TMatrix): TMatrix; overload;
+function MatrixMultiply(const m1, m2: TMatrix): TMatrix; overload; {$IFDEF GLS_FASTMATH}inline;{$ENDIF}
 // Multiplies M1 by M2 and places result in MResult
-procedure MatrixMultiply(const m1, m2: TMatrix; var MResult: TMatrix); overload;
+procedure MatrixMultiply(const m1, m2: TMatrix; var MResult: TMatrix); overload; {$IFDEF GLS_FASTMATH}inline;{$ENDIF}
 
 // Transforms a homogeneous vector by multiplying it with a matrix
 function VectorTransform(const V: TVector; const M: TMatrix): TVector; overload; inline;
@@ -1719,10 +1720,15 @@ end;
 procedure SetVector(out V: TVector; const vSrc: TVector);
 begin
   // faster than memcpy, move or ':=' on the TVector...
+  {
   V.X := vSrc.X;
   V.Y := vSrc.Y;
   V.Z := vSrc.Z;
   V.W := vSrc.W;
+  }
+
+  V._12 := vSrc._12;
+  V._34 := vSrc._34;
 end;
 
 procedure MakePoint(out V: TVector; const X, Y, Z: Single);
@@ -4022,12 +4028,11 @@ end;
 
 function VectorEquals(const V1, V2: TVector): Boolean;
 begin
-{$IFDEF _GLS_FASTMATH}
-  Result := Neslib.FastMath.TVector4(V1) = Neslib.FastMath.TVector4(V2);
-{$ELSE}
+  Result := (V1._12 = V2._12) and (V1._34 = V2._34);
+  {
   result := (V1._1 = V2._1) and (V1._2 = V2._2) and (V1._3 = V2._3)
     and (V1._4 = V2._4);
-{$ENDIF}
+  }
 end;
 
 function VectorEquals(const V1, V2: TAffineVector): Boolean;
@@ -4037,11 +4042,7 @@ end;
 
 function AffineVectorEquals(const V1, V2: TVector): Boolean;
 begin
-{$IFDEF _GLS_FASTMATH}
-  Result := Neslib.FastMath.TVector4(V1) = Neslib.FastMath.TVector4(V2);
-{$ELSE}
   result := (V1._1 = V2._1) and (V1._2 = V2._2) and (V1._3 = V2._3);
-{$ENDIF}
 end;
 
 function VectorIsNull(const V: TVector): Boolean;
@@ -4533,6 +4534,9 @@ end;
 
 function MatrixMultiply(const m1, m2: TAffineMatrix): TAffineMatrix;
 begin
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath.TMatrix3(Result) := Neslib.FastMath.TMatrix3(m1) * Neslib.FastMath.TMatrix3(m2);
+{$ELSE}
   result.X.X := m1.X.X * m2.X.X + m1.X.Y * m2.Y.X + m1.X.Z * m2.Z.X;
   result.X.Y := m1.X.X * m2.X.Y + m1.X.Y * m2.Y.Y + m1.X.Z * m2.Z.Y;
   result.X.Z := m1.X.X * m2.X.Z + m1.X.Y * m2.Y.Z + m1.X.Z * m2.Z.Z;
@@ -4542,113 +4546,9 @@ begin
   result.Z.X := m1.Z.X * m2.X.X + m1.Z.Y * m2.Y.X + m1.Z.Z * m2.Z.X;
   result.Z.Y := m1.Z.X * m2.X.Y + m1.Z.Y * m2.Y.Y + m1.Z.Z * m2.Z.Y;
   result.Z.Z := m1.Z.X * m2.X.Z + m1.Z.Y * m2.Y.Z + m1.Z.Z * m2.Z.Z;
+{$ENDIF}
 end;
 
-(**
-{$codealign 16}
-function MatrixMultiply(const m1, m2: TMatrix): TMatrix;
-asm
-  // Move 16 float32s into xmm-registers. Unaligned :/
-  movups xmm4, [m2.X]
-  movups xmm5, [m2.Y]
-  movups xmm6, [m2.Z]
-  movups xmm7, [m2.W]
-
-  // ---------------------------------------------------------------------------
-
-  movss  xmm0, [m1]+0
-  movss  xmm1, [m1]+4
-  movss  xmm2, [m1]+8
-  movss  xmm3, [m1]+12
-
-  shufps xmm0, xmm0, 0
-  shufps xmm1, xmm1, 0
-  shufps xmm2, xmm2, 0
-  shufps xmm3, xmm3, 0
-
-  mulps  xmm0, xmm4
-  mulps  xmm1, xmm5
-  mulps  xmm2, xmm6
-  mulps  xmm3, xmm7
-
-  addps  xmm0, xmm1
-  addps  xmm0, xmm2
-  addps  xmm0, xmm3
-
-  movups [Result.X], xmm0
-
-  // ---------------------------------------------------------------------------
-
-  movss  xmm0, [m1]+16
-  movss  xmm1, [m1]+20
-  movss  xmm2, [m1]+24
-  movss  xmm3, [m1]+28
-
-  shufps xmm0, xmm0, 0
-  shufps xmm1, xmm1, 0
-  shufps xmm2, xmm2, 0
-  shufps xmm3, xmm3, 0
-
-  mulps  xmm0, xmm4
-  mulps  xmm1, xmm5
-  mulps  xmm2, xmm6
-  mulps  xmm3, xmm7
-
-  addps  xmm0, xmm1
-  addps  xmm0, xmm2
-  addps  xmm0, xmm3
-
-  movups [Result.Y], xmm0
-
-  // ---------------------------------------------------------------------------
-
-  movss  xmm0, [m1]+32
-  movss  xmm1, [m1]+36
-  movss  xmm2, [m1]+40
-  movss  xmm3, [m1]+44
-
-  shufps xmm0, xmm0, 0
-  shufps xmm1, xmm1, 0
-  shufps xmm2, xmm2, 0
-  shufps xmm3, xmm3, 0
-
-  mulps  xmm0, xmm4
-  mulps  xmm1, xmm5
-  mulps  xmm2, xmm6
-  mulps  xmm3, xmm7
-
-  addps  xmm0, xmm1
-  addps  xmm0, xmm2
-  addps  xmm0, xmm3
-
-  movups [Result.Z], xmm0
-
-  // ---------------------------------------------------------------------------
-
-  movss  xmm0, [m1]+48
-  movss  xmm1, [m1]+52
-  movss  xmm2, [m1]+56
-  movss  xmm3, [m1]+60
-
-  shufps xmm0, xmm0, 0
-  shufps xmm1, xmm1, 0
-  shufps xmm2, xmm2, 0
-  shufps xmm3, xmm3, 0
-
-  mulps  xmm0, xmm4
-  mulps  xmm1, xmm5
-  mulps  xmm2, xmm6
-  mulps  xmm3, xmm7
-
-  addps  xmm0, xmm1
-  addps  xmm0, xmm2
-  addps  xmm0, xmm3
-
-  movups [Result.W], xmm0
-
-end;
-(**)
-(**)
 function MatrixMultiply(const m1, m2: TMatrix): TMatrix;
 begin
 {$IFDEF GLS_FASTMATH}
@@ -4689,113 +4589,6 @@ begin
 {$ENDIF}
 end;
 
-(**
-{$codealign 16}
-procedure MatrixMultiply(const m1, m2: TMatrix; var MResult: TMatrix);
-asm
-
-  // Move 16 float32s into xmm-registers. Unaligned :/
-  movups xmm4, [m2.X]
-  movups xmm5, [m2.Y]
-  movups xmm6, [m2.Z]
-  movups xmm7, [m2.W]
-
-  // ---------------------------------------------------------------------------
-
-  movss  xmm0, [m1]+0
-  movss  xmm1, [m1]+4
-  movss  xmm2, [m1]+8
-  movss  xmm3, [m1]+12
-
-  shufps xmm0, xmm0, 0
-  shufps xmm1, xmm1, 0
-  shufps xmm2, xmm2, 0
-  shufps xmm3, xmm3, 0
-
-  mulps  xmm0, xmm4
-  mulps  xmm1, xmm5
-  mulps  xmm2, xmm6
-  mulps  xmm3, xmm7
-
-  addps  xmm0, xmm1
-  addps  xmm0, xmm2
-  addps  xmm0, xmm3
-
-  movups [MResult.X], xmm0
-
-  // ---------------------------------------------------------------------------
-
-  movss  xmm0, [m1]+16
-  movss  xmm1, [m1]+20
-  movss  xmm2, [m1]+24
-  movss  xmm3, [m1]+28
-
-  shufps xmm0, xmm0, 0
-  shufps xmm1, xmm1, 0
-  shufps xmm2, xmm2, 0
-  shufps xmm3, xmm3, 0
-
-  mulps  xmm0, xmm4
-  mulps  xmm1, xmm5
-  mulps  xmm2, xmm6
-  mulps  xmm3, xmm7
-
-  addps  xmm0, xmm1
-  addps  xmm0, xmm2
-  addps  xmm0, xmm3
-
-  movups [MResult.Y], xmm0
-
-  // ---------------------------------------------------------------------------
-
-  movss  xmm0, [m1]+32
-  movss  xmm1, [m1]+36
-  movss  xmm2, [m1]+40
-  movss  xmm3, [m1]+44
-
-  shufps xmm0, xmm0, 0
-  shufps xmm1, xmm1, 0
-  shufps xmm2, xmm2, 0
-  shufps xmm3, xmm3, 0
-
-  mulps  xmm0, xmm4
-  mulps  xmm1, xmm5
-  mulps  xmm2, xmm6
-  mulps  xmm3, xmm7
-
-  addps  xmm0, xmm1
-  addps  xmm0, xmm2
-  addps  xmm0, xmm3
-
-  movups [MResult.Z], xmm0
-
-  // ---------------------------------------------------------------------------
-
-  movss  xmm0, [m1]+48
-  movss  xmm1, [m1]+52
-  movss  xmm2, [m1]+56
-  movss  xmm3, [m1]+60
-
-  shufps xmm0, xmm0, 0
-  shufps xmm1, xmm1, 0
-  shufps xmm2, xmm2, 0
-  shufps xmm3, xmm3, 0
-
-  mulps  xmm0, xmm4
-  mulps  xmm1, xmm5
-  mulps  xmm2, xmm6
-  mulps  xmm3, xmm7
-
-  addps  xmm0, xmm1
-  addps  xmm0, xmm2
-  addps  xmm0, xmm3
-
-  movups [MResult.W], xmm0
-
-end;
-(**)
-
-(**)
 procedure MatrixMultiply(const m1, m2: TMatrix; var MResult: TMatrix);
 begin
 {$IFDEF GLS_FASTMATH}
@@ -4835,7 +4628,6 @@ begin
     m1.W.W * m2.W.W;
 {$ENDIF}
 end;
-(**)
 
 function VectorTransform(const V: TVector; const M: TMatrix): TVector;
 begin

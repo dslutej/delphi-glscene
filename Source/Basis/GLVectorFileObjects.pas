@@ -536,7 +536,7 @@ type
     function GetUseVBO: Boolean;
     procedure SetUseVBO(const Value: Boolean);
   protected
-    function GetMeshObject(Index: Integer): TMeshObject;
+    function GetMeshObject(Index: Integer): TMeshObject; inline;
   public
     constructor CreateOwned(aOwner: TGLBaseMesh);
     destructor Destroy; override;

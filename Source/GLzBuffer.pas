@@ -1141,7 +1141,7 @@ var
   d2, d4, d5, d6, d8: single;
   shad2, shad4, shad5, shad6, shad8: single;
 
-  function ComputeIlum: Integer;
+  function ComputeIlum: Integer; //PALOFF
   begin
     //---Lighting---
     if FDepthFade then

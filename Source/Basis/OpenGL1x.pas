@@ -7105,7 +7105,7 @@ function LoadOpenGLFromLibrary(const GLName, GLUName: String): Boolean;
 function IsOpenGLLoaded : Boolean;
 
 function IsMesaGL : Boolean;
-procedure TrimAndSplitVersionString(Buffer: String; var Max, Min: Integer);
+procedure TrimAndSplitVersionString(Buffer: String; out Max, Min: Integer);
 function IsVersionMet(MajorVersion,MinorVersion, actualMajorVersion, actualMinorVersion:Integer): boolean;
 function IsOpenGLVersionMet(MajorVersion,MinorVersion: Integer): boolean;
 
@@ -8476,7 +8476,7 @@ begin
 end;
 {$ENDIF}
 
-procedure TrimAndSplitVersionString(Buffer: String; var Max, Min: Integer);
+procedure TrimAndSplitVersionString(Buffer: String; out Max, Min: Integer);
 // Peels out the X.Y form from the given Buffer which must contain a version string like "text Minor.Major.Build text"
 // at least however "Major.Minor".
 var
@@ -8531,7 +8531,7 @@ var
    MajorVersion, MinorVersion: Integer;
 
    // Checks if the given Extension string is in Buffer.
-   function CheckExtension(const Extension: string): Boolean;
+   function CheckExtension(const Extension: string): Boolean; //PALOFF
    var
      ExtPos: Integer;
    begin
@@ -8808,7 +8808,7 @@ procedure ReadWGLImplementationProperties;
 var
    Buffer: string;
    // Checks if the given Extension string is in Buffer.
-   function CheckExtension(const Extension: string): Boolean;
+   function CheckExtension(const Extension: string): Boolean; //PALOFF
    var
      ExtPos: Integer;
    begin

@@ -13,8 +13,9 @@ unit GLGeometryCoordinates;
 
 interface
 
+{$I GLScene.inc}
+
 uses
-  System.Math,
   GLVectorGeometry;
 
 { Convert cylindrical to cartesian [single]. theta in rad }
@@ -98,14 +99,14 @@ procedure BipolarCylindrical_Cartesian(const u, v, z1, a: single;
 procedure BipolarCylindrical_Cartesian(const u, v, z1, a: double;
   var x, y, z: double; var ierr: integer); overload;
 
-// --------------------------------------------------------------------------
-// --------------------------------------------------------------------------
-// --------------------------------------------------------------------------
 implementation
 
-// --------------------------------------------------------------------------
-// --------------------------------------------------------------------------
-// --------------------------------------------------------------------------
+uses
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath,
+  System.Math,
+{$ENDIF}
+  GLVectorTypes;
 
 // ----- Cylindrical_Cartesian ---------------------------------------------
 { ** Convert Cylindrical to Cartesian with no checks.
@@ -188,7 +189,7 @@ procedure Cartesian_Cylindrical(const x, y, z1: single;
 
 begin
   r := sqrt(x * x + y * y);
-  theta := ArcTan2(y, x);
+  theta := {$IFDEF GLS_FASTMATH}Neslib.FastMath.{$ENDIF}ArcTan2(y, x);
   z := z1;
 end;
 
@@ -199,7 +200,7 @@ procedure Cartesian_Cylindrical(const x, y, z1: double;
 
 begin
   r := sqrt(x * x + y * y);
-  theta := ArcTan2(y, x);
+  theta := {$IFDEF GLS_FASTMATH}Neslib.FastMath.{$ENDIF}ArcTan2(y, x);
   z := z1;
 end;
 
@@ -298,7 +299,7 @@ procedure Cartesian_Spherical(const x, y, z: single; var r, theta, phi: single);
 
 begin
   r := sqrt((x * x) + (y * y) + (z * z));
-  theta := ArcTan2(y, x);
+  theta := {$IFDEF GLS_FASTMATH}Neslib.FastMath.{$ENDIF}ArcTan2(y, x);
   phi := ArcCosine(z / r);
 end;
 
@@ -308,7 +309,7 @@ procedure Cartesian_Spherical(const v: TAffineVector;
   var r, theta, phi: single);
 begin
   r := VectorLength(v);
-  theta := ArcTan2(v.y, v.x);
+  theta := {$IFDEF GLS_FASTMATH}Neslib.FastMath.{$ENDIF}ArcTan2(v.y, v.x);
   phi := ArcCosine(v.z / r);
 end;
 
@@ -344,8 +345,8 @@ var
 begin
   SinCosine(eta, a, sn, cs);
   SinCosine(phi, snphi, csphi);
-  shx := sinh(xi);
-  chx := cosh(xi);
+  shx := {$IFDEF GLS_FASTMATH}Neslib.FastMath.{$ENDIF}sinh(xi);
+  chx := {$IFDEF GLS_FASTMATH}Neslib.FastMath.{$ENDIF}cosh(xi);
   x := sn * shx * csphi; // x = a*sin(eta)*sinh(xi)*cos(phi)
   y := sn * shx * snphi; // y = a*sin(eta)*sinh(xi)*sin(phi)
   z := cs * chx; // z = a*cos(eta)*cosh(xi)
@@ -405,8 +406,8 @@ begin
     SinCosine(eta, a, sn, cs);
     SinCosine(phi, snphi, csphi);
 
-    shx := sinh(xi);
-    chx := cosh(xi);
+    shx := {$IFDEF GLS_FASTMATH}Neslib.FastMath.{$ENDIF}sinh(xi);
+    chx := {$IFDEF GLS_FASTMATH}Neslib.FastMath.{$ENDIF}cosh(xi);
 
     x := sn * shx * csphi; // x = a*sin(eta)*sinh(xi)*cos(phi)
     y := sn * shx * snphi; // y = a*sin(eta)*sinh(xi)*sin(phi)
@@ -471,8 +472,8 @@ begin
   SinCosine(eta, a, sn, cs);
   SinCosine(phi, snphi, csphi);
 
-  shx := sinh(xi);
-  chx := cosh(xi);
+  shx := {$IFDEF GLS_FASTMATH}Neslib.FastMath.{$ENDIF}sinh(xi);
+  chx := {$IFDEF GLS_FASTMATH}Neslib.FastMath.{$ENDIF}cosh(xi);
 
   x := cs * chx * csphi; // x = a*cos(eta)*cosh(xi)*cos(phi)
   y := cs * chx * snphi; // y = a*cos(eta)*cosh(xi)*sin(phi)
@@ -535,8 +536,8 @@ begin
     SinCosine(eta, a, sn, cs);
     SinCosine(phi, snphi, csphi);
 
-    shx := sinh(xi);
-    chx := cosh(xi);
+    shx := {$IFDEF GLS_FASTMATH}Neslib.FastMath.{$ENDIF}sinh(xi);
+    chx := {$IFDEF GLS_FASTMATH}Neslib.FastMath.{$ENDIF}cosh(xi);
 
     x := cs * chx * csphi; // x = a*cos(eta)*cosh(xi)*cos(phi)
     y := cs * chx * snphi; // y = a*cos(eta)*cosh(xi)*sin(phi)
@@ -592,8 +593,8 @@ var
 
 begin
   SinCosine(u, sn, cs);
-  shx := sinh(v);
-  chx := cosh(v);
+  shx := {$IFDEF GLS_FASTMATH}Neslib.FastMath.{$ENDIF}sinh(v);
+  chx := {$IFDEF GLS_FASTMATH}Neslib.FastMath.{$ENDIF}cosh(v);
 
   x := a * shx / (chx - cs);
   y := a * sn / (chx - cs);
@@ -611,8 +612,8 @@ var
 
 begin
   SinCosine(u, sn, cs);
-  shx := sinh(v);
-  chx := cosh(v);
+  shx := {$IFDEF GLS_FASTMATH}Neslib.FastMath.{$ENDIF}sinh(v);
+  chx := {$IFDEF GLS_FASTMATH}Neslib.FastMath.{$ENDIF}cosh(v);
 
   x := a * shx / (chx - cs);
   y := a * sn / (chx - cs);
@@ -642,8 +643,8 @@ begin
   begin
     SinCosine(u, sn, cs);
 
-    shx := sinh(v);
-    chx := cosh(v);
+    shx := {$IFDEF GLS_FASTMATH}Neslib.FastMath.{$ENDIF}sinh(v);
+    chx := {$IFDEF GLS_FASTMATH}Neslib.FastMath.{$ENDIF}cosh(v);
 
     x := a * shx / (chx - cs);
     y := a * sn / (chx - cs);

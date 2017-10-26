@@ -29,6 +29,10 @@ procedure DoTesselate(Vertexes: TAffineVectorList; Mesh: TGLBaseMesh; normal: PA
 
 //---------------------------------------------------------------------------
 implementation
+
+uses
+
+  GLPersistentClasses;
 //---------------------------------------------------------------------------
 
 var

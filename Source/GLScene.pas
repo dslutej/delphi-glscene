@@ -452,11 +452,11 @@ type
        Given coordinates & vector are in absolute coordinates, rayVector
        must be normalized.
        rayStart may be a point inside the object, allowing retrieval of
-       the multiple intersects of the ray. 
+       the multiple intersects of the ray.
        When intersectXXX parameters are nil (default) implementation should
        take advantage of this to optimize calculus, if not, and an intersect
-       is found, non nil parameters should be defined. 
-       The intersectNormal needs NOT be normalized by the implementations. 
+       is found, non nil parameters should be defined.
+       The intersectNormal needs NOT be normalized by the implementations.
        Default value is based on bounding sphere. }
     function RayCastIntersect(const rayStart, rayVector: TVector;
       intersectPoint: PVector = nil;

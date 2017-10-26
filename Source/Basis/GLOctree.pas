@@ -145,10 +145,10 @@ implementation
 
 uses
 {$IFDEF GLS_FASTMATH}
-  Neslib.FastMath;
-{$ELSE}
-  System.Math;
+  Neslib.FastMath,
 {$ENDIF}
+  System.Math;
+
 
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
@@ -195,9 +195,9 @@ begin
   NormalizeVector(V2);
   NormalizeVector(V3);
 
-  Total_angles := Total_angles + Arccos(VectorDotProduct(V1, V2));
-  Total_angles := Total_angles + Arccos(VectorDotProduct(V2, V3));
-  Total_angles := Total_angles + Arccos(VectorDotProduct(V3, V1));
+  Total_angles := Total_angles + {$IFDEF GLS_FASTMATH}Neslib.FastMath.{$ENDIF}Arccos(VectorDotProduct(V1, V2));
+  Total_angles := Total_angles + {$IFDEF GLS_FASTMATH}Neslib.FastMath.{$ENDIF}Arccos(VectorDotProduct(V2, V3));
+  Total_angles := Total_angles + {$IFDEF GLS_FASTMATH}Neslib.FastMath.{$ENDIF}Arccos(VectorDotProduct(V3, V1));
 
   if (Abs(Total_angles - 2 * PI) <= 0.005) then
     Result := TRUE

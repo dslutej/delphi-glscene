@@ -151,6 +151,7 @@ type
       0 : (V: array[0..3] of Single);
       1 : (X,Y,Z,W: Single);
       2 : (_1,_2,_3,_4: UInt32);
+      3 : (_12, _34: UInt64);
   end;
   TVector4h = record
     case Integer of

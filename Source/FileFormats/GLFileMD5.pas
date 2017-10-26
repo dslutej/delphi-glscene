@@ -16,8 +16,13 @@ unit GLFileMD5;
 
 interface
 
+{$I GLScene.inc}
+
 uses
-  System.Classes, System.SysUtils, 
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath,
+{$ENDIF}
+  System.Classes, System.SysUtils,
   GLVectorFileObjects, GLUtils, GLApplicationFileIO,
   GLVectorTypes, GLVectorGeometry, GLVectorLists;
 
@@ -48,10 +53,11 @@ type
 var
   vMD5TextureExtensions : TStringList;
 
-// ------------------------------------------------------------------
-// ------------------------------------------------------------------
-// ------------------------------------------------------------------
 implementation
+
+uses
+  GLPersistentClasses;
+
 // -----------
 // ----------- TGLMD5VectorFile -----------
 // -----------

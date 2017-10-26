@@ -12,8 +12,11 @@ unit GLMultiProxy;
 
 interface
 
+{$I GLScene.inc}
+
 uses
-  System.Classes, System.SysUtils,
+  System.Classes,
+  System.SysUtils,
   
   OpenGLTokens,
   GLContext,
@@ -152,19 +155,15 @@ type
          property Behaviours;
    end;
 
-//-------------------------------------------------------------
-//-------------------------------------------------------------
-//-------------------------------------------------------------
 implementation
 
 uses
 
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath,
+{$ENDIF}
   GLPersistentClasses,
   OpenGLAdapter;
-
-//-------------------------------------------------------------
-//-------------------------------------------------------------
-//-------------------------------------------------------------
 
 // ------------------
 // ------------------ TGLMultiProxyMaster ------------------

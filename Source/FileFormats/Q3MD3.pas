@@ -60,6 +60,9 @@ procedure LoadQ3Skin(const FileName:string; Actor:TGLActor);
 
 implementation
 
+uses
+  GLPersistentClasses;
+
 // LoadQ3Anims
 //
 procedure LoadQ3Anims(Animations:TGLActorAnimations;

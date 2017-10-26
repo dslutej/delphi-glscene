@@ -62,6 +62,7 @@ implementation
 
 uses
 
+  GLPersistentClasses,
   GLVectorTypes;
 
 // ------------------------------------------------------------------
