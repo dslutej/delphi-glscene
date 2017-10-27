@@ -248,10 +248,10 @@ type
     procedure DoOnCommandIssued(var UserInputCommand: TGLUserInputCommand);
       virtual;
     procedure SetFontColor(const Color: TColor); virtual;
-    function GetFontColor: TColor; virtual;
+    function GetFontColor: TColor;
     procedure SetHUDSpriteColor(const Color: TColor); virtual;
-    function GetHUDSpriteColor: TColor; virtual;
-    function NumLines: Integer; virtual;
+    function GetHUDSpriteColor: TColor;
+    function NumLines: Integer;
     procedure ShowConsoleHelp; virtual;
     procedure HandleUnknownCommand(const Command: string); virtual;
 
@@ -264,7 +264,7 @@ type
     {Command interpreters }
     procedure CommandIssued(var UserInputCommand: TGLUserInputCommand); virtual;
     procedure FixCommand(var UserInputCommand: TGLUserInputCommand); virtual;
-    function ParseString(str, caract: string): TGLUserInputCommand; virtual;
+    function ParseString(str, caract: string): TGLUserInputCommand;
     procedure ProcessInput; virtual;
 
     {Refreshes the Hud (clip lines outside the visible console). }

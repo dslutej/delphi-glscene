@@ -295,18 +295,18 @@ const
 // Vector functions
 // ------------------------------------------------------------------------------
 
-function TexPointMake(const S, T: Single): TTexPoint;{$IFDEF GLS_INLINE}inline; {$ENDIF}
+function TexPointMake(const S, T: Single): TTexPoint; inline;
 function AffineVectorMake(const X, Y, Z: Single): TAffineVector; overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
-function AffineVectorMake(const V: TVector): TAffineVector; overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
+function AffineVectorMake(const V: TVector): TAffineVector; overload; inline;
 procedure SetAffineVector(out V: TAffineVector; const X, Y, Z: Single);  overload; {$IFDEF GLS_INLINE}inline; {$ENDIF}
 procedure SetVector(out V: TAffineVector; const X, Y, Z: Single); overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
-procedure SetVector(out V: TAffineVector; const vSrc: TVector); overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
+procedure SetVector(out V: TAffineVector; const vSrc: TVector); overload; inline;
 procedure SetVector(out V: TAffineVector; const vSrc: TAffineVector); overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
 procedure SetVector(out V: TAffineDblVector; const vSrc: TAffineVector);  overload; {$IFDEF GLS_INLINE}inline; {$ENDIF}
 procedure SetVector(out V: TAffineDblVector; const vSrc: TVector); overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
 function VectorMake(const V: TAffineVector; W: Single = 0): TVector; overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
-function VectorMake(const X, Y, Z: Single; W: Single = 0): TVector; overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
-function PointMake(const X, Y, Z: Single): TVector; overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
+function VectorMake(const X, Y, Z: Single; W: Single = 0): TVector; overload; inline;
+function PointMake(const X, Y, Z: Single): TVector; overload; inline;
 function PointMake(const V: TAffineVector): TVector; overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
 function PointMake(const V: TVector): TVector; overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
 procedure SetVector(out V: TVector; const X, Y, Z: Single; W: Single = 0);  overload; {$IFDEF GLS_INLINE}inline; {$ENDIF}
@@ -758,7 +758,7 @@ procedure NegateVector(var V: TVector); overload;  inline
 procedure NegateVector(var V: array of Single); overload;
 
 // Scales given vector by a factor
-procedure ScaleVector(var V: TVector2f; factor: Single); overload;  inline
+procedure ScaleVector(var V: TVector2f; factor: Single); overload; inline
 // Scales given vector by a factor
 procedure ScaleVector(var V: TAffineVector; factor: Single); overload;  inline
 { Scales given vector by another vector.
@@ -795,7 +795,7 @@ procedure DivideVector(var V: TAffineVector; const divider: TAffineVector); over
 function VectorDivide(const V: TVector; const divider: TVector): TVector; overload; {$IFDEF GLS_INLINE}inline; {$ENDIF}
 function VectorDivide(const V: TAffineVector; const divider: TAffineVector): TAffineVector; overload; {$IFDEF GLS_INLINE_VICE_ASM}inline; {$ENDIF}
 // True if all components are equal.
-function TexpointEquals(const p1, p2: TTexPoint): Boolean;
+function TexpointEquals(const p1, p2: TTexPoint): Boolean; inline;
 {$IFDEF GLS_INLINE_VICE_ASM}inline; {$ENDIF}
 // True if all components are equal.
 function RectEquals(const Rect1, Rect2: TRect): Boolean;
@@ -1720,13 +1720,6 @@ end;
 procedure SetVector(out V: TVector; const vSrc: TVector);
 begin
   // faster than memcpy, move or ':=' on the TVector...
-  {
-  V.X := vSrc.X;
-  V.Y := vSrc.Y;
-  V.Z := vSrc.Z;
-  V.W := vSrc.W;
-  }
-
   V._12 := vSrc._12;
   V._34 := vSrc._34;
 end;
@@ -3803,10 +3796,14 @@ end;
 
 procedure ScaleVector(var V: TVector; factor: Single);
 begin
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath.TVector4(V)*factor;
+{$ELSE}
   V.X := V.X * factor;
   V.Y := V.Y * factor;
   V.Z := V.Z * factor;
   V.W := V.W * factor;
+{$ENDIF}
 end;
 
 procedure ScaleVector(var V: TAffineVector; const factor: TAffineVector);
@@ -4023,16 +4020,13 @@ end;
 function RectEquals(const Rect1, Rect2: TRect): Boolean;
 begin
   result := (Rect1.Left = Rect2.Left) and (Rect1.Right = Rect2.Right) and
-    (Rect1.Top = Rect2.Top) and (Rect1.Bottom = Rect2.Left);
+    (Rect1.Top = Rect2.Top) and (Rect1.Bottom = Rect2.Bottom);
 end;
 
 function VectorEquals(const V1, V2: TVector): Boolean;
 begin
-  Result := (V1._12 = V2._12) and (V1._34 = V2._34);
-  {
   result := (V1._1 = V2._1) and (V1._2 = V2._2) and (V1._3 = V2._3)
     and (V1._4 = V2._4);
-  }
 end;
 
 function VectorEquals(const V1, V2: TAffineVector): Boolean;

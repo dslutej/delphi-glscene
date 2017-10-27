@@ -559,14 +559,14 @@ var
   B, C, Max: Single;
 
   procedure ISECT(VV0, VV1, VV2, D0, D1, D2: Single;
-    var Isect0, Isect1: Single);
+    out Isect0, Isect1: Single);
   begin
     Isect0 := VV0 + (VV1 - VV0) * D0 / (D0 - D1);
     Isect1 := VV0 + (VV2 - VV0) * D0 / (D0 - D2);
   end;
 
   function COMPUTE_INTERVALS(VV0, VV1, VV2, D0, D1, D2, D0D1, D0D2: Single;
-    var Isect0, Isect1: Single): Integer;
+    out Isect0, Isect1: Single): Integer;
   begin
     Result := 0;
     if (D0D1 > 0.0) then

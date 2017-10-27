@@ -494,7 +494,7 @@ function FindDDSCompatibleDataFormat(const iFormat: TGLInternalFormat;
 
 implementation
 
-procedure DecodeColor565(col : Word; var r,g,b : Byte);
+procedure DecodeColor565(col : Word; out r,g,b : Byte);
 begin
    r:=col and $1F;
    g:=(col shr 5) and $3F;

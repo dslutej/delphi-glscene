@@ -104,8 +104,8 @@ type
     procedure SetOcclusionFrameSkip(Val: Integer);
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     procedure DestroyHandle; override;
-    procedure ReleaseAllTiles; dynamic;
-    procedure OnTileDestroyed(Sender: TObject); virtual;
+    procedure ReleaseAllTiles;
+    procedure OnTileDestroyed(Sender: TObject);
     function GetPreparedPatch(const TilePos, EyePos: TAffineVector;
       TexFactor: Single; HDList: TList): TGLROAMPatch;
   public
@@ -119,7 +119,7 @@ type
       intersectPoint: PVector = nil; intersectNormal: PVector = nil): Boolean; override;
     {  Interpolates height for the given point. 
       Expects a point expressed in absolute coordinates. }
-    function InterpolatedHeight(const p: TVector): Single; overload; virtual;
+    function InterpolatedHeight(const p: TVector): Single; overload;
     function InterpolatedHeight(const p: TAffineVector): Single; overload;
     {  Triangle count for the last render. }
     property LastTriangleCount: Integer read FLastTriangleCount;

@@ -264,7 +264,7 @@ procedure FillUniformAutoSetMethodList(AList: TStrings;
   TypeFilter: TGLSLDataType); overload;
 procedure FillUniformAutoSetMethodList(AList: TStrings;
   TypeFilter: TGLSLSamplerType); overload;
-function GetUniformAutoSetMethod(AMethodName: string): TUniformAutoSetMethod;
+function GetUniformAutoSetMethod(const AMethodName: string): TUniformAutoSetMethod;
 function GetUniformAutoSetMethodName(AMethod: TUniformAutoSetMethod): string;
 
 //---------------------------------------------------------------------
@@ -373,7 +373,7 @@ begin
       AList.Add(vMethods[I].Name);
 end;
 
-function GetUniformAutoSetMethod(AMethodName: string): TUniformAutoSetMethod;
+function GetUniformAutoSetMethod(const AMethodName: string): TUniformAutoSetMethod;
 var
   I: Integer;
 begin

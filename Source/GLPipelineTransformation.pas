@@ -125,6 +125,9 @@ var
 implementation
 
 uses
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath,
+{$ENDIF}
 
   GLContext;
 

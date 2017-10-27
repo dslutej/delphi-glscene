@@ -116,7 +116,7 @@ type
     destructor Destroy; override;
     procedure Assign(Source: TPersistent); override;
 
-    procedure LoadShaderPrograms(const VPFilename, FPFilename: string; GPFilename: string = '');
+    procedure LoadShaderPrograms(const VPFilename, FPFilename: string; const GPFilename: string = '');
   end;
 
   {A custom shader program. }
@@ -619,7 +619,7 @@ begin
   inherited;
 end;
 
-procedure TGLCustomShader.LoadShaderPrograms(const VPFilename, FPFilename: string; GPFilename: string = '');
+procedure TGLCustomShader.LoadShaderPrograms(const VPFilename, FPFilename: string; const GPFilename: string = '');
 begin
   If VPFilename <> '' then VertexProgram.LoadFromFile(VPFilename);
   If FPFilename <> '' then FragmentProgram.LoadFromFile(FPFilename);

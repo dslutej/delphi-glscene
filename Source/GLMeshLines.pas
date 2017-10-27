@@ -606,8 +606,8 @@ begin
     GL.PushMatrix;
     GL.Scalef(lNodeSize, lNodeSize, lNodeSize);
 ///    rci.GLStates.UnSetGLState(stTexture2D);
-    rci.GLStates.UnSetGLState(stColorMaterial);
-    rci.GLStates.UnSetGLState(stBlend);
+    rci.GLStates.Disable(stColorMaterial);
+    rci.GLStates.Disable(stBlend);
     if Node = FSelectedNode then
       rci.GLStates.SetGLMaterialColors(cmFRONT, clrBlack, clrGray20, clrYellow, clrBlack, 0)
     else

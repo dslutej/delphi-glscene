@@ -56,11 +56,11 @@ type
     function SplineW(const t: Single): Single;
 
     { Calculates X and Y components at time t. }
-    procedure SplineXY(const t: Single; var X, Y: Single);
+    procedure SplineXY(const t: Single; out X, Y: Single);
     { Calculates X, Y and Z components at time t. }
-    procedure SplineXYZ(const t: Single; var X, Y, Z: Single);
+    procedure SplineXYZ(const t: Single; out X, Y, Z: Single);
     { Calculates X, Y, Z and W components at time t. }
-    procedure SplineXYZW(const t: Single; var X, Y, Z, W: Single);
+    procedure SplineXYZW(const t: Single; out X, Y, Z, W: Single);
 
     { Calculates affine vector at time t. }
     function SplineAffineVector(const t: Single): TAffineVector; overload;
@@ -251,20 +251,20 @@ begin
   Result := MATValeurSpline(matW, t, FNb);
 end;
 
-procedure TCubicSpline.SplineXY(const t: Single; var X, Y: Single);
+procedure TCubicSpline.SplineXY(const t: Single; out X, Y: Single);
 begin
   X := MATValeurSpline(matX, t, FNb);
   Y := MATValeurSpline(matY, t, FNb);
 end;
 
-procedure TCubicSpline.SplineXYZ(const t: Single; var X, Y, Z: Single);
+procedure TCubicSpline.SplineXYZ(const t: Single; out X, Y, Z: Single);
 begin
   X := MATValeurSpline(matX, t, FNb);
   Y := MATValeurSpline(matY, t, FNb);
   Z := MATValeurSpline(matZ, t, FNb);
 end;
 
-procedure TCubicSpline.SplineXYZW(const t: Single; var X, Y, Z, W: Single);
+procedure TCubicSpline.SplineXYZW(const t: Single; out X, Y, Z, W: Single);
 begin
   X := MATValeurSpline(matX, t, FNb);
   Y := MATValeurSpline(matY, t, FNb);

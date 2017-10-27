@@ -249,8 +249,8 @@ type
 
     procedure LoadFromStream(aStream: TStream);
     procedure SaveToStream(aStream: TStream);
-    procedure LoadFromFile(aFileName: String);
-    procedure SaveToFile(aFileName: String);
+    procedure LoadFromFile(const aFileName: String);
+    procedure SaveToFile(const aFileName: String);
 
     property Leaves: TGLTreeLeaves read FLeaves;
     property Branches: TGLTreeBranches read FBranches;
@@ -1440,7 +1440,7 @@ end;
 
  
 //
-procedure TGLTree.LoadFromFile(aFileName: String);
+procedure TGLTree.LoadFromFile(const aFileName: String);
 var
   stream: TStream;
 begin
@@ -1454,7 +1454,7 @@ end;
 
 // SaveToFile
 //
-procedure TGLTree.SaveToFile(aFileName: String);
+procedure TGLTree.SaveToFile(const aFileName: String);
 var
   stream: TStream;
 begin

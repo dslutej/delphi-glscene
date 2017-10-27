@@ -570,8 +570,8 @@ type
        Resturns True if all its MeshObjects use VBOs. }
     property UseVBO: Boolean read GetUseVBO write SetUseVBO;
     // Precalculate whatever is needed for rendering, called once
-    procedure Prepare; dynamic;
-    function FindMeshByName(MeshName: string): TMeshObject;
+    procedure Prepare; virtual;
+    function FindMeshByName(const MeshName: string): TMeshObject;
     property Owner: TGLBaseMesh read FOwner;
     procedure Clear; override;
     property Items[Index: Integer]: TMeshObject read GetMeshObject; default;
@@ -4500,7 +4500,7 @@ begin
     Items[i].Prepare;
 end;
 
-function TGLMeshObjectList.FindMeshByName(MeshName: string): TMeshObject;
+function TGLMeshObjectList.FindMeshByName(const MeshName: string): TMeshObject;
 var
   i: integer;
 begin

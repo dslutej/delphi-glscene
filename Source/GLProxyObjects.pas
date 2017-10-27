@@ -259,13 +259,13 @@ type
       SetOnBeforeRender;
   end;
 
-//-------------------------------------------------------------
-//-------------------------------------------------------------
-//-------------------------------------------------------------
 implementation
 
 uses
 
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath,
+{$ENDIF}
   GLPersistentClasses,
   GLPipelineTransformation,
   GLXCollection,
@@ -275,17 +275,11 @@ uses
 // ------------------ TGLColorProxy ------------------
 // ------------------
 
- 
-//
-
 constructor TGLColorProxy.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
   FFrontColor := TGLFaceProperties.Create(Self);
 end;
-
- 
-//
 
 destructor TGLColorProxy.Destroy;
 begin
@@ -467,9 +461,6 @@ end;
 // ------------------
 // ------------------ TGLActorProxy ------------------
 // ------------------
-
- 
-//
 
 function TGLActorProxy.BoneMatrix(BoneIndex: integer): TMatrix;
 begin

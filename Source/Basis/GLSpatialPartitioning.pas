@@ -53,19 +53,14 @@ function ExtendedFrustumMakeFromSceneViewer(const AFrustum: TFrustum;
 procedure RenderAABB(var rci: TGLRenderContextInfo; const AABB: TAABB; w, r, g, b: single); overload;
 procedure RenderAABB(var rci: TGLRenderContextInfo; const AABB: TAABB); overload;
 
-//---------------------------------------------------------------------
-//---------------------------------------------------------------------
-//---------------------------------------------------------------------
 implementation
 
 uses
 {$IFDEF GLS_FASTMATH}
   Neslib.FastMath,
 {$ENDIF}
+  GLCoordinates,
   OpenGLAdapter;
-//---------------------------------------------------------------------
-//---------------------------------------------------------------------
-//---------------------------------------------------------------------
 
 procedure RenderAABB(var rci: TGLRenderContextInfo; const AABB: TAABB);
 begin

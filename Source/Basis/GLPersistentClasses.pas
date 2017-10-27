@@ -138,7 +138,7 @@ type
     procedure Error; virtual;
     function Get(Index: Integer): TObject; inline;
     procedure Put(Index: Integer; Item: TObject);
-    procedure SetCapacity(newCapacity: Integer);
+    procedure SetCapacity(newCapacity: Integer); inline;
     procedure SetCount(NewCount: Integer); inline;
     function GetFirst: TObject; inline;
     procedure SetFirst(item: TObject);
@@ -320,7 +320,7 @@ uses
   GLStrings;
 
 const
-  cDefaultListGrowthDelta = 16;
+  cDefaultListGrowthDelta = 64;
 
   cVTInteger = 'Int';
   cVTFloat = 'Float';

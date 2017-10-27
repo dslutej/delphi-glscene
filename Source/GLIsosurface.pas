@@ -140,7 +140,7 @@ type
     function GetVoxelData(i, j, k: Integer): TGLVoxel;
     function Voxel(i, j, k: Integer): PGLVoxel;
 
-    function Calc_u(v1, v2: Single): Single; virtual;
+    function Calc_u(v1, v2: Single): Single;
   public
     ScalarField: TGLScalarField;
 
@@ -158,7 +158,7 @@ type
     procedure Run; overload;
     procedure Run(IsoValue: TGLScalarValue); overload;
 
-    function Internal(AValue: TGLScalarValue): Boolean; virtual;
+    function Internal(AValue: TGLScalarValue): Boolean;
 
     procedure FillVoxelData; overload; virtual;
     procedure FillVoxelData(AIsoValue: TGLScalarValue;

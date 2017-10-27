@@ -73,7 +73,7 @@ type
     procedure SetDescription(const Value: string);
 
   protected
-    procedure CreateNodes; dynamic;
+    procedure CreateNodes;
     procedure NodesChanged(Sender: TObject);
     function GetDisplayName: string; override;
 

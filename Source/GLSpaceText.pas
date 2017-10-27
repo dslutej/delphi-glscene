@@ -112,7 +112,7 @@ type
     procedure DestroyHandle; override;
     procedure OnFontChange(sender: TObject);
     procedure GetFirstAndLastChar(var firstChar, lastChar: Integer);
-    procedure DoOnLinesChange(sender: TObject); virtual;
+    procedure DoOnLinesChange(sender: TObject);
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;

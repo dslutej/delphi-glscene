@@ -3171,7 +3171,7 @@ end;
 //---------------------------------------------------------------------------------------------------------------------
 
 function FindNodeTagByNameAndType(const Source: TFile3DS; DB: TDatabase3DS;
-  Name: string; AType: word): PChunk3DS;
+  const Name: string; AType: word): PChunk3DS;
 
 var
   I: integer;

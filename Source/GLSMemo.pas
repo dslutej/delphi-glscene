@@ -14,6 +14,7 @@ interface
 {$I GLScene.inc}
 
 uses
+
   WinApi.Windows,
   WinApi.Messages,
   System.SysUtils,
@@ -199,14 +200,14 @@ type
     function GetValidAttrs(Index: Integer): Boolean;
     procedure SetValidAttrs(Index: Integer; Value: Boolean);
     function GetCharAttrs(Index: Integer): string;
-    procedure SetCharAttrs(Index: Integer; Value: string);
+    procedure SetCharAttrs(Index: Integer; const Value: string);
   protected
     
     function GetObject(Index: Integer): TObject; override;
     procedure PutObject(Index: Integer; AObject: TObject); override;
     procedure SetUpdateState(Updating: Boolean); override;
     function CreateProp(Index: integer): TLineProp;
-    property LineProp[Index: integer]: TLineProp read GetLineProp;
+    property LineProp[Index: integer]: TLineProp read GetLineProp; //PALOFF
     property Style[Index: integer]: integer read GetLineStyle write
     SetLineStyle;
     property InComment[Index: integer]: Boolean read GetInComment write
@@ -263,7 +264,7 @@ type
     FUndoText: string;
   public
     
-    constructor Create(ACurX0, ACurY0, ACurX, ACurY: integer; AText: string);
+    constructor Create(ACurX0, ACurY0, ACurX, ACurY: integer; const AText: string);
     function Append(NewUndo: TGLSMemoUndo): Boolean; virtual;
     procedure Undo;
     procedure Redo;
@@ -301,7 +302,7 @@ type
     FIndex: integer;
   public
     
-    constructor Create(AIndex, ACurX0, ACurY0, ACurX, ACurY: integer; AText:
+    constructor Create(AIndex, ACurX0, ACurY0, ACurX, ACurY: integer; const AText:
       string);
     procedure PerformUndo; override;
     procedure PerformRedo; override;
@@ -449,7 +450,7 @@ type
     function GetValidAttrs(Index: integer): Boolean;
     procedure SetValidAttrs(Index: integer; Value: Boolean);
     function GetCharAttrs(Index: integer): string;
-    procedure SetCharAttrs(Index: integer; Value: string);
+    procedure SetCharAttrs(Index: integer; const Value: string);
 
     procedure ExpandSelection;
     function GetSelText: string;
@@ -486,7 +487,7 @@ type
     function LineRangeRect(FromLine, ToLine: integer): TRect;
     function ColRangeRect(FromCol, ToCol: integer): TRect;
     procedure InvalidateLineRange(FromLine, ToLine: integer);
-    function AddString(S: string): integer;
+    function AddString(const S: string): integer;
     procedure InsertString(Index: integer; S: string);
     procedure GoHome(Shift: TShiftState);
     procedure GoEnd(Shift: TShiftState);
@@ -724,8 +725,8 @@ type
       FCommentStyleNo,
       FNumberStyleNo: integer;
     FCaseSensitive: Boolean;
-    function GetToken(S: string; var From: integer;
-      var TokenType: TTokenType; var StyleNo: integer): string;
+    function GetToken(const S: string; var From: integer;
+      out TokenType: TTokenType; out StyleNo: integer): string;
     procedure SetWordList(Value: TGLSMemoStringList);
     procedure SetSpecialList(Value: TGLSMemoStringList);
     procedure SetBracketList(Value: TGLSMemoStringList);
@@ -1639,7 +1640,7 @@ begin
   Result := TGLSMemoStrings(FLines).CharAttrs[Index];
 end;
 
-procedure TGLSCustomMemo.SetCharAttrs(Index: integer; Value: string);
+procedure TGLSCustomMemo.SetCharAttrs(Index: integer; const Value: string);
 begin
   TGLSMemoStrings(FLines).CharAttrs[Index] := Value;
   if IsLineVisible(Index) then
@@ -1726,7 +1727,6 @@ end;
 procedure TGLSCustomMemo.MoveCursor(dX, dY: integer; Shift: TShiftState);
 var
   Selecting: Boolean;
-  S: string;
   //------------------------------------------------------------
   function IsDelimiter(c: char): Boolean;
   begin
@@ -1739,6 +1739,8 @@ var
   end;
   //------------------------------------------------------------
   procedure MoveWordLeft;
+  var
+    S: string;
   begin
     CurX := CurX - 1;
     S := TrimRight(Lines[CurY]);
@@ -1759,6 +1761,7 @@ var
   procedure MoveWordRight;
   var
     Len: integer;
+    S: string;
   begin
     S := TrimRight(Lines[CurY]);
     Len := Length(S);
@@ -2173,7 +2176,7 @@ end;
 //        ADD STRING
 //--------------------------------------------------------------
 
-function TGLSCustomMemo.AddString(S: string): integer;
+function TGLSCustomMemo.AddString(const S: string): integer;
 begin
   if Lines.Count = 0 then
     TGLSMemoStrings(Lines).DoAdd('');
@@ -2852,7 +2855,7 @@ var
     S3 := Copy(S, LineSelEnd + 1, len);
   end;
   //------------- DRAW PART ---------------------
-  procedure DrawPart(Part: string; PartStyle, StartPos: integer;
+  procedure DrawPart(const Part: string; PartStyle, StartPos: integer;
     var rct: TRect; IsSelection: Boolean);
   var
     len, w: integer;
@@ -4627,7 +4630,7 @@ begin
     Result := P.FCharAttrs;
 end;
 
-procedure TGLSMemoStrings.SetCharAttrs(Index: Integer; Value: string);
+procedure TGLSMemoStrings.SetCharAttrs(Index: Integer; const Value: string);
 var
   P: TLineProp;
 begin
@@ -4641,7 +4644,7 @@ end;
 
 // ---------------------TGLSMemoUndo 
 
-constructor TGLSMemoUndo.Create(ACurX0, ACurY0, ACurX, ACurY: integer; AText:
+constructor TGLSMemoUndo.Create(ACurX0, ACurY0, ACurX, ACurY: integer; const AText:
   string);
 begin
   inherited Create;
@@ -4775,7 +4778,7 @@ end;
 //----------------  TDELETE BUF, LINE UNDO --------------------------
 
 constructor TGLSMemoDelLineUndo.Create(AIndex, ACurX0, ACurY0, ACurX, ACurY:
-  integer; AText: string);
+  integer; const AText: string);
 begin
   inherited Create(ACurX0, ACurY0, ACurX, ACurY, AText);
   FIndex := AIndex;
@@ -5035,8 +5038,8 @@ end;
 //        SYNTAX MEMO - GET TOKEN
 //--------------------------------------------------------------
 
-function TGLSSynHiMemo.GetToken(S: string; var From: integer;
-  var TokenType: TTokenType; var StyleNo: integer): string;
+function TGLSSynHiMemo.GetToken(const S: string; var From: integer;
+  out TokenType: TTokenType; out StyleNo: integer): string;
 var
   i, toStart, toEnd, Len, LenSpec: integer;
   Done: Boolean;
@@ -5044,12 +5047,12 @@ var
   IntPart: integer;
   WasPoint: Boolean;
   //-------------------------------------------------------------
-  function StartsFrom(S: string; Pos: integer; S0: string): Boolean;
+  function StartsFrom(const S: string; Pos: integer; const S0: string): Boolean;
   begin
     Result := (StrLComp(PChar(S) + Pos - 1, PChar(S0), Length(S0)) = 0);
   end;
   //-------------------------------------------------------------
-  function Equal(s1, s2: string): Boolean;
+  function Equal(const s1, s2: string): Boolean;
   begin
     if FCaseSensitive then
       Result := s1 = s2

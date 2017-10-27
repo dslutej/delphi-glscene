@@ -76,8 +76,8 @@ type
 type
   TGLDelaunay2D = class
   private
-    function InCircle(Xp, Yp, X1, Y1, X2, Y2, X3, Y3: Single; var Xc: Single;
-      var Yc: Single; var R: Single; j: Integer): Boolean;
+    function InCircle(Xp, Yp, X1, Y1, X2, Y2, X3, Y3: Single; out Xc,Yc, R:
+      Single; j: Integer): Boolean;
     function Triangulate(nvert: Integer): Integer;
   public
     Vertex: TDVertex;
@@ -94,13 +94,7 @@ type
     procedure QuickSort(var A: TDVertex; Low, High: Integer);
   end;
 
-//------------------------------------------------------------------------
-//------------------------------------------------------------------------
-//------------------------------------------------------------------------
 implementation
-//------------------------------------------------------------------------
-//------------------------------------------------------------------------
-//------------------------------------------------------------------------
 
 constructor TGLDelaunay2D.Create;
 begin
@@ -121,7 +115,7 @@ begin
 end;
 
 function TGLDelaunay2D.InCircle(Xp, Yp, X1, Y1, X2, Y2, X3, Y3: Single;
-  var Xc: Single; var Yc: Single; var R: Single; j: Integer): Boolean;
+  out Xc, Yc, R: Single; j: Integer): Boolean;
 // Return TRUE if the point (xp,yp) lies inside the circumcircle
 // made up by points (x1,y1) (x2,y2) (x3,y3)
 // The circumcircle centre is returned in (xc,yc) and the radius r

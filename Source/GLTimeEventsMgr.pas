@@ -56,7 +56,7 @@ type
       constructor Create(AOwner : TComponent);
       function Add: TTimeEvent;
       function FindItemID(ID: Integer): TTimeEvent;
-      function EventByName(name:String): TTimeEvent;
+      function EventByName(const name:String): TTimeEvent;
       property Items[index : Integer] : TTimeEvent read GetItems write SetItems; default;
    end;
 
@@ -75,7 +75,7 @@ type
          procedure SetEnabled(const Value: Boolean);
       protected
          function GetDisplayName : String; override;
-         procedure SetName(Val : String);
+         procedure SetName(const Val : String);
          procedure DoEvent(const CurTime : Double);
       public
          constructor Create(Collection : TCollection); override;
@@ -218,7 +218,7 @@ begin
 	Result:=(inherited FindItemID(ID)) as TTimeEvent;
 end;
 
-function TTimeEvents.EventByName(name:String): TTimeEvent;
+function TTimeEvents.EventByName(const name:String): TTimeEvent;
 var i:integer;
 begin
     i:=0;
@@ -256,7 +256,7 @@ begin
     end;
 end;
 
-procedure TTimeEvent.SetName(Val : String);
+procedure TTimeEvent.SetName(const Val : String);
 var
    i : Integer;
    ok : Boolean;

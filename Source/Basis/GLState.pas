@@ -536,7 +536,7 @@ type
     destructor Destroy; override;
     procedure PushAttrib(const stateTypes: TGLStateTypes); inline;
     procedure PopAttrib(); inline;
-    procedure Enable(const aState: TGLState); inline;
+    procedure Enable(const aState: TGLState);
     procedure Disable(const aState: TGLState);
     procedure PerformEnable(const aState: TGLState); inline;
     procedure PerformDisable(const aState: TGLState); inline;
@@ -1003,7 +1003,7 @@ type
     {End display list. }
     procedure EndList; inline;
     {Call display list. }
-    procedure CallList(list: Cardinal);
+    procedure CallList(list: Cardinal); inline;
     {Defines the OpenGL texture matrix.
        Assumed texture mode is GL_MODELVIEW. }
     procedure SetGLTextureMatrix(const matrix: TMatrix); inline;

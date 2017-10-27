@@ -339,10 +339,10 @@ type
     function gettext(const szMsgId: ansistring): TranslatedUnicodeString; overload; virtual;
     function ngettext(const singular,plural:ansistring;Number:longint):TranslatedUnicodeString; overload; virtual;
     {$endif}
-    function gettext(const szMsgId: MsgIdString): TranslatedUnicodeString; overload; virtual;
+    function gettext(const szMsgId: MsgIdString): TranslatedUnicodeString; overload;
     function gettext_NoExtract(const szMsgId: MsgIdString): TranslatedUnicodeString;
     function gettext_NoOp(const szMsgId: MsgIdString): TranslatedUnicodeString;
-    function ngettext(const singular,plural:MsgIdString;Number:longint):TranslatedUnicodeString; overload; virtual;
+    function ngettext(const singular,plural:MsgIdString;Number:longint):TranslatedUnicodeString; overload;
     function ngettext_NoExtract(const singular,plural:MsgIdString;Number:longint):TranslatedUnicodeString;
     function GetCurrentLanguage:LanguageString;
     function GetTranslationProperty (const Propertyname:ComponentNameString):TranslatedUnicodeString;
@@ -365,12 +365,12 @@ type
     function dngettext(const szDomain: DomainString; const singular,plural:ansistring;Number:longint):TranslatedUnicodeString; overload; virtual;
     {$endif}
     function dgettext(const szDomain: DomainString;
-      const szMsgId: MsgIdString): TranslatedUnicodeString; overload; virtual;
+      const szMsgId: MsgIdString): TranslatedUnicodeString; overload;
     function dgettext_NoExtract(const szDomain: DomainString;
       const szMsgId: MsgIdString): TranslatedUnicodeString;
     function dngettext(const szDomain: DomainString;
       const singular, plural: MsgIdString; Number: longint): TranslatedUnicodeString;
-      overload; virtual;
+      overload;
     function dngettext_NoExtract(const szDomain: DomainString;
       const singular, plural: MsgIdString; Number: longint): TranslatedUnicodeString;
     procedure textdomain(const szDomain: DomainString);
