@@ -3,7 +3,6 @@
   Copyright (c) 1999-2017 Un4seen Developments Ltd.
 
   See the BASS.CHM file for more detailed documentation
-  The whole history is logged in previous version of the unit
 
   How to install
   --------------
@@ -53,9 +52,9 @@ const
   BASS_ERROR_EMPTY        = 31;   // the MOD music has no sequence data
   BASS_ERROR_NONET        = 32;   // no internet connection could be opened
   BASS_ERROR_CREATE       = 33;   // couldn't create the file
-  BASS_ERROR_NOFX         = 34;   // effects are not enabled
+  BASS_ERROR_NOFX         = 34;   // effects are not available
   BASS_ERROR_NOTAVAIL     = 37;   // requested data is not available
-  BASS_ERROR_DECODE       = 38;   // the channel is a "decoding channel"
+  BASS_ERROR_DECODE       = 38;   // the channel is/isn't a "decoding channel"
   BASS_ERROR_DX           = 39;   // a sufficient DirectX version is not installed
   BASS_ERROR_TIMEOUT      = 40;   // connection timedout
   BASS_ERROR_FILEFORM     = 41;   // unsupported file format
@@ -93,12 +92,20 @@ const
   BASS_CONFIG_NET_READTIMEOUT = 37;
   BASS_CONFIG_VISTA_SPEAKERS = 38;
   BASS_CONFIG_IOS_SPEAKER   = 39;
+  BASS_CONFIG_MF_DISABLE    = 40;
   BASS_CONFIG_HANDLES       = 41;
   BASS_CONFIG_UNICODE       = 42;
   BASS_CONFIG_SRC           = 43;
   BASS_CONFIG_SRC_SAMPLE    = 44;
   BASS_CONFIG_ASYNCFILE_BUFFER = 45;
   BASS_CONFIG_OGG_PRESCAN   = 47;
+  BASS_CONFIG_MF_VIDEO      = 48;
+  BASS_CONFIG_AIRPLAY       = 49;
+  BASS_CONFIG_DEV_NONSTOP   = 50;
+  BASS_CONFIG_IOS_NOCATEGORY = 51;
+  BASS_CONFIG_VERIFY_NET    = 52;
+  BASS_CONFIG_DEV_PERIOD    = 53;
+  BASS_CONFIG_FLOAT         = 54;
 
   // BASS_SetConfigPtr options
   BASS_CONFIG_NET_AGENT     = 16;
@@ -108,6 +115,7 @@ const
   BASS_DEVICE_8BITS       = 1;    // 8 bit resolution, else 16 bit
   BASS_DEVICE_MONO        = 2;    // mono, else stereo
   BASS_DEVICE_3D          = 4;    // enable 3D functionality
+  BASS_DEVICE_16BITS      = 8;    // limit output to 16 bit
   {
     If the BASS_DEVICE_3D flag is not specified when
     initilizing BASS, then the 3D flags (BASS_SAMPLE_3D
@@ -120,6 +128,7 @@ const
   BASS_DEVICE_NOSPEAKER   = $1000; // ignore speaker arrangement
   BASS_DEVICE_DMIX        = $2000; // use ALSA "dmix" plugin
   BASS_DEVICE_FREQ        = $4000; // set device sample rate
+  BASS_DEVICE_STEREO      = $8000; // limit output to stereo
 
   // DirectSound interfaces (for use with BASS_GetDSoundObject)
   BASS_OBJECT_DS          = 1;   // IDirectSound
@@ -129,6 +138,22 @@ const
   BASS_DEVICE_ENABLED     = 1;
   BASS_DEVICE_DEFAULT     = 2;
   BASS_DEVICE_INIT        = 4;
+
+  BASS_DEVICE_TYPE_MASK        = $ff000000;
+  BASS_DEVICE_TYPE_NETWORK     = $01000000;
+  BASS_DEVICE_TYPE_SPEAKERS    = $02000000;
+  BASS_DEVICE_TYPE_LINE        = $03000000;
+  BASS_DEVICE_TYPE_HEADPHONES  = $04000000;
+  BASS_DEVICE_TYPE_MICROPHONE  = $05000000;
+  BASS_DEVICE_TYPE_HEADSET     = $06000000;
+  BASS_DEVICE_TYPE_HANDSET     = $07000000;
+  BASS_DEVICE_TYPE_DIGITAL     = $08000000;
+  BASS_DEVICE_TYPE_SPDIF       = $09000000;
+  BASS_DEVICE_TYPE_HDMI        = $0a000000;
+  BASS_DEVICE_TYPE_DISPLAYPORT = $40000000;
+
+  // BASS_GetDeviceInfo flags
+  BASS_DEVICES_AIRPLAY         = $1000000;
 
   // BASS_INFO flags (from DSOUND.H)
   DSCAPS_CONTINUOUSRATE   = $00000010;     // supports all sample rates between min/maxrate
@@ -149,8 +174,22 @@ const
   DSCCAPS_CERTIFIED = DSCAPS_CERTIFIED;    // device driver has been certified by Microsoft
 
   // defines for formats field of BASS_RECORDINFO (from MMSYSTEM.H)
+{
+  WAVE_FORMAT_1M08       = $00000001;      // 11.025 kHz, Mono,   8-bit
+  WAVE_FORMAT_1S08       = $00000002;      // 11.025 kHz, Stereo, 8-bit
+  WAVE_FORMAT_1M16       = $00000004;      // 11.025 kHz, Mono,   16-bit
+  WAVE_FORMAT_1S16       = $00000008;      // 11.025 kHz, Stereo, 16-bit
+  WAVE_FORMAT_2M08       = $00000010;      // 22.05  kHz, Mono,   8-bit
+  WAVE_FORMAT_2S08       = $00000020;      // 22.05  kHz, Stereo, 8-bit
+  WAVE_FORMAT_2M16       = $00000040;      // 22.05  kHz, Mono,   16-bit
+  WAVE_FORMAT_2S16       = $00000080;      // 22.05  kHz, Stereo, 16-bit
+  WAVE_FORMAT_4M08       = $00000100;      // 44.1   kHz, Mono,   8-bit
+  WAVE_FORMAT_4S08       = $00000200;      // 44.1   kHz, Stereo, 8-bit
+  WAVE_FORMAT_4M16       = $00000400;      // 44.1   kHz, Mono,   16-bit
+  WAVE_FORMAT_4S16       = $00000800;      // 44.1   kHz, Stereo, 16-bit
+}
   BASS_SAMPLE_8BITS       = 1;   // 8 bit
-  BASS_SAMPLE_FLOAT       = 256; // 32-bit floating-point
+  BASS_SAMPLE_FLOAT       = 256; // 32 bit floating-point
   BASS_SAMPLE_MONO        = 2;   // mono
   BASS_SAMPLE_LOOP        = 4;   // looped
   BASS_SAMPLE_3D          = 8;   // 3D functionality
@@ -183,6 +222,7 @@ const
   BASS_MUSIC_RAMPS        = $400;  // sensitive ramping
   BASS_MUSIC_SURROUND     = $800;  // surround sound
   BASS_MUSIC_SURROUND2    = $1000; // surround sound (mode 2)
+  BASS_MUSIC_FT2PAN       = $2000; // apply FastTracker 2 panning to XM files
   BASS_MUSIC_FT2MOD       = $2000; // play .MOD as FastTracker 2 does
   BASS_MUSIC_PT1MOD       = $4000; // play .MOD as ProTracker 1 does
   BASS_MUSIC_NONINTER     = $10000; // non-interpolated sample mixing

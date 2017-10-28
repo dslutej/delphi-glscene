@@ -590,7 +590,7 @@ type
     FSplineMode: TGLLineSplineMode;
   protected
     FNodes: TGLNodes;
-    procedure CreateNodes; dynamic;
+    procedure CreateNodes; virtual;
     procedure SetSplineMode(const val: TGLLineSplineMode);
     procedure SetDivision(const Value: Integer);
     procedure SetNodes(const aNodes: TGLNodes);

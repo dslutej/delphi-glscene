@@ -172,7 +172,7 @@ type
   TGLsync = NativeInt;
 
 
-   {$ifdef MSWINDOWS}
+   {$IFDEF MSWINDOWS}
    PWGLSwap = ^TWGLSwap;
    _WGLSWAP = packed record
      hdc: HDC;
@@ -180,7 +180,7 @@ type
    end;
    TWGLSwap = _WGLSWAP;
    WGLSWAP = _WGLSWAP;
-   {$endif}
+   {$ENDIF}
 
    // Linux type
    {$IFDEF LINUX}

@@ -2,20 +2,17 @@
 // This unit is part of the GLScene Project, http://glscene.org
 //
 {
-  A Newton Game Dynamics Manager for GLScene. 
-
-  Where can I find ... ? 
-   GLScene                                   (http://glscene.org)
+  A Newton Game Dynamics Manager for GLScene.
+  Where can I find ... ?
    Newton Game Dynamics Engine               (http://newtondynamics.com)
    NewtonImport, a Delphi header translation (http://newtondynamics.com/forum/viewtopic.php?f=9&t=5273#p35865)
-  
+
   Notes:
   This code is still being developed so any part of it may change at anytime.
-  
-   History :  
-   15/07/10 - FP - Creation by Franck Papouin
-   The whole history is logged in previous version of the unit.   
 
+   History :
+   15/07/10 - FP - Creation by Franck Papouin
+   The whole history is logged in previous version of the unit.
 }
 
 unit GLNGDManager;
@@ -48,8 +45,7 @@ uses
   GLVectorTypes;
 
 type
-
-  NGDFloat = NewtonImport.Float;
+  NGDFloat = NewtonImport.dFloat;
   PNGDFloat = ^NGDFloat;
 
   TGLNGDHeightField = record
@@ -137,11 +133,9 @@ type
     procedure SetNGDManagerDebugs(const Value: TGLNGDManagerDebugs);
     procedure SetDotAxisSize(const Value: Single);
     function StoredDotAxis: Boolean;
-
   public
     constructor Create(AOwner: TComponent);
     destructor Destroy; override;
-
   published
     property GeomColorDyn: TGLColor read FGeomColorDyn write FGeomColorDyn;
     property GeomColorStat: TGLColor read FGeomColorStat write FGeomColorStat;
@@ -162,9 +156,7 @@ type
   end;
 
   TGLNGDManager = class(TComponent)
-
   strict private
-
     FVisible: Boolean; // Show Debug at design time
     FVisibleAtRunTime: Boolean; // Show Debug at run time
     FDllVersion: Integer;
@@ -180,7 +172,6 @@ type
     FNewtonJointGroup: TOwnedCollection;
     FNGDDebugOption: TGLNGDDebugOption;
     FGLLines: TGLLines;
-
   private
     FNewtonWorld: PNewtonWorld;
     FNGDBehaviours: TGLNGDBehaviourList;
@@ -202,19 +193,14 @@ type
     procedure AddNode(const Value: TAffineVector); overload;
     procedure RebuildAllMaterial;
     procedure RebuildAllJoint(Sender: TObject);
-
     // Events
     procedure NotifyWorldSizeChange(Sender: TObject);
     procedure NotifyChange(Sender: TObject); // Debug view
-
   public
-    
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     procedure Step(deltatime: Single);
-
   published
-
     property Visible: Boolean read FVisible write SetVisible default True;
     property VisibleAtRunTime: Boolean read FVisibleAtRunTime write
       SetVisibleAtRunTime default False;
@@ -244,7 +230,6 @@ type
   {  Basis structures for GLScene behaviour style implementations. }
   TGLNGDBehaviour = class(TGLBehaviour)
   private
-    { Private Declartions }
     FManager: TGLNGDManager;
     FManagerName: string;
     FInitialized: Boolean;
@@ -262,7 +247,6 @@ type
     FNGDSurfaceItem: TGLNGDSurfaceItem;
     FHeightFieldOptions: TGLNGDHeightField;
   protected
-
     procedure Initialize; virtual;
     procedure Finalize; virtual;
     procedure WriteToFiler(writer: TWriter); override;
@@ -278,7 +262,6 @@ type
     procedure SetNGDNewtonCollisions(const Value: TGLNGDCollisions);
     procedure SetNGDSurfaceItem(const Value: TGLNGDSurfaceItem);
     procedure SetHeightFieldOptions(const Value: TGLNGDHeightField);
-
     function GetPrimitiveCollision(): PNewtonCollision;
     function GetConvexCollision(): PNewtonCollision;
     function GetBBoxCollision(): PNewtonCollision;
@@ -289,24 +272,18 @@ type
     function GetHeightFieldCollision(): PNewtonCollision;
     function GetNGDFileCollision(): PNewtonCollision;
     function StoredTolerance: Boolean;
-
     // Event
     procedure OnCollisionIteratorEvent(const userData: Pointer;
       vertexCount: Integer; const cfaceArray: PNGDFloat; faceId: Integer);
-
     // CallBack
     class procedure NewtonCollisionIterator(const userData: Pointer;
       vertexCount: Integer; const faceArray: PNGDFloat;
       faceId: Integer); static; cdecl;
-
     class procedure NewtonSerialize(serializeHandle: Pointer;
       const buffer: Pointer; size: Cardinal); static; cdecl;
-
     class procedure NewtonDeserialize(serializeHandle: Pointer;
       buffer: Pointer; size: Cardinal); static; cdecl;
-
   public
-
     constructor Create(AOwner: TGLXCollection); override;
     destructor Destroy; override;
     procedure Reinitialize;
@@ -319,9 +296,7 @@ type
     procedure DeSerialize(filename: string);
     property HeightFieldOptions: TGLNGDHeightField read FHeightFieldOptions write
       SetHeightFieldOptions;
-
   published
-
     property Manager: TGLNGDManager read FManager write SetManager;
     property ContinuousCollisionMode: Boolean read FContinuousCollisionMode write
       SetContinuousCollisionMode default False;
@@ -338,7 +313,6 @@ type
 
   TGLNGDDynamic = class(TGLNGDBehaviour)
   strict private
-
     FAABBmin: TGLCoordinates;
     FAABBmax: TGLCoordinates;
     FForce: TGLCoordinates;
@@ -353,7 +327,6 @@ type
     FApplyForceAndTorqueEvent: TApplyForceAndTorqueEvent;
     FSetTransformEvent: TSetTransformEvent;
     FCustomForceAndTorqueEvent: TApplyForceAndTorqueEvent;
-
     // Read Only
     FVolume: Single;
     FMass: Single;
@@ -361,12 +334,10 @@ type
     FAppliedTorque: TGLCoordinates;
     FAppliedOmega: TGLCoordinates;
     FAppliedVelocity: TGLCoordinates;
-
     function StoredDensity: Boolean;
     function StoredLinearDamping: Boolean;
     function StoredNullCollisionVolume: Boolean;
   protected
-
     procedure SetAutoSleep(const Value: Boolean);
     procedure SetLinearDamping(const Value: Single);
     procedure SetDensity(const Value: Single); virtual;
@@ -376,7 +347,6 @@ type
     procedure ReadFromFiler(reader: TReader); override;
     procedure Loaded; override;
     procedure Render; override;
-
     // Events
     procedure NotifyCenterOfMassChange(Sender: TObject);
     procedure NotifyAngularDampingChange(Sender: TObject);
@@ -384,16 +354,12 @@ type
       timestep: NGDFloat; threadIndex: Integer);
     procedure OnSetTransformEvent(const cbody: PNewtonBody;
       const cmatrix: PNGDFloat; threadIndex: Integer);
-
     // Callback
     class procedure NewtonApplyForceAndTorque(const body: PNewtonBody;
       timestep: NGDFloat; threadIndex: Integer); static; cdecl;
     class procedure NewtonSetTransform(const body: PNewtonBody;
       const matrix: PNGDFloat; threadIndex: Integer); static; cdecl;
-
-
   public
-    
     constructor Create(AOwner: TGLXCollection); override;
     destructor Destroy; override;
     procedure AddImpulse(const veloc, pointposit: TVector);
@@ -408,7 +374,6 @@ type
     property Velocity: TVector read GetVelocity write SetVelocity;
     property Omega: TVector read GetOmega write SetOmega;
   published
-    
     property Force: TGLCoordinates read FForce write FForce;
     property Torque: TGLCoordinates read FTorque write FTorque;
     property CenterOfMass
@@ -426,7 +391,6 @@ type
     property NullCollisionVolume
       : Single read FNullCollisionVolume write FNullCollisionVolume stored
       StoredNullCollisionVolume;
-
     // Read Only
     property AppliedOmega: TGLCoordinates read FAppliedOmega;
     property AppliedVelocity: TGLCoordinates read FAppliedVelocity;
@@ -437,17 +401,11 @@ type
   end;
 
   TGLNGDStatic = class(TGLNGDBehaviour)
-
   protected
-
     procedure Render; override;
-
   public
-
     class function FriendlyName: string; override;
-
   published
-
   end;
 
   TGLNGDSurfaceItem = class(TCollectionItem)
@@ -456,7 +414,6 @@ type
   protected
     function GetDisplayName: string; override;
     procedure SetDisplayName(const Value: string); override;
-
   published
     property DisplayName;
     property ID;
@@ -469,7 +426,6 @@ type
     FNGDSurfaceItem2: TGLNGDSurfaceItem;
     FAABBOverlapEvent: TAABBOverlapEvent;
     FContactProcessEvent: TContactProcessEvent;
-
     FSoftness: Single; // 0.1
     FElasticity: Single; // 0.4
     FCollidable: Boolean; // true
@@ -477,7 +433,6 @@ type
     FKineticFriction: Single; // 0.5
     FContinuousCollisionMode: Boolean; // False
     FThickness: Boolean; // False
-
     procedure SetCollidable(const Value: Boolean);
     procedure SetElasticity(const Value: Single);
     procedure SetKineticFriction(const Value: Single);
@@ -485,12 +440,10 @@ type
     procedure SetStaticFriction(const Value: Single);
     procedure SetContinuousCollisionMode(const Value: Boolean);
     procedure SetThickness(const Value: Boolean);
-
     function StoredElasticity: Boolean;
     function StoredKineticFriction: Boolean;
     function StoredSoftness: Boolean;
     function StoredStaticFriction: Boolean;
-
   private
     // Callback
     class function NewtonAABBOverlap(const material: PNewtonMaterial;
@@ -498,20 +451,17 @@ type
       threadIndex: Integer): Integer; static; cdecl;
     class procedure NewtonContactsProcess(const contact: PNewtonJoint;
       timestep: NGDFloat; threadIndex: Integer); static; cdecl;
-
     // Event
     function OnNewtonAABBOverlapEvent(const cmaterial: PNewtonMaterial;
       const cbody0: PNewtonBody; const cbody1: PNewtonBody;
       threadIndex: Integer): Boolean;
     procedure OnNewtonContactsProcessEvent(const ccontact: PNewtonJoint;
       timestep: NGDFloat; threadIndex: Integer);
-
   public
     constructor Create(Collection: TCollection); override;
     procedure SetMaterialItems(const item1, item2: TGLNGDSurfaceItem);
     property NGDSurfaceItem1: TGLNGDSurfaceItem read FNGDSurfaceItem1;
     property NGDSurfaceItem2: TGLNGDSurfaceItem read FNGDSurfaceItem2;
-
   published
     property Softness: Single read FSoftness write SetSoftness stored
       StoredSoftness;
@@ -552,11 +502,9 @@ type
   TGLNGDJointPin = class(TGLNGDJointPivot)
   private
     FPinDirection: TGLCoordinates;
-
   public
     constructor Create(AOwner: TComponent; aOuter: TGLNGDJoint); override;
     destructor Destroy; override;
-
   published
     property PinDirection: TGLCoordinates read FPinDirection write FPinDirection;
   end;
@@ -564,11 +512,9 @@ type
   TGLNGDJointPin2 = class(TGLNGDJointPin)
   private
     FPinDirection2: TGLCoordinates;
-
   public
     constructor Create(AOwner: TComponent; aOuter: TGLNGDJoint); override;
     destructor Destroy; override;
-
   published
     property PinDirection2: TGLCoordinates read FPinDirection2 write FPinDirection2;
   end;
@@ -584,10 +530,8 @@ type
     function StoredMaxTwistAngle: Boolean;
     function StoredMinTwistAngle: Boolean;
     function StoredConeAngle: Boolean;
-
   public
     constructor Create(AOwner: TComponent; aOuter: TGLNGDJoint); override;
-
   published
     property ConeAngle: Single read FConeAngle write SetConeAngle stored
       StoredConeAngle;
@@ -605,10 +549,8 @@ type
     procedure SetMinAngle(const Value: Single);
     function StoredMaxAngle: Boolean;
     function StoredMinAngle: Boolean;
-
   public
     constructor Create(AOwner: TComponent; aOuter: TGLNGDJoint); override;
-
   published
     property MinAngle: Single read FMinAngle write SetMinAngle stored
       StoredMinAngle;
@@ -624,14 +566,12 @@ type
     procedure SetMinDistance(const Value: Single);
     function StoredMaxDistance: Boolean;
     function StoredMinDistance: Boolean;
-
   public
     constructor Create(AOwner: TComponent; aOuter: TGLNGDJoint); override;
-
   published
-    property MinDistance: Single read FMinDistance write SetMinDistance stored 
+    property MinDistance: Single read FMinDistance write SetMinDistance stored
 	   StoredMinDistance;
-    property MaxDistance: Single read FMaxDistance write SetMaxDistance stored 
+    property MaxDistance: Single read FMaxDistance write SetMaxDistance stored
 	   StoredMaxDistance;
   end;
 
@@ -642,10 +582,8 @@ type
     FAngularFriction: Single; // 250
     function StoredAngularFriction: Boolean;
     function StoredLinearFriction: Boolean;
-
   public
     constructor Create();
-
   published
     property PickModeLinear: Boolean read FPickModeLinear write FPickModeLinear
       default False;
@@ -656,43 +594,35 @@ type
   end;
 
   TGLNGDJoint = class(TCollectionItem)
-
   private
     // Global
     FManager: TGLNGDManager;
     FParentObject: TGLBaseSceneObject;
     FJointType: TGLNGDJoints;
     FStiffness: Single; // 0.9
-
     // With Two object
     // Every joint except nj_UpVector and nj_KinematicController
     FChildObject: TGLBaseSceneObject;
     FCollisionState: Boolean; // False
-
     // With classic joint
     // nj_BallAndSocket, nj_Hinge, nj_Slider, nj_Corkscrew
     // nj_Universal, nj_UpVector
     FNewtonJoint: PNewtonJoint;
-
     // With CustomJoint
     // nj_CustomBallAndSocket, nj_CustomHinge, nj_CustomSlider
     // nj_KinematicController
     FNewtonUserJoint: PNewtonUserJoint;
-
     // nj_UpVector
     FUPVectorDirection: TGLCoordinates;
-
     FBallAndSocketOptions: TGLNGDJointPivot;
     FHingeOptions: TGLNGDJointPin;
     FSliderOptions: TGLNGDJointPin;
     FCorkscrewOptions: TGLNGDJointPin;
     FUniversalOptions: TGLNGDJointPin2;
-
     FCustomBallAndSocketOptions: TGLNGDJointBallAndSocket;
     FCustomHingeOptions: TGLNGDJointHinge;
     FCustomSliderOptions: TGLNGDJointSlider;
     FKinematicOptions: TGLNGDJointKinematicController;
-
     procedure SetJointType(const Value: TGLNGDJoints);
     procedure SetChildObject(const Value: TGLBaseSceneObject);
     procedure SetCollisionState(const Value: Boolean);
@@ -702,12 +632,10 @@ type
     function StoredStiffness: Boolean;
     procedure DestroyNewtonData;
   public
-
     constructor Create(Collection: TCollection); override;
     destructor Destroy; override;
     procedure KinematicControllerPick(pickpoint: TVector;
       PickedActions: TGLNGDPickedActions);
-
   published
     property BallAndSocketOptions: TGLNGDJointPivot read FBallAndSocketOptions write
       FBallAndSocketOptions;
@@ -785,8 +713,9 @@ end;
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
 
-{ TGLNGDDebugOption }
-
+//-----------------------
+// TGLNGDDebugOption
+//-----------------------
 constructor TGLNGDDebugOption.Create(AOwner: TComponent);
 begin
   FManager := AOwner as TGLNGDManager;
@@ -852,8 +781,9 @@ begin
   Result := not SameValue(FDotAxisSize, 1, epsilon);
 end;
 
-{ TGLNGDManager }
-
+//------------------------
+// TGLNGDManager
+//------------------------
 procedure TGLNGDManager.AddNode(const Value: TVector);
 begin
   if Assigned(FGLLines) then
@@ -930,11 +860,8 @@ begin
   FNewtonSurfaceItem := TCollection.Create(TGLNGDSurfaceItem);
   FNewtonSurfacePair := TOwnedCollection.Create(self, TGLNGDSurfacePair);
   FNewtonJointGroup := TOwnedCollection.Create(self, TGLNGDJoint);
-
   FNGDDebugOption := TGLNGDDebugOption.Create(self);
-
   RegisterManager(self);
-
 end;
 
 destructor TGLNGDManager.Destroy;
@@ -959,7 +886,6 @@ begin
   NewtonMaterialDestroyAllGroupID(FNewtonWorld);
   NewtonDestroy(FNewtonWorld);
   FNewtonWorld := nil;
-
   DeregisterManager(self);
   inherited;
 end;
@@ -1435,7 +1361,9 @@ begin
   NotifyChange(self);
 end;
 
-{ TGLNGDBehaviour }
+//---------------------------
+//  TGLNGDBehaviour
+//---------------------------
 
 constructor TGLNGDBehaviour.Create(AOwner: TGLXCollection);
 begin
@@ -1536,7 +1464,6 @@ begin
           FConvexCollisionTolerance, 0, nil)
       else
         Result := GetNullCollision;
-
     end;
   end
   else
@@ -1606,7 +1533,6 @@ begin
   end
   else
     Result := GetNullCollision;
-
 end;
 
 
@@ -1631,15 +1557,12 @@ begin
   if FileExists(FFileCollision) then
   begin
     MyFile := TFileStream.Create(FFileCollision, fmOpenRead);
-
     Result := NewtonCreateCollisionFromSerialization(FManager.FNewtonWorld,
       @TGLNGDBehaviour.NewtonDeserialize, Pointer(MyFile));
-
     MyFile.Free;
   end
   else
     Result := NewtonCreateNull(FManager.FNewtonWorld);
-
 end;
 
 function TGLNGDBehaviour.GetNullCollision: PNewtonCollision;
@@ -1736,7 +1659,6 @@ begin
   end
   else
     Result := GetNullCollision;
-
 end;
 
 procedure TGLNGDBehaviour.Initialize;
@@ -1762,7 +1684,6 @@ begin
 
     // Set Collision
     UpdCollision;
-
   end;
 end;
 
@@ -1863,9 +1784,7 @@ begin
     FManager.FCurrentColor := FManager.DebugOption.GeomColorDyn
   else
     FManager.FCurrentColor := FManager.DebugOption.GeomColorStat;
-
   M := FOwnerBaseSceneObject.AbsoluteMatrix;
-
   if mdShowGeometry in FManager.DebugOption.NGDManagerDebugs then
     NewtonCollisionForEachPolygonDo(FCollision, @M,
       @TGLNGDBehaviour.NewtonCollisionIterator, self);
@@ -2403,8 +2322,6 @@ begin
   Result := not SameValue(FNullCollisionVolume, 0, epsilon);
 end;
 
-// WriteToFiler
-//
 procedure TGLNGDDynamic.WriteToFiler(writer: TWriter);
 begin
   inherited;
@@ -2423,8 +2340,6 @@ begin
   FAngularDamping.WriteToFiler(writer);
 end;
 
-// ReadFromFiler
-//
 procedure TGLNGDDynamic.ReadFromFiler(reader: TReader);
 var
   version: Integer;
@@ -2559,7 +2474,9 @@ begin
       FOwnerBaseSceneObject.AbsoluteMatrix := pMatrix(cmatrix)^;
 end;
 
-{ TGLNGDStatic }
+//------------------------
+// TGLNGDStatic
+//------------------------
 
 procedure TGLNGDStatic.Render;
 begin
@@ -2576,7 +2493,9 @@ begin
   Result := 'NGD Static';
 end;
 
-{ TGLNGDSurfaceItem }
+//------------------------
+// TGLNGDSurfaceItem
+//------------------------
 
 function TGLNGDSurfaceItem.GetDisplayName: string;
 begin
@@ -2591,7 +2510,9 @@ begin
   FDisplayName := Value;
 end;
 
+//------------------------
 { TGLNGDSurfacePair }
+//------------------------
 
 constructor TGLNGDSurfacePair.Create(Collection: TCollection);
 begin
@@ -2714,7 +2635,9 @@ begin
   Result := not SameValue(FStaticFriction, 0.9, epsilon);
 end;
 
+//------------------------
 { TGLNGDJoint }
+//------------------------
 
 constructor TGLNGDJoint.Create(Collection: TCollection);
 begin
@@ -3010,7 +2933,9 @@ begin
   Result := not SameValue(FStiffness, 0.9, epsilon);
 end;
 
-{ TGLNGDJoint.TGLNGDJointPivot }
+//------------------------
+{ TGLNGDJointPivot }
+//------------------------
 
 constructor TGLNGDJointPivot.Create(AOwner: TComponent; aOuter: TGLNGDJoint);
 begin
@@ -3043,7 +2968,9 @@ begin
   inherited;
 end;
 
-{ TGLNGDJoint.TGLNGDJointPin2 }
+//------------------------
+{ TGLNGDJointPin2 }
+//------------------------
 
 constructor TGLNGDJointPin2.Create(AOwner: TComponent; aOuter: TGLNGDJoint);
 begin
@@ -3059,7 +2986,9 @@ begin
   inherited;
 end;
 
-{ TGLNGDJoint.TGLNGDJointBallAndSocket }
+//------------------------
+{ TGLNGDJointBallAndSocket }
+//------------------------
 
 constructor TGLNGDJointBallAndSocket.Create(AOwner: TComponent;
   aOuter: TGLNGDJoint);
@@ -3103,7 +3032,9 @@ begin
   Result := not SameValue(FMinTwistAngle, -90, epsilon);
 end;
 
-{ TGLNGDJoint.TGLNGDJointHinge }
+//------------------------
+{ TGLNGDJointHinge }
+//------------------------
 
 constructor TGLNGDJointHinge.Create(AOwner: TComponent; aOuter: TGLNGDJoint);
 begin
@@ -3134,8 +3065,9 @@ begin
   Result := not SameValue(FMinAngle, -90, epsilon);
 end;
 
-{ TGLNGDJoint.TGLNGDJointSlider }
-
+//------------------------
+{ TGLNGDJointSlider }
+//------------------------
 
 constructor TGLNGDJointSlider.Create(AOwner: TComponent; aOuter: TGLNGDJoint);
 begin
@@ -3187,7 +3119,9 @@ begin
   Result := not SameValue(FLinearFriction, 750, epsilon);
 end;
 
+//------------------------
 { TGLNGDBehaviourList }
+//------------------------
 
 function TGLNGDBehaviourList.GetBehav(index: Integer): TGLNGDBehaviour;
 begin
@@ -3211,9 +3145,7 @@ RegisterXCollectionItemClass(TGLNGDStatic);
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
-
 finalization
-
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------

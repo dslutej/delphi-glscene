@@ -279,6 +279,7 @@ const
   CL_VERSION_1_2 =                                 1;
   CL_VERSION_2_0 =                                 1;
   CL_VERSION_2_1 =                                 1;
+  CL_VERSION_2_2 =                                 1;
 
   (* cl_bool *)
   CL_FALSE =                                       0;

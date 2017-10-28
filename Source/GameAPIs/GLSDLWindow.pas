@@ -5,12 +5,10 @@
   Non visual wrapper around basic SDL window features. 
   Notes to Self:
   Unit must ultimately *NOT* make use of any platform specific stuff,
-  *EVEN* through the use of conditionnals.
+  *EVEN* through the use of conditionals.
   SDL-specifics should also be avoided in the "interface" section. 
 
-  Written and maintained by Eric Grange (http://glscene.org),
-  this component uses JEDI-SDL conversion (http://delphi-jedi.org),
-  which is a Delphi header conversion for SDL (http://libsdl.org) 
+  This component uses a Delphi header conversion for SDL from http://libsdl.org 
 
    History :  
    11/12/01 - Egg - Creation
@@ -26,21 +24,17 @@ uses
   System.Classes,
   System.SysUtils,
   System.SyncObjs,
-  SDL{,
-  SDL2};
+  OpenGLAdapter, 
+  GLContext, 
+  GLVectorGeometry,
+  SDL2;
 
 type
-  // TGLSDLWindowPixelDepth
-  //
   {  Pixel Depth options.
-
      vpd16bits: 16bpp graphics (565) (and 16 bits depth buffer for OpenGL)
-     vpd24bits: 24bpp graphics (565) (and 24 bits depth buffer for OpenGL)
-     }
+     vpd24bits: 24bpp graphics (565) (and 24 bits depth buffer for OpenGL) }
   TGLSDLWindowPixelDepth = (vpd16bits, vpd24bits);
 
-  // TGLSDLWindowOptions
-  //
   {  Specifies optional settings for the SDL window.
     Those options are a simplified subset of the SDL options:
      voDoubleBuffer: create a double-buffered window
@@ -48,14 +42,12 @@ type
     only if not defined).
      voOpenGL: requires OpenGL capability for the window
      voResizable: window should be resizable
-     voFullScreen: requires a fullscreen "window" (screen resolution may
+     voFullScreen: requires a full screen "window" (screen resolution may
     be changed)
-     voStencilBuffer: requires a stencil buffer (8bits, use along voOpenGL)
-     }
+     voStencilBuffer: requires a stencil buffer (8bits, use along voOpenGL)  }
   TGLSDLWindowOption = (voDoubleBuffer, voHardwareAccel, voOpenGL, voResizable,
     voFullScreen, voStencilBuffer);
   TGLSDLWindowOptions = set of TGLSDLWindowOption;
-
   TGLSDLEvent = procedure(sender: TObject; const event: TSDL_Event) of object;
 
 const
@@ -63,8 +55,6 @@ const
     voResizable];
 
 type
-  // TGLSDLWindow
-  //
   {  A basic SDL-based window (non-visual component).
     Only a limited subset of SDL's features are available, and this window
     is heavily oriented toward using it for OpenGL rendering.
@@ -72,7 +62,6 @@ type
     so you may have multiple components, but only one can be used. }
   TGLSDLWindow = class(TComponent)
   private
-     
     FWidth: Integer;
     FHeight: Integer;
     FPixelDepth: TGLSDLWindowPixelDepth;
@@ -90,9 +79,7 @@ type
     FThread: TThread;
     FSDLSurface: PSDL_Surface;
     FWindowHandle: Longword;
-
   protected
-    
     procedure SetWidth(const val: Integer);
     procedure SetHeight(const val: Integer);
     procedure SetPixelDepth(const val: TGLSDLWindowPixelDepth);
@@ -102,21 +89,16 @@ type
     procedure SetThreadSleepLength(const val: Integer);
     procedure SetThreadPriority(const val: TThreadPriority);
     procedure SetThreadedEventPolling(const val: Boolean);
-
     function BuildSDLVideoFlags: Cardinal;
     procedure SetSDLGLAttributes;
     procedure CreateOrRecreateSDLSurface;
     procedure ResizeGLWindow;
     procedure SetupSDLEnvironmentValues;
-
     procedure StartThread;
     procedure StopThread;
-
   public
-    
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
-
     {  Initializes and Opens an SDL window }
     procedure Open;
     {  Closes an already opened SDL Window.
@@ -124,27 +106,21 @@ type
     procedure Close;
     {  Applies changes (size, pixeldepth...) to the opened window. }
     procedure UpdateWindow;
-
     {  Swap front and back buffer.  }
     procedure SwapBuffers;
-
     {  Polls SDL events. 
       SDL events can be either polled "manually", through a call to this
       method, or automatically via ThreadEventPolling. }
     procedure PollEvents;
-
     {  Is the SDL window active (opened)? 
       Adjusting this value as the same effect as invoking Open/Close. }
     property Active: Boolean read FActive write SetActive;
     {  Presents the SDL surface of the window. 
       If Active is False, this value is undefined. }
     property Surface: PSDL_Surface read FSDLSurface;
-
     {  Experimental: ask SDL to reuse and existing WindowHandle }
     property WindowHandle: Cardinal read FWindowHandle write FWindowHandle;
-
   published
-    
     {  Width of the SDL window.
       To apply changes to an active window, call UpdateWindow. }
     property Width: Integer read FWidth write SetWidth default 640;
@@ -161,7 +137,6 @@ type
       default cDefaultSDLWindowOptions;
     {  Caption of the SDL window }
     property Caption: String read FCaption write SetCaption;
-
     {  Controls automatic threaded event polling. }
     property ThreadedEventPolling: Boolean read FThreadedEventPolling
       write SetThreadedEventPolling default True;
@@ -171,7 +146,6 @@ type
     {  Priority of the event polling thread. }
     property ThreadPriority: TThreadPriority read FThreadPriority
       write SetThreadPriority default tpLower;
-
     {  Fired whenever Open succeeds. 
       The SDL surface is defined and usable when the event happens. }
     property OnOpen: TNotifyEvent read FOnOpen write FOnOpen;
@@ -190,8 +164,6 @@ type
       write FOnEventPollDone;
   end;
 
-  // ESDLError
-  //
   {  Generic SDL or SDLWindow exception. }
   ESDLError = class(Exception);
 
@@ -201,13 +173,9 @@ procedure Register;
 // ---------------------------------------------------------------------
 // ---------------------------------------------------------------------
 implementation
-
 // ---------------------------------------------------------------------
 // ---------------------------------------------------------------------
 // ---------------------------------------------------------------------
-
-uses
-  OpenGLAdapter, GLContext, GLVectorGeometry;
 
 var
   vSDLCS: TCriticalSection;
@@ -215,8 +183,6 @@ var
 
 type
 
-  // TSDLEventThread
-  //
   TSDLEventThread = class(TThread)
     Owner: TGLSDLWindow;
     procedure Execute; override;
@@ -228,8 +194,6 @@ begin
   RegisterComponents('GLScene Utils', [TGLSDLWindow]);
 end;
 
-// RaiseSDLError
-//
 procedure RaiseSDLError(const msg: String = '');
 begin
   if msg <> '' then
@@ -242,8 +206,6 @@ end;
 // ------------------ TSDLEventThread ------------------
 // ------------------
 
-// Execute
-//
 procedure TSDLEventThread.Execute;
 begin
   try
@@ -269,8 +231,6 @@ begin
   end;
 end;
 
-// DoPollEvents
-//
 procedure TSDLEventThread.DoPollEvents;
 begin
   // no need for a CS here, we're in the main thread
@@ -282,8 +242,6 @@ end;
 // ------------------ TSDLWindow ------------------
 // ------------------
 
- 
-//
 constructor TGLSDLWindow.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
@@ -296,16 +254,12 @@ begin
   FOptions := cDefaultSDLWindowOptions;
 end;
 
- 
-//
 destructor TGLSDLWindow.Destroy;
 begin
   Close;
   inherited Destroy;
 end;
 
-// SetWidth
-//
 procedure TGLSDLWindow.SetWidth(const val: Integer);
 begin
   if FWidth <> val then
@@ -313,8 +267,6 @@ begin
       FWidth := val;
 end;
 
-// SetHeight
-//
 procedure TGLSDLWindow.SetHeight(const val: Integer);
 begin
   if FHeight <> val then
@@ -322,22 +274,16 @@ begin
       FHeight := val;
 end;
 
-// SetPixelDepth
-//
 procedure TGLSDLWindow.SetPixelDepth(const val: TGLSDLWindowPixelDepth);
 begin
   FPixelDepth := val;
 end;
 
-// SetOptions
-//
 procedure TGLSDLWindow.SetOptions(const val: TGLSDLWindowOptions);
 begin
   FOptions := val;
 end;
 
-// BuildSDLVideoFlags
-//
 function TGLSDLWindow.BuildSDLVideoFlags: Cardinal;
 var
   videoInfo: PSDL_VideoInfo;
@@ -368,8 +314,6 @@ begin
     Result := Result + SDL_SWSURFACE;
 end;
 
-// SetSDLGLAttributes
-//
 procedure TGLSDLWindow.SetSDLGLAttributes;
 begin
   case PixelDepth of
@@ -400,8 +344,6 @@ begin
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 0)
 end;
 
-// CreateOrRecreateSDLSurface
-//
 procedure TGLSDLWindow.CreateOrRecreateSDLSurface;
 const
   cPixelDepthToBpp: array [Low(TGLSDLWindowPixelDepth)
@@ -424,8 +366,6 @@ begin
     ResizeGLWindow;
 end;
 
-// SetupSDLEnvironmentValues
-//
 procedure TGLSDLWindow.SetupSDLEnvironmentValues;
 var
   envVal: String;
@@ -433,20 +373,14 @@ begin
   if FWindowHandle <> 0 then
   begin
     envVal := '';
-{$IFDEF MSWINDOWS}
+	
     SDL_putenv('SDL_VIDEODRIVER=windib');
     envVal := 'SDL_WINDOWID=' + IntToStr(Integer(FWindowHandle));
-{$ELSE} // Not Windows.
-{$IFDEF UNIX}
-    .. .Unsupported UNIX target.implement your target code here ! .. .
-{$ENDIF} // UNIX
-{$ENDIF} // MSWINDOWS
-      SDL_putenv(PAnsiChar(AnsiString(envVal)));
+	
+    SDL_putenv(PAnsiChar(AnsiString(envVal)));
   end;
 end;
 
-// Open
-//
 procedure TGLSDLWindow.Open;
 begin
   if Active then
@@ -473,8 +407,6 @@ begin
     StartThread;
 end;
 
-// Close
-//
 procedure TGLSDLWindow.Close;
 begin
   if not Active then
@@ -488,16 +420,12 @@ begin
   vSDLActive := False;
 end;
 
-// UpdateWindow
-//
 procedure TGLSDLWindow.UpdateWindow;
 begin
   if Active then
     CreateOrRecreateSDLSurface;
 end;
 
-// SwapBuffers
-//
 procedure TGLSDLWindow.SwapBuffers;
 begin
   if Active then
@@ -507,8 +435,6 @@ begin
       SDL_Flip(Surface);
 end;
 
-// ResizeGLWindow
-//
 procedure TGLSDLWindow.ResizeGLWindow;
 var
   RC: TGLContext;
@@ -518,8 +444,6 @@ begin
     RC.GLStates.ViewPort := Vector4iMake(0, 0, Width, Height);
 end;
 
-// SetActive
-//
 procedure TGLSDLWindow.SetActive(const val: Boolean);
 begin
   if val <> FActive then
@@ -529,8 +453,6 @@ begin
       Close;
 end;
 
-// SetCaption
-//
 procedure TGLSDLWindow.SetCaption(const val: String);
 begin
   if FCaption <> val then
@@ -541,16 +463,12 @@ begin
   end;
 end;
 
-// SetThreadSleepLength
-//
 procedure TGLSDLWindow.SetThreadSleepLength(const val: Integer);
 begin
   if val >= 0 then
     FThreadSleepLength := val;
 end;
 
-// SetThreadPriority
-//
 procedure TGLSDLWindow.SetThreadPriority(const val: TThreadPriority);
 begin
   FThreadPriority := val;
@@ -558,8 +476,6 @@ begin
     FThread.Priority := val;
 end;
 
-// SetThreadedEventPolling
-//
 procedure TGLSDLWindow.SetThreadedEventPolling(const val: Boolean);
 begin
   if FThreadedEventPolling <> val then
@@ -575,8 +491,6 @@ begin
   end;
 end;
 
-// StartThread
-//
 procedure TGLSDLWindow.StartThread;
 begin
   if Active and ThreadedEventPolling and (not Assigned(FThread)) then
@@ -589,8 +503,6 @@ begin
   end;
 end;
 
-// StopThread
-//
 procedure TGLSDLWindow.StopThread;
 begin
   if Assigned(FThread) then
@@ -605,8 +517,6 @@ begin
   end;
 end;
 
-// PollEvents
-//
 procedure TGLSDLWindow.PollEvents;
 var
   event: TSDL_Event;

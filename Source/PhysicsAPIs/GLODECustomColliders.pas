@@ -47,70 +47,50 @@ type
     Depth: Single;
   end;
 
-  // TGLODECustomCollider
-  //
   {The custom collider is designed for generic contact handling. There is a
-     contact point generator for sphere, box, capped cylinder, cylinder and
-     cone geoms. 
-
-     Once the contact points for a collision are generated the abstract Collide
-     function is called to generate the depth and the contact position and
-     normal. These points are then sorted and the deepest are applied to ODE. }
+   contact point generator for sphere, box, capped cylinder, cylinder and cone geoms.
+   Once the contact points for a collision are generated the abstract Collide
+   function is called to generate the depth and the contact position and
+   normal. These points are then sorted and the deepest are applied to ODE }
   TGLODECustomCollider = class(TGLODEBehaviour)
   private
-     
     FGeom: PdxGeom;
     FContactList,
       FContactCache: TList;
     FTransform: TMatrix;
     FContactResolution: Single;
-
     FRenderContacts: Boolean;
     FContactRenderPoints: TAffineVectorList;
     FPointSize: Single;
     FContactColor: TGLColor;
-
   protected
-    
     procedure Initialize; override;
     procedure Finalize; override;
-
     procedure WriteToFiler(writer: TWriter); override;
     procedure ReadFromFiler(reader: TReader); override;
-
     // Test a position for a collision and fill out the contact information.
     function Collide(aPos: TAffineVector; var Depth: Single;
       var cPos, cNorm: TAffineVector): Boolean; virtual; abstract;
-
     // Clears the contact list so it's ready for another collision.
     procedure ClearContacts;
-
     // Add a contact point to the list for ApplyContacts to processes.
     procedure AddContact(x, y, z: TdReal); overload;
     procedure AddContact(pos: TAffineVector); overload;
-
     // Sort the current contact list and apply the deepest to ODE.
     function ApplyContacts(o1, o2: PdxGeom; flags: Integer;
       contact: PdContactGeom; skip: Integer): Integer;
-
     {Set the transform used that transforms contact points generated with
        AddContact. }
     procedure SetTransform(ATransform: TMatrix);
-
     procedure SetContactResolution(const Value: Single);
     procedure SetRenderContacts(const Value: Boolean);
     procedure SetPointSize(const Value: Single);
     procedure SetContactColor(const Value: TGLColor);
-
   public
-    
     constructor Create(AOwner: TGLXCollection); override;
     destructor Destroy; override;
-
     procedure Render(var rci: TGLRenderContextInfo); override;
-
     property Geom: PdxGeom read FGeom;
-
   published
     {Defines the resolution of the contact points created for the colliding
        Geom. The number of contact points generated change base don the size
@@ -124,32 +104,22 @@ type
     property PointSize: Single read FPointSize write SetPointSize;
     // Contact point rendering color.
     property ContactColor: TGLColor read FContactColor write SetContactColor;
-
   end;
 
-  // TGLODEHeightField
-  //
   {Add this behaviour to a TGLHeightField or TGLTerrainRenderer to enable
-     height based collisions for spheres, boxes, capped cylinders, cylinders
-     and cones. }
+   height based collisions for spheres, boxes, capped cylinders, cylinders and cones }
   TGLODEHeightField = class(TGLODECustomCollider)
   protected
-    
     procedure WriteToFiler(writer: TWriter); override;
     procedure ReadFromFiler(reader: TReader); override;
-
     function Collide(aPos: TAffineVector; var Depth: Single;
       var cPos, cNorm: TAffineVector): Boolean; override;
-
   public
-    
     constructor Create(AOwner: TGLXCollection); override;
-
     class function FriendlyName: string; override;
     class function FriendlyDescription: string; override;
     class function UniqueItem: Boolean; override;
     class function CanAddTo(collection: TGLXCollection): Boolean; override;
-
   end;
 
 function GetGLODEHeightField(obj: TGLBaseSceneObject): TGLODEHeightField;
@@ -167,24 +137,15 @@ var
   vCustomColliderClass: TdGeomClass;
   vCustomColliderClassNum: Integer;
 
-  // GetGLODEHeightField
-  //
-
 function GetGLODEHeightField(obj: TGLBaseSceneObject): TGLODEHeightField;
 begin
   result := TGLODEHeightField(obj.Behaviours.GetByClass(TGLODEHeightField));
 end;
 
-// GetOrCreateODEHeightField
-//
-
 function GetOrCreateGLODEHeightField(obj: TGLBaseSceneObject): TGLODEHeightField;
 begin
   result := TGLODEHeightField(obj.GetOrCreateBehaviour(TGLODEHeightField));
 end;
-
-// GetColliderFromGeom
-//
 
 function GetColliderFromGeom(aGeom: PdxGeom): TGLODECustomCollider;
 var
@@ -196,9 +157,6 @@ begin
     if temp is TGLODECustomCollider then
       Result := TGLODECustomCollider(temp);
 end;
-
-// ContactSort
-//
 
 function ContactSort(Item1, Item2: Pointer): Integer;
 var
@@ -213,9 +171,6 @@ begin
   else
     result := 1;
 end;
-
-// CollideSphere
-//
 
 function CollideSphere(o1, o2: PdxGeom; flags: Integer;
   contact: PdContactGeom; skip: Integer): Integer; cdecl;
@@ -262,9 +217,6 @@ begin
   Result := Collider.ApplyContacts(o1, o2, flags, contact, skip);
   Collider.SetTransform(IdentityHMGMatrix);
 end;
-
-// CollideBox
-//
 
 function CollideBox(o1, o2: PdxGeom; flags: Integer;
   contact: PdContactGeom; skip: Integer): Integer; cdecl;
@@ -351,9 +303,6 @@ begin
   Collider.SetTransform(IdentityHMGMatrix);
 end;
 
-// CollideCapsule
-//
-
 function CollideCapsule(o1, o2: PdxGeom; flags: Integer;
   contact: PdContactGeom; skip: Integer): Integer; cdecl;
 var
@@ -409,9 +358,6 @@ begin
   Collider.SetTransform(IdentityHMGMatrix);
 end;
 
-// CollideCylinder
-//
-
 function CollideCylinder(o1, o2: PdxGeom; flags: Integer;
   contact: PdContactGeom; skip: Integer): Integer; cdecl;
 var
@@ -466,9 +412,6 @@ begin
   Collider.SetTransform(IdentityHMGMatrix);
 end;
 
-// GetCustomColliderFn
-//
-
 function GetCustomColliderFn(num: Integer): TdColliderFn; cdecl;
 begin
   if num = dSphereClass then
@@ -487,13 +430,9 @@ end;
 // --------------- TGLODECustomCollider --------------
 // ---------------
 
- 
-//
-
 constructor TGLODECustomCollider.Create(AOwner: TGLXCollection);
 begin
   inherited;
-
   FContactList := TList.Create;
   FContactCache := TList.Create;
 
@@ -504,9 +443,6 @@ begin
   FContactColor := TGLColor.CreateInitialized(Self, clrRed, NotifyChange);
   FPointSize := 3;
 end;
-
- 
-//
 
 destructor TGLODECustomCollider.Destroy;
 var
@@ -520,9 +456,6 @@ begin
   FContactColor.Free;
   inherited;
 end;
-
-// Initialize
-//
 
 procedure TGLODECustomCollider.Initialize;
 begin

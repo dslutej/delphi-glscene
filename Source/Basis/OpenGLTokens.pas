@@ -208,9 +208,7 @@ type
     length: TGLsizei;
     message: PAnsiChar;
     userParam: Pointer);
-{$IFDEF MSWINDOWS}stdcall;
-{$ENDIF}{$IFDEF UNIX}cdecl;
-{$ENDIF}
+{$IFDEF MSWINDOWS}stdcall;{$ENDIF}{$IFDEF UNIX}cdecl;{$ENDIF}
 
   TGLvdpauSurfaceNV = GLintptr;
   PGLvdpauSurfaceNV = ^TGLvdpauSurfaceNV;
@@ -257,7 +255,6 @@ type
 
    // GLUNurbsCallback
    TGLUNurbsErrorProc = procedure(ErrorCode: Cardinal); {$IFDEF MSWINDOWS} stdcall; {$ELSE} cdecl; {$ENDIF}
-
 
 {$IFDEF EGL_SUPPORT}
 type

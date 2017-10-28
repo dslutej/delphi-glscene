@@ -28,8 +28,6 @@ implementation
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
 
-// Register
-//
 procedure Register;
 begin
   RegisterClasses([TGLODEManager, TGLODEJointList, TGLODEJoints, TGLODEElements,

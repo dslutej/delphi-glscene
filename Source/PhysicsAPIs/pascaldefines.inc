@@ -93,6 +93,67 @@
 {$DEFINE UNIX}
 {$ENDIF}
 
+{$IFDEF ver70}
+   {$IFDEF Windows}
+     {$DEFINE Win16}
+   {$ENDIF Windows}
+   {$IFDEF MSDOS}
+     {$DEFINE NO_EXPORTS}
+   {$ENDIF MSDOS}
+   {$IFDEF DPMI}
+     {$DEFINE BP_DPMI}
+   {$ENDIF}
+   {$DEFINE OS_16_BIT}
+   {$DEFINE __OS_DOS__}
+{$ENDIF ver70}
+
+{$IFDEF ver80}
+   {$DEFINE Delphi}      {Delphi 1.x}
+   {$DEFINE Delphi16}
+   {$DEFINE Win16}
+   {$DEFINE OS_16_BIT}
+   {$DEFINE __OS_DOS__}
+{$ENDIF ver80}
+
+{$IFDEF ver90}
+   {$DEFINE Delphi}      {Delphi 2.x}
+   {$DEFINE Delphi32}
+{$ENDIF ver90}
+
+{$IFDEF ver100}
+   {$DEFINE Delphi}      {Delphi 3.x}
+   {$DEFINE Delphi32}
+   {$DEFINE WIN32}
+{$ENDIF ver100}
+
+{$IFDEF ver93}
+   {$DEFINE Delphi}      {C++ Builder 1.x}
+   {$DEFINE Delphi32}
+{$ENDIF ver93}
+
+{$IFDEF ver110}
+   {$DEFINE Delphi}      {C++ Builder 3.x}
+   {$DEFINE Delphi32}
+{$ENDIF ver110}
+
+{$IFDEF ver120}
+   {$DEFINE Delphi}      {Delphi 4.x}
+   {$DEFINE Delphi32}
+   {$DEFINE Has_Int64}
+{$ENDIF ver120}
+
+{$IFDEF ver130}
+   {$DEFINE Delphi}      {Delphi 5.x}
+   {$DEFINE Delphi32}
+   {$DEFINE Has_Int64}
+{$ENDIF ver130}
+
+{$IFDEF ver140}
+   {$DEFINE Delphi}      {Delphi 6.x}
+   {$DEFINE Delphi32}
+   {$DEFINE Has_Int64}
+{$ENDIF ver140}
+
 {$IFDEF ver150}
    {$DEFINE Delphi}      {Delphi 7.x}
    {$DEFINE Delphi32}
@@ -103,46 +164,16 @@
 {$ENDIF}
 
 {$IFDEF ver160}
-   {$DEFINE Delphi}      {Delphi 8}
+   {$DEFINE Delphi}      {Delphi 8??}
    {$DEFINE Delphi32}
    {$DEFINE Has_Int64}
 {$ENDIF ver160}
 
 {$IFDEF ver170}
-   {$DEFINE Delphi}      {Delphi 2005}
+   {$DEFINE Delphi}      {Delphi 9??}
    {$DEFINE Delphi32}
    {$DEFINE Has_Int64}
 {$ENDIF ver170}
-
-{$IFDEF ver180}
-   {$DEFINE Delphi}      {Delphi 2006}
-   {$DEFINE Delphi32}
-   {$DEFINE Has_Int64}
-{$ENDIF ver160}
-
-{$IFDEF ver185}
-   {$DEFINE Delphi}      {Delphi 2007}
-   {$DEFINE Delphi32}
-   {$DEFINE Has_Int64}
-{$ENDIF ver185}
-
-{$IFDEF ver200}
-   {$DEFINE Delphi}      {Delphi 2009}
-   {$DEFINE Delphi32}
-   {$DEFINE Has_Int64}
-{$ENDIF ver200}
-
-{$IFDEF ver210}
-   {$DEFINE Delphi}      {Delphi 2010}
-   {$DEFINE Delphi32}
-   {$DEFINE Has_Int64}
-{$ENDIF ver210}
-
-{$IFDEF ver220}
-   {$DEFINE Delphi}      {Delphi XE}
-   {$DEFINE Delphi32}
-   {$DEFINE Has_Int64}
-{$ENDIF ver220}
 
 {$IFDEF UNIX}
   {$ifdef VER150}
@@ -174,6 +205,9 @@
   {$H+}
   {$PACKRECORDS 4}        // Added for record
   {$MACRO ON}             // Added For OpenGL
+  {$THREADING on}
+  {$DEFINE Delphi}
+  {$DEFINE UseAT}
   {$UNDEF USE_STDCALL}
   {$DEFINE OS_BigMem}
   {$DEFINE NO_EXPORTS}
