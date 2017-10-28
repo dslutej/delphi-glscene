@@ -29,7 +29,6 @@ unit GLVectorGeometry;
 interface
 
 {$I GLScene.inc}
-
 uses
 
 {$IFDEF GLS_FASTMATH}
@@ -3001,7 +3000,7 @@ begin
   result := Sqrt(X * X + Y * Y + Z * Z);
 end;
 
-function VectorLength(const V: TVector2f): Single;
+function VectorLength(const  V: TVector2f): Single;
 begin
   result := Sqrt(VectorNorm(V.X, V.Y));
 end;
@@ -3797,7 +3796,7 @@ end;
 procedure ScaleVector(var V: TVector; factor: Single);
 begin
 {$IFDEF GLS_FASTMATH}
-  Neslib.FastMath.TVector4(V)*factor;
+  Neslib.FastMath.TVector4(V) := Neslib.FastMath.TVector4(V)*factor;
 {$ELSE}
   V.X := V.X * factor;
   V.Y := V.Y * factor;
@@ -3821,121 +3820,58 @@ begin
   V.W := V.W * factor.W;
 end;
 
-{$IFDEF GLS_ASM}
-function VectorScale(const V: TVector2f; factor: Single): TVector2f;
-asm
-  FLD  DWORD PTR [EAX]
-  FMUL DWORD PTR [EBP+8]
-  FSTP DWORD PTR [EDX]
-  FLD  DWORD PTR [EAX+4]
-  FMUL DWORD PTR [EBP+8]
-  FSTP DWORD PTR [EDX+4]
-end;
-{$ELSE}
 function VectorScale(const V: TVector2f; factor: Single): TVector2f;
 begin
   result.X := V.X * factor;
   result.Y := V.Y * factor;
 end;
-{$ENDIF}
 
-{$IFDEF GLS_ASM}
-function VectorScale(const V: TAffineVector; factor: Single): TAffineVector;
-asm
-  FLD  DWORD PTR [EAX]
-  FMUL DWORD PTR [EBP+8]
-  FSTP DWORD PTR [EDX]
-  FLD  DWORD PTR [EAX+4]
-  FMUL DWORD PTR [EBP+8]
-  FSTP DWORD PTR [EDX+4]
-  FLD  DWORD PTR [EAX+8]
-  FMUL DWORD PTR [EBP+8]
-  FSTP DWORD PTR [EDX+8]
-end;
-  {$ELSE}
 function VectorScale(const V: TAffineVector; factor: Single): TAffineVector;
 begin
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath.TVector3(Result) := Neslib.FastMath.TVector3(V) * factor;
+{$ELSE}
   result.X := V.X * factor;
   result.Y := V.Y * factor;
   result.Z := V.Z * factor;
-end;
 {$ENDIF}
-
-{$IFDEF GLS_ASM}
-procedure VectorScale(const V: TAffineVector; factor: Single;
-  var vr: TAffineVector);
-asm
-  FLD  DWORD PTR [EAX]
-  FMUL DWORD PTR [EBP+8]
-  FSTP DWORD PTR [EDX]
-  FLD  DWORD PTR [EAX+4]
-  FMUL DWORD PTR [EBP+8]
-  FSTP DWORD PTR [EDX+4]
-  FLD  DWORD PTR [EAX+8]
-  FMUL DWORD PTR [EBP+8]
-  FSTP DWORD PTR [EDX+8]
 end;
-{$ELSE}
+
 procedure VectorScale(const V: TAffineVector; factor: Single;
   var vr: TAffineVector);
 begin
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath.TVector3(vr) := Neslib.FastMath.TVector3(V) * factor;
+{$ELSE}
   vr.X := V.X * factor;
   vr.Y := V.Y * factor;
   vr.Z := V.Z * factor;
-end;
 {$ENDIF}
-
-{$IFDEF GLS_ASM}
-function VectorScale(const V: TVector; factor: Single): TVector;
-asm
-  FLD  DWORD PTR [EAX]
-  FMUL DWORD PTR [EBP+8]
-  FSTP DWORD PTR [EDX]
-  FLD  DWORD PTR [EAX+4]
-  FMUL DWORD PTR [EBP+8]
-  FSTP DWORD PTR [EDX+4]
-  FLD  DWORD PTR [EAX+8]
-  FMUL DWORD PTR [EBP+8]
-  FSTP DWORD PTR [EDX+8]
-  FLD  DWORD PTR [EAX+12]
-  FMUL DWORD PTR [EBP+8]
-  FSTP DWORD PTR [EDX+12]
 end;
-{$ELSE}
+
 function VectorScale(const V: TVector; factor: Single): TVector;
 begin
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath.TVector4(Result) := Neslib.FastMath.TVector4(V) * factor;
+{$ELSE}
   result.X := V.X * factor;
   result.Y := V.Y * factor;
   result.Z := V.Z * factor;
   result.W := V.W * factor;
-end;
 {$ENDIF}
-
-{$IFDEF GLS_ASM}
-procedure VectorScale(const V: TVector; factor: Single; var vr: TVector);
-asm
-  FLD  DWORD PTR [EAX]
-  FMUL DWORD PTR [EBP+8]
-  FSTP DWORD PTR [EDX]
-  FLD  DWORD PTR [EAX+4]
-  FMUL DWORD PTR [EBP+8]
-  FSTP DWORD PTR [EDX+4]
-  FLD  DWORD PTR [EAX+8]
-  FMUL DWORD PTR [EBP+8]
-  FSTP DWORD PTR [EDX+8]
-  FLD  DWORD PTR [EAX+12]
-  FMUL DWORD PTR [EBP+8]
-  FSTP DWORD PTR [EDX+12]
 end;
-{$ELSE}
+
 procedure VectorScale(const V: TVector; factor: Single; var vr: TVector);
 begin
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath.TVector4(vr) := Neslib.FastMath.TVector4(V) * factor;
+{$ELSE}
   vr.X := V.X * factor;
   vr.Y := V.Y * factor;
   vr.Z := V.Z * factor;
   vr.W := V.W * factor;
-end;
 {$ENDIF}
+end;
 
 {$IFDEF GLS_ASM}
 procedure VectorScale(const V: TVector; factor: Single; var vr: TAffineVector);
