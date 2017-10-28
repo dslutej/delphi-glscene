@@ -120,7 +120,7 @@ type
     procedure AngleCombine(const list1: TBaseVectorList; intensity: Single);
         {Linear combination of Self with another list. 
            Self[i]:=Self[i]+list2[i]*factor }
-    procedure Combine(const list2: TBaseVectorList; factor: Single); dynvirtualamic;
+    procedure Combine(const list2: TBaseVectorList; factor: Single); virtual;
     property ItemAddress[Index: Integer]: PFloatArray read GetItemAddress;
   end;
 
