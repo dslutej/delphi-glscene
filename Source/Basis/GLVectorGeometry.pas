@@ -295,7 +295,7 @@ const
 // ------------------------------------------------------------------------------
 
 function TexPointMake(const S, T: Single): TTexPoint; inline;
-function AffineVectorMake(const X, Y, Z: Single): TAffineVector; overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
+function AffineVectorMake(const X, Y, Z: Single): TAffineVector; overload; inline;
 function AffineVectorMake(const V: TVector): TAffineVector; overload; inline;
 procedure SetAffineVector(out V: TAffineVector; const X, Y, Z: Single);  overload; {$IFDEF GLS_INLINE}inline; {$ENDIF}
 procedure SetVector(out V: TAffineVector; const X, Y, Z: Single); overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
@@ -898,7 +898,7 @@ function CreateRotationMatrix(const anAxis: TVector; angle: Single): TMatrix; ov
 function CreateAffineRotationMatrix(const anAxis: TAffineVector; angle: Single): TAffineMatrix;
 
 // Multiplies two 3x3 matrices
-function MatrixMultiply(const m1, m2: TAffineMatrix): TAffineMatrix; overload; {$IFDEF GLS_FASTMATH}inline;{$ENDIF}
+function MatrixMultiply(const m1, m2: TAffineMatrix): TAffineMatrix; overload; inline;
 
 // Multiplies two 4x4 matrices
 function MatrixMultiply(const m1, m2: TMatrix): TMatrix; overload; {$IFDEF GLS_FASTMATH}inline;{$ENDIF}
@@ -2152,99 +2152,62 @@ end;
 function VectorCombine(const V1, V2: TAffineVector; const f1, f2: Single)
   : TAffineVector;
 begin
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath.TVector3(Result) :=
+    Neslib.FastMath.TVector3(V1)*F1 +
+    Neslib.FastMath.TVector3(V2)*F2;
+{$ELSE}
   result.V[X] := (f1 * V1.V[X]) + (f2 * V2.V[X]);
   result.V[Y] := (f1 * V1.V[Y]) + (f2 * V2.V[Y]);
   result.V[Z] := (f1 * V1.V[Z]) + (f2 * V2.V[Z]);
+{$ENDIF}
 end;
 
 function VectorCombine3(const V1, V2, V3: TAffineVector;
   const f1, f2, F3: Single): TAffineVector;
 begin
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath.TVector3(Result) :=
+    Neslib.FastMath.TVector3(V1)*F1 +
+    Neslib.FastMath.TVector3(V2)*F2 +
+    Neslib.FastMath.TVector3(V3)*F3;
+{$ELSE}
   result.V[X] := (f1 * V1.V[X]) + (f2 * V2.V[X]) + (F3 * V3.V[X]);
   result.V[Y] := (f1 * V1.V[Y]) + (f2 * V2.V[Y]) + (F3 * V3.V[Y]);
   result.V[Z] := (f1 * V1.V[Z]) + (f2 * V2.V[Z]) + (F3 * V3.V[Z]);
+{$ENDIF}
 end;
 
 procedure VectorCombine3(const V1, V2, V3: TAffineVector;
   const f1, f2, F3: Single; var vr: TAffineVector);
 begin
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath.TVector3(vr) :=
+    Neslib.FastMath.TVector3(V1)*F1 +
+    Neslib.FastMath.TVector3(V2)*F2 +
+    Neslib.FastMath.TVector3(V3)*F3;
+{$ELSE}
   vr.V[X] := (f1 * V1.V[X]) + (f2 * V2.V[X]) + (F3 * V3.V[X]);
   vr.V[Y] := (f1 * V1.V[Y]) + (f2 * V2.V[Y]) + (F3 * V3.V[Y]);
   vr.V[Z] := (f1 * V1.V[Z]) + (f2 * V2.V[Z]) + (F3 * V3.V[Z]);
+{$ENDIF}
 end;
 
-{$IFDEF GLS_ASM}
-procedure CombineVector(var vr: TVector; const V: TVector;
-  var f: Single); overload;
-// EAX contains address of vr
-// EDX contains address of v
-// ECX contains address of f
-asm
-  test vSIMD, 1
-  jz @@FPU
-@@3DNow:
-  db $0F,$6E,$11           /// MOVD  MM2, [ECX]
-  db $0F,$62,$D2           /// PUNPCKLDQ MM2, MM2
-  db $0F,$6F,$02           /// MOVQ  MM0, [EDX]
-  db $0F,$0F,$C2,$B4       /// PFMUL MM0, MM2
-  db $0F,$0F,$00,$9E       /// PFADD MM0, [EAX]
-  db $0F,$7F,$00           /// MOVQ  [EAX], MM0
-  db $0F,$6F,$4A,$08       /// MOVQ  MM1, [EDX+8]
-  db $0F,$0F,$CA,$B4       /// PFMUL MM1, MM2
-  db $0F,$0F,$48,$08,$9E   /// PFADD MM1, [EAX+8]
-  db $0F,$7F,$48,$08       /// MOVQ  [EAX+8], MM1
-  db $0F,$0E               /// FEMMS
-  ret
-@@FPU:
-  FLD  DWORD PTR [EDX]
-  FMUL DWORD PTR [ECX]
-  FADD DWORD PTR [EAX]
-  FSTP DWORD PTR [EAX]
-  FLD  DWORD PTR [EDX+4]
-  FMUL DWORD PTR [ECX]
-  FADD DWORD PTR [EAX+4]
-  FSTP DWORD PTR [EAX+4]
-  FLD  DWORD PTR [EDX+8]
-  FMUL DWORD PTR [ECX]
-  FADD DWORD PTR [EAX+8]
-  FSTP DWORD PTR [EAX+8]
-  FLD  DWORD PTR [EDX+12]
-  FMUL DWORD PTR [ECX]
-  FADD DWORD PTR [EAX+12]
-  FSTP DWORD PTR [EAX+12]
-end;
-{$ELSE}
 procedure CombineVector(var vr: TVector; const V: TVector;
   var f: Single); overload;
 begin
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath.TVector4(vr) :=
+    Neslib.FastMath.TVector4(vr) +
+    NesLib.FastMath.TVector4(V) * f;
+{$ELSE}
   vr.X := vr.X + V.X * f;
   vr.Y := vr.Y + V.Y * f;
   vr.Z := vr.Z + V.Z * f;
   vr.W := vr.W + V.W * f;
-end;
 {$ENDIF}
-
-{$IFDEF GLS_ASM}
-procedure CombineVector(var vr: TVector; const V: TAffineVector;
-  var f: Single); overload;
-// EAX contains address of vr
-// EDX contains address of v
-// ECX contains address of f
-asm
-  FLD  DWORD PTR [EDX]
-  FMUL DWORD PTR [ECX]
-  FADD DWORD PTR [EAX]
-  FSTP DWORD PTR [EAX]
-  FLD  DWORD PTR [EDX+4]
-  FMUL DWORD PTR [ECX]
-  FADD DWORD PTR [EAX+4]
-  FSTP DWORD PTR [EAX+4]
-  FLD  DWORD PTR [EDX+8]
-  FMUL DWORD PTR [ECX]
-  FADD DWORD PTR [EAX+8]
-  FSTP DWORD PTR [EAX+8]
 end;
-{$ELSE}
+
 procedure CombineVector(var vr: TVector; const V: TAffineVector;
   var f: Single); overload;
 begin
@@ -2252,14 +2215,19 @@ begin
   vr.Y := vr.Y + V.Y * f;
   vr.Z := vr.Z + V.Z * f;
 end;
-{$ENDIF}
 
 function VectorCombine(const V1, V2: TVector; const F1, F2: Single): TVector;
 begin
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath.TVector4(Result) :=
+    Neslib.FastMath.TVector4(V1)*F1 +
+    Neslib.FastMath.TVector4(V1)*F2;
+{$ELSE}
   result.V[X] := (F1 * V1.V[X]) + (F2 * V2.V[X]);
   result.V[Y] := (F1 * V1.V[Y]) + (F2 * V2.V[Y]);
   result.V[Z] := (F1 * V1.V[Z]) + (F2 * V2.V[Z]);
   result.V[W] := (F1 * V1.V[W]) + (F2 * V2.V[W]);
+{$ENDIF}
 end;
 
 function VectorCombine(const V1: TVector; const V2: TAffineVector;
@@ -2384,43 +2352,16 @@ begin
 end;
 {$ENDIF}
 
-{$IFDEF GLS_ASM}
-function VectorCrossProduct(const V1, V2: TAffineVector): TAffineVector;
-// EAX contains address of V1
-// EDX contains address of V2
-// ECX contains the result
-asm
-  fld   dword ptr [eax+$4]
-  fmul  dword ptr [edx+$8]
-  fld   dword ptr [eax+$8]
-  fmul  dword ptr [edx+$4]
-  fsubp
-  fstp  dword ptr [ecx]
-
-  fld   dword ptr [eax+$8]
-  fmul  dword ptr [edx]
-  fld   dword ptr [eax]
-  fmul  dword ptr [edx+$8]
-  fsubp
-  fstp  dword ptr [ecx+$4]
-
-  fld   dword ptr [eax]
-  fmul  dword ptr [edx+$4]
-  fld   dword ptr [eax+$4]
-  fmul  dword ptr [edx]
-  fsubp
-  fstp  dword ptr [ecx+$8]
-end;
-{$ELSE}
-
 function VectorCrossProduct(const V1, V2: TAffineVector): TAffineVector;
 begin
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath.TVector3(Result) := Neslib.FastMath.TVector3(V1).Cross(Neslib.FastMath.TVector3(V2));
+{$ELSE}
   result.V[X] := V1.V[Y] * V2.V[Z] - V1.V[Z] * V2.V[Y];
   result.V[Y] := V1.V[Z] * V2.V[X] - V1.V[X] * V2.V[Z];
   result.V[Z] := V1.V[X] * V2.V[Y] - V1.V[Y] * V2.V[X];
-end;
-
 {$ENDIF}
+end;
 
 {$IFDEF GLS_ASM}
 function VectorCrossProduct(const V1, V2: TVector): TVector;
@@ -2956,7 +2897,7 @@ end;
 function RSqrt(V: Single): Single;
 begin
 {$IFDEF GLS_FASTMATH}
-  Result := InverseSqrt(V);
+  Result := NesLib.FastMath.InverseSqrt(V);
 {$ELSE}
   result := 1 / Sqrt(V);
 {$ENDIF}

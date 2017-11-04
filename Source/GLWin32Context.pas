@@ -574,9 +574,9 @@ begin
       GLSLogger.LogWarning(strDriverNotSupportDebugRC);
     if rcoOGL_ES in Options then
       GLSLogger.LogWarning(strDriverNotSupportOESRC);
-    if GLStates.ForwardContext then
+{    if GLStates.ForwardContext then
       GLSLogger.LogWarning(strDriverNotSupportFRC);
-    GLStates.ForwardContext := False;
+    GLStates.ForwardContext := False;}
   end
   else
     GLSLogger.LogInfo(strTmpRC_Created);
@@ -592,7 +592,7 @@ begin
   try
     ClearIAttribs;
     // Initialize forward context
-    if GLStates.ForwardContext then
+    if false{GLStates.ForwardContext} then
     begin
       if FGL.VERSION_4_2 then
       begin
@@ -679,7 +679,7 @@ begin
       FRC := FGL.WCreateContextAttribsARB(aDC, 0, @FiAttribs[0]);
       if FRC = 0 then
       begin
-        if GLStates.ForwardContext then
+        if false{GLStates.ForwardContext} then
           GLSLogger.LogErrorFmt(strForwardContextFailed,
             [GetLastError, SysErrorMessage(GetLastError)])
         else
@@ -707,14 +707,14 @@ begin
     else
       GLStates.MultisampleFilterHint := hintDontCare;
 
-    if GLStates.ForwardContext then
-      GLSLogger.LogInfo(strFRC_created);
+    {if GLStates.ForwardContext then
+      GLSLogger.LogInfo(strFRC_created);}
     if bOES then
       GLSLogger.LogInfo(strOESRC_created);
     bSuccess := True;
   finally
-    GLStates.ForwardContext := GLStates.ForwardContext and bSuccess;
-    PipelineTransformation.LoadMatricesEnabled := not GLStates.ForwardContext;
+{    GLStates.ForwardContext := GLStates.ForwardContext and bSuccess;}
+    PipelineTransformation.LoadMatricesEnabled := true {not GLStates.ForwardContext};
   end;
 end;
 
@@ -1032,7 +1032,7 @@ begin
                 // Modern creation style
                 ClearIAttribs;
                 // Initialize forward context
-                if GLStates.ForwardContext then
+                if false {GLStates.ForwardContext} then
                 begin
                   if FGL.VERSION_4_2 then
                   begin
@@ -1104,7 +1104,7 @@ begin
                 if localRC = 0 then
                {$IFDEF GLS_LOGGING}
                 begin
-                  if GLStates.ForwardContext then
+                  if false {GLStates.ForwardContext} then
                     GLSLogger.LogErrorFmt(strForwardContextFailed,
                       [GetLastError, SysErrorMessage(GetLastError)])
                   else
@@ -1201,12 +1201,12 @@ begin
 
   Deactivate;
 
-  if GLStates.ForwardContext then
+{  if GLStates.ForwardContext then
     GLSLogger.LogInfo('PBuffer ' + strFRC_created);
   if bOES then
     GLSLogger.LogInfo('PBuffer ' + strOESRC_created);
   if not (GLStates.ForwardContext or bOES) then
-    GLSLogger.LogInfo(strPBufferRC_created);
+    GLSLogger.LogInfo(strPBufferRC_created);}
 end;
 
 // DoShareLists

@@ -1392,10 +1392,11 @@ var
 const
   cAAFHeader: AnsiString = 'AAF';
 
-function xgl(): TGLMultitextureCoordinator; inline;
+{function xgl(): TGLMultitextureCoordinator; inline;
 begin
   Result := TGLMultitextureCoordinator(vCurrentGLContext.MultitextureCoordinator);
 end;
+}
 
 function GetVectorFileFormats: TGLVectorFileFormatsList;
 begin

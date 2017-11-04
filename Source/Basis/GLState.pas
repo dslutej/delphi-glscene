@@ -214,7 +214,7 @@ type
     FListStates: array of TGLStateTypes;
     FCurrentList: Cardinal;
     FTextureMatrixIsIdentity: array[0..3] of Boolean;
-    FForwardContext: Boolean;
+//    FForwardContext: Boolean;
     FFFPLight: Boolean;
     // Vertex Array Data state
     FVertexArrayBinding: Cardinal;
@@ -1016,8 +1016,8 @@ type
     // read only properties
     property States: TGLStates read FStates;
     {True for ignore deprecated and removed features in OpenGL 3x }
-    property ForwardContext: Boolean read FForwardContext
-      write SetForwardContext;
+{    property ForwardContext: Boolean read FForwardContext
+      write SetForwardContext;}
   end;
 
 type
@@ -1191,7 +1191,7 @@ begin
 
   for I := High(FTextureMatrixIsIdentity) downto 0 do
     FTextureMatrixIsIdentity[I] := False;
-  FForwardContext := False;
+//  FForwardContext := False;
 
   // Vertex Array Data state
   FVertexArrayBinding := 0;
@@ -1363,8 +1363,8 @@ end;
 
 procedure TGLStateCache.Enable(const aState: TGLState);
 begin
-  if cGLStateToGLEnum[aState].GLDeprecated and FForwardContext then
-    exit;
+{  if cGLStateToGLEnum[aState].GLDeprecated and FForwardContext then
+    exit;}
   if not (aState in FStates) or FInsideList then
   begin
     if FInsideList then
@@ -1381,8 +1381,8 @@ end;
 
 procedure TGLStateCache.Disable(const aState: TGLState);
 begin
-  if cGLStateToGLEnum[aState].GLDeprecated and FForwardContext then
-    exit;
+{  if cGLStateToGLEnum[aState].GLDeprecated and FForwardContext then
+    exit;}
   if (aState in FStates) or FInsideList then
   begin
     if FInsideList then
@@ -1417,16 +1417,16 @@ end;
 
 procedure TGLStateCache.PerformEnable(const aState: TGLState);
 begin
-  if cGLStateToGLEnum[aState].GLDeprecated and FForwardContext then
-    exit;
+{  if cGLStateToGLEnum[aState].GLDeprecated and FForwardContext then
+    exit;}
   Include(FStates, aState);
   GL.Enable(cGLStateToGLEnum[aState].GLConst);
 end;
 
 procedure TGLStateCache.PerformDisable(const aState: TGLState);
 begin
-  if cGLStateToGLEnum[aState].GLDeprecated and FForwardContext then
-    exit;
+{  if cGLStateToGLEnum[aState].GLDeprecated and FForwardContext then
+    exit;}
   Exclude(FStates, aState);
   GL.Disable(cGLStateToGLEnum[aState].GLConst);
 end;
@@ -1461,50 +1461,49 @@ var
   i: Integer;
   currentFace: Cardinal;
 begin
-  if FForwardContext then
-    exit;
+{  if FForwardContext then
+    exit;}
   Assert((aFace = cmFront) or (aFace = cmBack),
     'Only cmFront or cmBack supported');
   i := Integer(aFace);
   currentFace := cGLCullFaceModeToGLEnum[aFace];
 
-  if (FFrontBackShininess[i] <> shininess)
-    or FInsideList then
-  begin
-    GL.Materiali(currentFace, GL_SHININESS, shininess);
-    if not FInsideList then
-      FFrontBackShininess[i] := shininess;
-  end;
-  if not AffineVectorEquals(FFrontBackColors[i][0], emission)
-    or FInsideList then
-  begin
-    GL.Materialfv(currentFace, GL_EMISSION, @emission);
-    if not FInsideList then
-      SetVector(FFrontBackColors[i][0], emission);
-  end;
-  if not AffineVectorEquals(FFrontBackColors[i][1], ambient)
-    or FInsideList then
-  begin
-    GL.Materialfv(currentFace, GL_AMBIENT, @ambient);
-    if not FInsideList then
-      SetVector(FFrontBackColors[i][1], ambient);
-  end;
-  if not VectorEquals(FFrontBackColors[i][2], diffuse)
-    or FInsideList then
-  begin
-    GL.Materialfv(currentFace, GL_DIFFUSE, @diffuse);
-    if not FInsideList then
-      SetVector(FFrontBackColors[i][2], diffuse);
-  end;
-  if not AffineVectorEquals(FFrontBackColors[i][3], specular)
-    or FInsideList then
-  begin
-    GL.Materialfv(currentFace, GL_SPECULAR, @specular);
-    if not FInsideList then
-      SetVector(FFrontBackColors[i][3], specular);
-  end;
   if FInsideList then
+  begin{
+    GL.Materiali(currentFace,  GL_SHININESS, shininess);
+    GL.Materialfv(currentFace, GL_EMISSION,  @emission);
+    GL.Materialfv(currentFace, GL_AMBIENT,   @ambient);
+    GL.Materialfv(currentFace, GL_DIFFUSE,   @diffuse);
+    GL.Materialfv(currentFace, GL_SPECULAR,  @specular);}
     Include(FListStates[FCurrentList], sttLighting);
+  end;
+{  else }begin
+    if (FFrontBackShininess[i] <> shininess) then
+    begin
+      GL.Materiali(currentFace, GL_SHININESS, shininess);
+      FFrontBackShininess[i] := shininess;
+    end;
+    if not AffineVectorEquals(FFrontBackColors[i][0], emission) then
+    begin
+      GL.Materialfv(currentFace, GL_EMISSION, @emission);
+      SetVector(FFrontBackColors[i][0], emission);
+    end;
+    if not AffineVectorEquals(FFrontBackColors[i][1], ambient) then
+    begin
+      GL.Materialfv(currentFace, GL_AMBIENT, @ambient);
+      SetVector(FFrontBackColors[i][1], ambient);
+    end;
+    if not VectorEquals(FFrontBackColors[i][2], diffuse) then
+    begin
+      GL.Materialfv(currentFace, GL_DIFFUSE, @diffuse);
+      SetVector(FFrontBackColors[i][2], diffuse);
+    end;
+    if not AffineVectorEquals(FFrontBackColors[i][3], specular) then
+    begin
+      GL.Materialfv(currentFace, GL_SPECULAR, @specular);
+      SetVector(FFrontBackColors[i][3], specular);
+    end;
+  end;
 end;
 
 procedure TGLStateCache.SetGLMaterialAlphaChannel(const aFace: Cardinal; const
@@ -1513,7 +1512,7 @@ var
   i: Integer;
   color: TVector4f;
 begin
-  if FForwardContext then Exit;
+{  if FForwardContext then Exit;}
 
   if not(stLighting in FStates) then
   begin
@@ -1546,7 +1545,7 @@ procedure TGLStateCache.SetGLMaterialDiffuseColor(const aFace: Cardinal; const d
 var
   i: Integer;
 begin
-  if FForwardContext then Exit;
+{  if FForwardContext then Exit;}
 
   if not(stLighting in FStates) then
   begin
@@ -1632,19 +1631,19 @@ begin
   if enabled <> FEnablePrimitiveRestart then
   begin
     FEnablePrimitiveRestart := enabled;
-    if FForwardContext then
-    begin
-      if enabled then
-        GL.Enable(GL_PRIMITIVE_RESTART)
-      else
-        GL.Disable(GL_PRIMITIVE_RESTART);
-    end
-    else if GL.NV_primitive_restart then
+    if GL.NV_primitive_restart then
     begin
       if enabled then
         GL.EnableClientState(GL_PRIMITIVE_RESTART_NV)
       else
         GL.DisableClientState(GL_PRIMITIVE_RESTART_NV);
+    end
+    else begin
+      if enabled then
+        GL.Enable(GL_PRIMITIVE_RESTART)
+      else
+        GL.Disable(GL_PRIMITIVE_RESTART);
+
     end;
   end;
 end;
@@ -1658,7 +1657,7 @@ procedure TGLStateCache.SetPrimitiveRestartIndex(const index: Cardinal);
 begin
   if index <> FPrimitiveRestartIndex then
   begin
-    if GL.NV_primitive_restart or FForwardContext then
+    if GL.NV_primitive_restart then
     begin
       FPrimitiveRestartIndex := index;
       GL.PrimitiveRestartIndex(index)
@@ -2137,8 +2136,8 @@ procedure TGLStateCache.SetGLAlphaFunction(func: TComparisonFunction;
 var I: Cardinal; E: Single;
 {$ENDIF}
 begin
-  if FForwardContext then
-    exit;
+{  if FForwardContext then
+    exit;}
 {$IFDEF GLS_CACHE_MISS_CHECK}
   GL.GetIntegerv(GL_ALPHA_TEST_FUNC, @I);
   if cGLComparisonFunctionToGLEnum[FAlphaFunc] <> I then
@@ -2310,8 +2309,8 @@ end;
 
 procedure TGLStateCache.SetGLTextureMatrix(const matrix: TMatrix);
 begin
-  if FForwardContext then
-    exit;
+{  if FForwardContext then
+   exit;}
   if FInsideList then
     Include(FListStates[FCurrentList], sttTransform)
   else
@@ -2323,8 +2322,8 @@ end;
 
 procedure TGLStateCache.ResetGLTextureMatrix;
 begin
-  if FForwardContext then
-    exit;
+{  if FForwardContext then
+    exit;}
   GL.MatrixMode(GL_TEXTURE);
   GL.LoadIdentity;
   FTextureMatrixIsIdentity[ActiveTexture] := True;
@@ -2336,8 +2335,8 @@ var
   I: Integer;
   lastActiveTexture: Cardinal;
 begin
-  if FForwardContext then
-    exit;
+{  if FForwardContext then
+    exit;}
   lastActiveTexture := ActiveTexture;
   GL.MatrixMode(GL_TEXTURE);
   for I := High(FTextureMatrixIsIdentity) downto 0 do
@@ -2955,7 +2954,7 @@ var
   glTarget: Cardinal;
 begin
   glTarget := DecodeGLTextureTarget(Target);
-  if FForwardContext or not IsTargetSupported(glTarget) then
+  if {FForwardContext or }not IsTargetSupported(glTarget) then
     exit;
   if (Value <> FActiveTextureEnabling[FActiveTexture][Target])
     or FInsideList then
@@ -3199,15 +3198,15 @@ end;
 
 procedure TGLStateCache.SetFFPLight(Value: Boolean);
 begin
-  FFFPLight := Value and not FForwardContext;
+  FFFPLight := Value{ and not FForwardContext};
 end;
 
 function TGLStateCache.GetMaxLights: Integer;
 begin
   if FMaxLights = 0 then
-  if FForwardContext then
+{  if FForwardContext then
     FMaxLights := MAX_HARDWARE_LIGHT
-  else
+  else}
     GL.GetIntegerv(GL_MAX_LIGHTS, @FMaxLights);
   Result := FMaxLights;
 end;
@@ -3534,7 +3533,7 @@ end;
 
 procedure TGLStateCache.SetForwardContext(Value: Boolean);
 begin
-  if Value <> FForwardContext then
+{  if Value <> FForwardContext then
   begin
     FForwardContext := Value;
     if Value then
@@ -3542,6 +3541,7 @@ begin
       SetFFPlight(False);
     end;
   end;
+}
 end;
 
 

@@ -2814,7 +2814,7 @@ procedure TGLImage.DrawPixels(const x, y: Single);
 begin
   if fBlank or IsEmpty then
     Exit;
-  Assert(not CurrentGLContext.GLStates.ForwardContext);
+{  Assert(not CurrentGLContext.GLStates.ForwardContext);}
   GL.RasterPos2f(x, y);
   GL.DrawPixels(Width, Height, fColorFormat, fDataType, FData);
 end;

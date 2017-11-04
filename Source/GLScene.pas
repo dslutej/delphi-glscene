@@ -6470,7 +6470,7 @@ begin
     AuxBuffers := 0;
     AntiAliasing := Self.AntiAliasing;
     Layer := Self.Layer;
-    GLStates.ForwardContext := roForwardContext in ContextOptions;
+{    GLStates.ForwardContext := roForwardContext in ContextOptions;}
     PrepareGLContext;
   end;
 end;
@@ -7066,7 +7066,7 @@ begin
   if Assigned(FCamera)
     and UnProject(
     VectorMake(aPoint),
-    RenderingContext.PipelineTransformation.ViewProjectionMatrix,
+    RenderingContext.PipelineTransformation.ViewProjectionMatrix^,
     PHomogeneousIntVector(@FViewPort)^,
     rslt) then
     Result := Vector3fMake(rslt)
@@ -7096,7 +7096,7 @@ begin
     if Assigned(FCamera)
       and Project(
       VectorMake(aPoint),
-      RenderingContext.PipelineTransformation.ViewProjectionMatrix,
+      RenderingContext.PipelineTransformation.ViewProjectionMatrix^,
       TVector4i(FViewPort),
       rslt) then
       Result := Vector3fMake(rslt)
@@ -7120,7 +7120,7 @@ begin
   begin
     for i := nbPoints - 1 downto 0 do
     begin
-      Project(points^, RenderingContext.PipelineTransformation.ViewProjectionMatrix, PHomogeneousIntVector(@FViewPort)^, points^);
+      Project(points^, RenderingContext.PipelineTransformation.ViewProjectionMatrix^, PHomogeneousIntVector(@FViewPort)^, points^);
       Inc(points);
     end;
   end;
@@ -7453,7 +7453,7 @@ begin
   with RenderingContext.GLStates do
   begin
     PrepareRenderingMatrices(aViewPort, resolution);
-    if not ForwardContext then
+{    if not ForwardContext then}
     begin
       xgl.MapTexCoordToNull; // force XGL rebind
       xgl.MapTexCoordToMain;
@@ -7471,7 +7471,7 @@ begin
       with FCamera.FScene do
       begin
         SetupLights(MaxLights);
-        if not ForwardContext then
+{        if not ForwardContext then}
         begin
           if FogEnable then
           begin

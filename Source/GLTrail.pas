@@ -213,8 +213,6 @@ begin
      end;
 end;
 
-
-
 function TGLTrail.CreateMark(const p1,p2: TVector3f; CurrentTime : Double): boolean;
 var
    diff: integer;

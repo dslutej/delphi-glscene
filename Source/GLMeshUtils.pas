@@ -2022,8 +2022,7 @@ begin
   Assert(Assigned(AindicesList));
   Assert(Assigned(AVerticesList));
   PrimitiveNum := Count div 3;
-  Count := 3 * PrimitiveNum;
-  Assert(Count > 0);
+  Assert(PrimitiveNum > 0);
   IndicesList := AindicesList;
   VerticesList := AVerticesList;
 

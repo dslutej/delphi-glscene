@@ -75,11 +75,11 @@ type
     function GetModelMatrix: TMatrix; inline;
     function GetViewMatrix: TMatrix; inline;
     function GetProjectionMatrix: TMatrix; inline;
-    function GetModelViewMatrix: TMatrix; inline;
-    function GetInvModelViewMatrix: TMatrix; inline;
-    function GetInvModelMatrix: TMatrix; inline;
-    function GetNormalModelMatrix: TAffineMatrix; inline;
-    function GetViewProjectionMatrix: TMatrix; inline;
+    function GetModelViewMatrix: PMatrix; inline;
+    function GetInvModelViewMatrix: PMatrix; inline;
+    function GetInvModelMatrix: PMatrix; inline;
+    function GetNormalModelMatrix: PAffineMatrix; inline;
+    function GetViewProjectionMatrix: PMatrix; inline;
     function GetFrustum: TFrustum; inline;
 
     procedure SetModelMatrix(const AMatrix: TMatrix); inline;
@@ -104,11 +104,11 @@ type
     property ViewMatrix: TMatrix read GetViewMatrix write SetViewMatrix;
     property ProjectionMatrix: TMatrix read GetProjectionMatrix write SetProjectionMatrix;
 
-    property InvModelMatrix: TMatrix read GetInvModelMatrix;
-    property ModelViewMatrix: TMatrix read GetModelViewMatrix;
-    property NormalModelMatrix: TAffineMatrix read GetNormalModelMatrix;
-    property InvModelViewMatrix: TMatrix read GetInvModelViewMatrix;
-    property ViewProjectionMatrix: TMatrix read GetViewProjectionMatrix;
+    property InvModelMatrix: PMatrix read GetInvModelMatrix;
+    property ModelViewMatrix: PMatrix read GetModelViewMatrix;
+    property NormalModelMatrix: PAffineMatrix read GetNormalModelMatrix;
+    property InvModelViewMatrix: PMatrix read GetInvModelViewMatrix;
+    property ViewProjectionMatrix: PMatrix read GetViewProjectionMatrix;
     property Frustum: TFrustum read GetFrustum;
 
     property LoadMatricesEnabled: Boolean read FLoadMatricesEnabled write FLoadMatricesEnabled;
@@ -140,15 +140,12 @@ end;
 
 procedure TGLTransformation.LoadProjectionMatrix;
 begin
-  with GL do
-  begin
-    MatrixMode(GL_PROJECTION);
-    LoadMatrixf(PGLFloat(@FStack[FStackPos].FProjectionMatrix));
-    MatrixMode(GL_MODELVIEW);
-  end;
+  GL.MatrixMode(GL_PROJECTION);
+  GL.LoadMatrixf(PGLFloat(@FStack[FStackPos].FProjectionMatrix));
+  GL.MatrixMode(GL_MODELVIEW);
 end;
 
-function TGLTransformation.GetModelViewMatrix: TMatrix;
+function TGLTransformation.GetModelViewMatrix: PMatrix;
 begin
   if trsModelViewChanged in FStack[FStackPos].FStates then
   begin
@@ -156,15 +153,12 @@ begin
       MatrixMultiply(FStack[FStackPos].FModelMatrix, FStack[FStackPos].FViewMatrix);
     Exclude(FStack[FStackPos].FStates, trsModelViewChanged);
   end;
-  Result := FStack[FStackPos].FModelViewMatrix;
+  Result := @FStack[FStackPos].FModelViewMatrix;
 end;
 
 procedure TGLTransformation.LoadModelViewMatrix;
-var
-  M: TMatrix;
 begin
-  M := GetModelViewMatrix;
-  GL.LoadMatrixf(PGLFloat(@M));
+  GL.LoadMatrixf(PGLFloat(GetModelViewMatrix));
 end;
 
 procedure TGLTransformation.IdentityAll;
@@ -319,28 +313,28 @@ begin
 end;
 
 
-function TGLTransformation.GetInvModelViewMatrix: TMatrix;
+function TGLTransformation.GetInvModelViewMatrix: PMatrix;
 begin
   if trsInvModelViewChanged in FStack[FStackPos].FStates then
   begin
-    FStack[FStackPos].FInvModelViewMatrix := GetModelViewMatrix;
+    FStack[FStackPos].FInvModelViewMatrix := GetModelViewMatrix^;
     InvertMatrix(FStack[FStackPos].FInvModelViewMatrix);
     Exclude(FStack[FStackPos].FStates, trsInvModelViewChanged);
   end;
-  Result := FStack[FStackPos].FInvModelViewMatrix;
+  Result := @FStack[FStackPos].FInvModelViewMatrix;
 end;
 
-function TGLTransformation.GetInvModelMatrix: TMatrix;
+function TGLTransformation.GetInvModelMatrix: PMatrix;
 begin
   if trsInvModelChanged in FStack[FStackPos].FStates then
   begin
     FStack[FStackPos].FInvModelMatrix := MatrixInvert(FStack[FStackPos].FModelMatrix);
     Exclude(FStack[FStackPos].FStates, trsInvModelChanged);
   end;
-  Result := FStack[FStackPos].FInvModelMatrix;
+  Result := @FStack[FStackPos].FInvModelMatrix;
 end;
 
-function TGLTransformation.GetNormalModelMatrix: TAffineMatrix;
+function TGLTransformation.GetNormalModelMatrix: PAffineMatrix;
 var
   M: TMatrix;
 begin
@@ -351,10 +345,10 @@ begin
     SetMatrix(FStack[FStackPos].FNormalModelMatrix, M);
     Exclude(FStack[FStackPos].FStates, trsNormalModelChanged);
   end;
-  Result := FStack[FStackPos].FNormalModelMatrix;
+  Result := @FStack[FStackPos].FNormalModelMatrix;
 end;
 
-function TGLTransformation.GetViewProjectionMatrix: TMatrix;
+function TGLTransformation.GetViewProjectionMatrix: PMatrix;
 begin
   if trsViewProjChanged in FStack[FStackPos].FStates then
   begin
@@ -362,14 +356,14 @@ begin
       MatrixMultiply(FStack[FStackPos].FViewMatrix, FStack[FStackPos].FProjectionMatrix);
     Exclude(FStack[FStackPos].FStates, trsViewProjChanged);
   end;
-  Result := FStack[FStackPos].FViewProjectionMatrix;
+  Result := @FStack[FStackPos].FViewProjectionMatrix;
 end;
 
 function TGLTransformation.GetFrustum: TFrustum;
 begin
   if trsFrustum in FStack[FStackPos].FStates then
   begin
-    FStack[FStackPos].FFrustum := ExtractFrustumFromModelViewProjection(GetViewProjectionMatrix);
+    FStack[FStackPos].FFrustum := ExtractFrustumFromModelViewProjection(GetViewProjectionMatrix^);
     Exclude(FStack[FStackPos].FStates, trsFrustum);
   end;
   Result := FStack[FStackPos].FFrustum;

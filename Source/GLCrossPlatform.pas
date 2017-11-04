@@ -201,22 +201,22 @@ function RelativePath(const S: string): string;
    precision time reference available, avoiding, if possible, timers that
    allocate specific system resources. }
 procedure QueryPerformanceCounter(out val: Int64);
-{Returns the frequency of the counter used by QueryPerformanceCounter. 
+{Returns the frequency of the counter used by QueryPerformanceCounter.
    Return value is in ticks per second (Hz), returns False if no precision
    counter is available. }
 function QueryPerformanceFrequency(out val: Int64): Boolean;
 
-{Starts a precision timer. 
+{Starts a precision timer.
    Returned value should just be considered as 'handle', even if it ain't so.
    Default platform implementation is to use QueryPerformanceCounter and
    QueryPerformanceFrequency, if higher precision references are available,
    they should be used. The timer will and must be stopped/terminated/released
    with StopPrecisionTimer. }
 function StartPrecisionTimer: Int64;
-{Computes time elapsed since timer start. 
+{Computes time elapsed since timer start.
    Return time lap in seconds. }
 function PrecisionTimerLap(const precisionTimer: Int64): Double;
-{Computes time elapsed since timer start and stop timer. 
+{Computes time elapsed since timer start and stop timer.
    Return time lap in seconds. }
 function StopPrecisionTimer(const precisionTimer: Int64): Double;
 
@@ -591,7 +591,7 @@ begin
   with SystemTime do
     Result := (wHour * (MinsPerHour * SecsPerMin * MSecsPerSec) +
              wMinute * (SecsPerMin * MSecsPerSec) +
-             wSecond * MSecsPerSec +
+               wSecond * MSecsPerSec +
              wMilliSeconds) - vGLSStartTime;
   // Hack to fix time precession
   if Result - vLastTime = 0 then

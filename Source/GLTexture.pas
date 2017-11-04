@@ -2479,7 +2479,7 @@ begin
       ActiveTextureEnabled[FTextureHandle.Target] := True;
     end;
 
-    if not rci.GLStates.ForwardContext then
+{    if not rci.GLStates.ForwardContext then}
     begin
       if FTextureHandle.Target = ttTextureCube then
         SetCubeMapTextureMatrix;
@@ -2490,7 +2490,7 @@ begin
       xgl.MapTexCoordToMain;
     end;
   end
-  else if not rci.GLStates.ForwardContext then
+  else {if not rci.GLStates.ForwardContext then}
   begin // default
     xgl.MapTexCoordToMain;
   end;
@@ -2499,7 +2499,7 @@ end;
 procedure TGLTexture.UnApply(var rci: TGLRenderContextInfo);
 begin
   if not Disabled
-    and not rci.GLStates.ForwardContext then
+    {and not rci.GLStates.ForwardContext} then
   begin
     // Multisample image do not work with FFP
     if FTextureHandle.Target in [ttNoShape, ttTexture2DMultisample, ttTexture2DMultisampleArray] then
@@ -2547,13 +2547,13 @@ begin
         SetGLTextureMatrix(textureMatrix^)
       else if FTextureHandle.Target = ttTextureCube then
       begin
-        m := rci.PipelineTransformation.ModelViewMatrix;
+        m := rci.PipelineTransformation.ModelViewMatrix^;
         NormalizeMatrix(m);
         TransposeMatrix(m);
         rci.GLStates.SetGLTextureMatrix(m);
       end;
 
-      if not ForwardContext then
+      {if not ForwardContext then}
       begin
         GL.TexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, cTextureMode[FTextureMode]);
         GL.TexEnvfv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, FEnvColor.AsAddress);
@@ -2567,7 +2567,7 @@ end;
 procedure TGLTexture.UnApplyAsTextureN(n: Integer; var rci: TGLRenderContextInfo;
   reloadIdentityTextureMatrix: boolean);
 begin
-  if not rci.GLStates.ForwardContext then
+{  if not rci.GLStates.ForwardContext then}
   begin
     // Multisample image do not work with FFP
     if (FTextureHandle.Target = ttTexture2DMultisample) or
@@ -2951,7 +2951,7 @@ begin
       cTextureCompareMode[fTextureCompareMode]);
     GL.TexParameteri(target, GL_TEXTURE_COMPARE_FUNC,
       cGLComparisonFunctionToGLEnum[fTextureCompareFunc]);
-    if not FTextureHandle.RenderingContext.GLStates.ForwardContext then
+{    if not FTextureHandle.RenderingContext.GLStates.ForwardContext then}
       GL.TexParameteri(target, GL_DEPTH_TEXTURE_MODE,
         cDepthTextureMode[fDepthTextureMode]);
   end;

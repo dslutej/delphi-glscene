@@ -75,7 +75,6 @@ begin
         cube.Material.BlendingMode := bmTransparency;
         with cube.Material.FrontProperties do
         begin
-          Color := Random(1);
           Diffuse.Color := VectorLerp(clrBlue, clrWhite, (x * x + y * y + z * z)
             / (cSize * cSize * 3));
           Diffuse.Alpha := 0.5;
