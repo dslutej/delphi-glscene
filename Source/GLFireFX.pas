@@ -789,7 +789,7 @@ begin
   rci.PipelineTransformation.Push;
   // revert to the base model matrix in the case of a referenced fire
   if Assigned(Manager.Reference) then
-    rci.PipelineTransformation.ModelMatrix := IdentityHmgMatrix;
+    rci.PipelineTransformation.SetModelMatrix(IdentityHmgMatrix);
 
   rci.GLStates.CurrentProgram := 0;
   rci.GLStates.Disable(stCullFace);
@@ -827,7 +827,7 @@ begin
         SetVector(lastTr, fp^.Position);
         innerColor.W := fp^.Alpha * fp^.TimeToLive / Sqr(fp^.LifeLength);
         GL.Color4fv(@innerColor);
-        Manager.AffParticle3d(Manager.FOuterColor.Color, rci.PipelineTransformation.ViewMatrix);
+        Manager.AffParticle3d(Manager.FOuterColor.Color, rci.PipelineTransformation.ViewMatrix^);
       end;
 
     objList.Free;

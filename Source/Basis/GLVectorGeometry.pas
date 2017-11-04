@@ -989,8 +989,8 @@ procedure NormalizePlane(var plane: THmgPlane);
   This functions gives an hint as to were the point is, if the point is in the
   half-space pointed by the vector, result is positive.
   This function performs an homogeneous space dot-product. }
-function PlaneEvaluatePoint(const plane: THmgPlane; const point: TAffineVector): Single; overload;
-function PlaneEvaluatePoint(const plane: THmgPlane; const point: TVector): Single; overload;
+function PlaneEvaluatePoint(const plane: THmgPlane; const point: TAffineVector): Single; overload; inline;
+function PlaneEvaluatePoint(const plane: THmgPlane; const point: TVector): Single; overload; inline;
 
 { Calculate the normal of a plane defined by three points. }
 function CalcPlaneNormal(const p1, p2, p3: TAffineVector): TAffineVector; overload;
@@ -5222,59 +5222,19 @@ begin
   ScaleVector(plane, n);
 end;
 
-{$IFDEF GLS_ASM}
-function PlaneEvaluatePoint(const plane: THmgPlane;
-  const point: TAffineVector): Single;
-// EAX contains address of plane
-// EDX contains address of point
-// result is stored in ST(0)
-asm
-  FLD DWORD PTR [EAX]
-  FMUL DWORD PTR [EDX]
-  FLD DWORD PTR [EAX + 4]
-  FMUL DWORD PTR [EDX + 4]
-  FADDP
-  FLD DWORD PTR [EAX + 8]
-  FMUL DWORD PTR [EDX + 8]
-  FADDP
-  FLD DWORD PTR [EAX + 12]
-  FADDP
-end;
-{$ELSE}
 function PlaneEvaluatePoint(const plane: THmgPlane;
   const point: TAffineVector): Single;
 begin
   result := plane.X * point.X + plane.Y * point.Y + plane.Z *
     point.Z + plane.W;
 end;
-{$ENDIF}
 
-{$IFDEF GLS_ASM}
-function PlaneEvaluatePoint(const plane: THmgPlane;
-  const point: TVector): Single;
-// EAX contains address of plane
-// EDX contains address of point
-// result is stored in ST(0)
-asm
-  FLD DWORD PTR [EAX]
-  FMUL DWORD PTR [EDX]
-  FLD DWORD PTR [EAX + 4]
-  FMUL DWORD PTR [EDX + 4]
-  FADDP
-  FLD DWORD PTR [EAX + 8]
-  FMUL DWORD PTR [EDX + 8]
-  FADDP
-  FLD DWORD PTR [EAX + 12]
-  FADDP
-end;
-{$ELSE}
 function PlaneEvaluatePoint(const plane: THmgPlane;
   const point: TVector): Single;
 begin
   result := plane.X * point.X + plane.Y * point.Y + plane.Z *
     point.Z + plane.W;
 end;
-{$ENDIF}
 
 {$IFDEF GLS_ASM}
 function PointIsInHalfSpace(const point, planePoint,

@@ -1777,7 +1777,7 @@ begin
     FLastSortTime := StopPrecisionTimer(timer) * 1000;
 
     rci.PipelineTransformation.Push;
-    rci.PipelineTransformation.ModelMatrix := IdentityHmgMatrix;
+    rci.PipelineTransformation.SetModelMatrix(IdentityHmgMatrix);
 
     rci.GLStates.Disable(stCullFace);
     rci.GLStates.ActiveTextureEnabled[ttTexture2D] := True;

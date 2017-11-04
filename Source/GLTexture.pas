@@ -2428,7 +2428,7 @@ procedure TGLTexture.Apply(var rci: TGLRenderContextInfo);
     case MappingMode of
       tmmCubeMapReflection, tmmCubeMapNormal:
         begin
-          m := rci.PipelineTransformation.ViewMatrix;
+          m := rci.PipelineTransformation.ViewMatrix^;
           NormalizeMatrix(m);
           TransposeMatrix(m);
           rci.GLStates.SetGLTextureMatrix(m);
@@ -2440,7 +2440,7 @@ procedure TGLTexture.Apply(var rci: TGLRenderContextInfo);
             begin
               m := TGLLightSource(Items[0]).AbsoluteMatrix;
               NormalizeMatrix(m);
-              mm := rci.PipelineTransformation.ViewMatrix;
+              mm := rci.PipelineTransformation.ViewMatrix^;
               NormalizeMatrix(mm);
               TransposeMatrix(mm);
               m := MatrixMultiply(m, mm);
@@ -2453,7 +2453,7 @@ procedure TGLTexture.Apply(var rci: TGLRenderContextInfo);
           m.Y := VectorNegate(rci.cameraDirection);
           m.Z := rci.cameraUp;
           m.W := WHmgPoint;
-          mm := rci.PipelineTransformation.ViewMatrix;
+          mm := rci.PipelineTransformation.ViewMatrix^;
           NormalizeMatrix(mm);
           TransposeMatrix(mm);
           m := MatrixMultiply(m, mm);

@@ -215,7 +215,7 @@ begin
   TexMatrix := MatrixMultiply(
     CreatePerspectiveMatrix(FFOV, FAspect, 0.1, 1), cBaseMat);
   TexMatrix := MatrixMultiply(
-    CurrentGLContext.PipelineTransformation.InvModelViewMatrix, TexMatrix);
+    CurrentGLContext.PipelineTransformation.InvModelViewMatrix^, TexMatrix);
 end;
 
 procedure TGLSLTextureEmitter.SetAllowReverseProjection(val: boolean);

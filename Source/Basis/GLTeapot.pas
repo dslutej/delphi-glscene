@@ -183,7 +183,7 @@ begin
   if ARenderSelf then
   begin
     with ARci.PipelineTransformation do
-      ModelMatrix := MatrixMultiply(M, ModelMatrix);
+      SetModelMatrix(MatrixMultiply(M, ModelMatrix^));
     if ARci.ignoreMaterials then
       if (osDirectDraw in ObjectStyle) or ARci.amalgamating then
         BuildList(ARci)

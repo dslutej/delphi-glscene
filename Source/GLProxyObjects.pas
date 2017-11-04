@@ -542,7 +542,7 @@ begin
         ARci.proxySubObject := True;
         if pooTransformation in ProxyOptions then
           with ARci.PipelineTransformation do
-            ModelMatrix := MatrixMultiply(MasterActor.Matrix, ModelMatrix);
+            SetModelMatrix(MatrixMultiply(MasterActor.Matrix, ModelMatrix^));
 
         // At last TGLActorProxy specific stuff!
         with MasterActor do

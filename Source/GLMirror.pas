@@ -241,7 +241,7 @@ begin
         end;
 
         ARci.PipelineTransformation.Push;
-        ARci.PipelineTransformation.ModelMatrix := IdentityHmgMatrix;
+        ARci.PipelineTransformation.SetModelMatrix(IdentityHmgMatrix);
 
         Disable(stCullFace);
         Enable(stNormalize);
@@ -258,8 +258,8 @@ begin
         refMat := MakeReflectionMatrix(
           AffineVectorMake(AbsolutePosition),
           AffineVectorMake(AbsoluteDirection));
-        curMat := MatrixMultiply(refMat, ARci.PipelineTransformation.ViewMatrix);
-        ARci.PipelineTransformation.ViewMatrix := curMat;
+        curMat := MatrixMultiply(refMat, ARci.PipelineTransformation.ViewMatrix^);
+        ARci.PipelineTransformation.SetViewMatrix(curMat);
         Scene.SetupLights(CurrentBuffer.LimitOf[limLights]);
 
         // mirror geometry and render master
@@ -278,7 +278,7 @@ begin
           if FMirrorObject.Parent <> nil then
             MatrixMultiply(ModelMat, FMirrorObject.Parent.AbsoluteMatrix, ModelMat);
           MatrixMultiply(ModelMat, FMirrorObject.LocalMatrix^, ModelMat);
-          ARci.PipelineTransformation.ModelMatrix := ModelMat;
+          ARci.PipelineTransformation.SetModelMatrix(ModelMat);
           FMirrorObject.DoRender(ARci, ARenderSelf, FMirrorObject.Count > 0);
         end
         else

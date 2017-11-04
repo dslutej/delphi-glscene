@@ -1514,7 +1514,7 @@ begin
     PolygonMode := FPolygonMode;
 
     // Fixed functionality state
-    if not ARci.GLStates.ForwardContext then
+    if True{ not ARci.GLStates.ForwardContext} then
     begin
       // Lighting switch
       if (moNoLighting in MaterialOptions) or not ARci.bufferLighting then
@@ -3317,7 +3317,7 @@ begin
         if Ord(FLightDir) = N+1 then
         begin
           LDir := ARci.GLStates.LightPosition[FLightSourceIndex];
-          LDir := VectorTransform(LDir, ARci.PipelineTransformation.InvModelMatrix);
+          LDir := VectorTransform(LDir, ARci.PipelineTransformation.InvModelMatrix^);
           NormalizeVector(LDir);
           GL.TexEnvfv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, @LDir);
         end;
@@ -5049,7 +5049,7 @@ end;
 
 procedure TGLBaseShaderModel.UnApply(var ARci: TGLRenderContextInfo);
 begin
-  if FIsValid and not ARci.GLStates.ForwardContext then
+  if FIsValid {and not ARci.GLStates.ForwardContext} then
     FHandle.EndUseProgramObject;
 end;
 
@@ -6916,13 +6916,13 @@ end;
 procedure TStandartUniformAutoSetExecutor.SetInvModelMatrix(Sender:
   IShaderParameter; var ARci: TGLRenderContextInfo);
 begin
-  Sender.mat4 := ARci.PipelineTransformation.InvModelMatrix;
+  Sender.mat4 := ARci.PipelineTransformation.InvModelMatrix^;
 end;
 
 procedure TStandartUniformAutoSetExecutor.SetInvModelViewMatrix(Sender:
   IShaderParameter; var ARci: TGLRenderContextInfo);
 begin
-  Sender.mat4 := ARci.PipelineTransformation.InvModelViewMatrix;
+  Sender.mat4 := ARci.PipelineTransformation.InvModelViewMatrix^;
 end;
 
 procedure TStandartUniformAutoSetExecutor.SetLightSource0Position(Sender:
@@ -6994,45 +6994,45 @@ end;
 procedure TStandartUniformAutoSetExecutor.SetModelMatrix(Sender:
   IShaderParameter; var ARci: TGLRenderContextInfo);
 begin
-  Sender.mat4 := ARci.PipelineTransformation.ModelMatrix;
+  Sender.mat4 := ARci.PipelineTransformation.ModelMatrix^;
 end;
 
 procedure TStandartUniformAutoSetExecutor.SetModelViewMatrix(Sender:
   IShaderParameter; var ARci: TGLRenderContextInfo);
 begin
-  Sender.mat4 := ARci.PipelineTransformation.ModelViewMatrix;
+  Sender.mat4 := ARci.PipelineTransformation.ModelViewMatrix^;
 end;
 
 procedure TStandartUniformAutoSetExecutor.SetNormalModelMatrix(Sender:
   IShaderParameter; var ARci: TGLRenderContextInfo);
 begin
-  Sender.mat3 := ARci.PipelineTransformation.NormalModelMatrix;
+  Sender.mat3 := ARci.PipelineTransformation.NormalModelMatrix^;
 end;
 
 procedure TStandartUniformAutoSetExecutor.SetProjectionMatrix(Sender:
   IShaderParameter; var ARci: TGLRenderContextInfo);
 begin
-  Sender.mat4 := ARci.PipelineTransformation.ProjectionMatrix;
+  Sender.mat4 := ARci.PipelineTransformation.ProjectionMatrix^;
 end;
 
 procedure TStandartUniformAutoSetExecutor.SetViewMatrix(Sender:
   IShaderParameter; var ARci: TGLRenderContextInfo);
 begin
-  Sender.mat4 := ARci.PipelineTransformation.ViewMatrix;
+  Sender.mat4 := ARci.PipelineTransformation.ViewMatrix^;
 end;
 
 procedure TStandartUniformAutoSetExecutor.SetViewProjectionMatrix(Sender:
   IShaderParameter; var ARci: TGLRenderContextInfo);
 begin
-  Sender.mat4 := ARci.PipelineTransformation.ViewProjectionMatrix;
+  Sender.mat4 := ARci.PipelineTransformation.ViewProjectionMatrix^;
 end;
 
 procedure TStandartUniformAutoSetExecutor.SetWorldViewProjectionMatrix(Sender:
   IShaderParameter; var ARci: TGLRenderContextInfo);
 begin
   Sender.mat4 := MatrixMultiply(
-    ARci.PipelineTransformation.ModelViewMatrix,
-    ARci.PipelineTransformation.ProjectionMatrix);
+    ARci.PipelineTransformation.ModelViewMatrix^,
+    ARci.PipelineTransformation.ProjectionMatrix^);
 end;
 
 

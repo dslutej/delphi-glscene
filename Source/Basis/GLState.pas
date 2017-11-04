@@ -1469,15 +1469,16 @@ begin
   currentFace := cGLCullFaceModeToGLEnum[aFace];
 
   if FInsideList then
-  begin{
+  begin
+
     GL.Materiali(currentFace,  GL_SHININESS, shininess);
     GL.Materialfv(currentFace, GL_EMISSION,  @emission);
     GL.Materialfv(currentFace, GL_AMBIENT,   @ambient);
     GL.Materialfv(currentFace, GL_DIFFUSE,   @diffuse);
-    GL.Materialfv(currentFace, GL_SPECULAR,  @specular);}
+    GL.Materialfv(currentFace, GL_SPECULAR,  @specular);
     Include(FListStates[FCurrentList], sttLighting);
-  end;
-{  else }begin
+  end
+  else begin
     if (FFrontBackShininess[i] <> shininess) then
     begin
       GL.Materiali(currentFace, GL_SHININESS, shininess);
@@ -3011,8 +3012,8 @@ begin
   Assert(mode = GL_COMPILE,
     'Compile & executing not supported by TGLStateCache');
   FCurrentList := list - 1;
-  while High(FListStates) < Integer(FCurrentList) do
-    SetLength(FListStates, 2 * Length(FListStates));
+//  while High(FListStates) < Integer(FCurrentList) do
+//    SetLength(FListStates, 2 * Length(FListStates));
 
   FListStates[FCurrentList] := [];
   FInsideList := True;

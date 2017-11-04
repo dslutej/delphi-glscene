@@ -72,9 +72,9 @@ type
     FStack: array of TTransformationRec;
     FLoadMatricesEnabled: Boolean;
     FOnPush: TOnMatricesPush;
-    function GetModelMatrix: TMatrix; inline;
-    function GetViewMatrix: TMatrix; inline;
-    function GetProjectionMatrix: TMatrix; inline;
+    function GetModelMatrix: PMatrix; inline;
+    function GetViewMatrix: PMatrix; inline;
+    function GetProjectionMatrix: PMatrix; inline;
     function GetModelViewMatrix: PMatrix; inline;
     function GetInvModelViewMatrix: PMatrix; inline;
     function GetInvModelMatrix: PMatrix; inline;
@@ -82,9 +82,6 @@ type
     function GetViewProjectionMatrix: PMatrix; inline;
     function GetFrustum: TFrustum; inline;
 
-    procedure SetModelMatrix(const AMatrix: TMatrix); inline;
-    procedure SetViewMatrix(const AMatrix: TMatrix); inline;
-    procedure SetProjectionMatrix(const AMatrix: TMatrix); inline;
   protected
     procedure LoadModelViewMatrix; inline;
     procedure LoadProjectionMatrix; inline;
@@ -93,6 +90,10 @@ type
   public
     constructor Create;
 
+    procedure SetModelMatrix(const AMatrix: TMatrix); inline;
+    procedure SetViewMatrix(const AMatrix: TMatrix); inline;
+    procedure SetProjectionMatrix(const AMatrix: TMatrix); inline;
+
     procedure IdentityAll; inline;
     procedure Push(AValue: PTransformationRec); overload;
     procedure Push(); overload; inline;
@@ -100,9 +101,9 @@ type
     procedure ReplaceFromStack;
     function StackTop: TTransformationRec; inline;
 
-    property ModelMatrix: TMatrix read GetModelMatrix write SetModelMatrix;
-    property ViewMatrix: TMatrix read GetViewMatrix write SetViewMatrix;
-    property ProjectionMatrix: TMatrix read GetProjectionMatrix write SetProjectionMatrix;
+    property ModelMatrix: PMatrix read GetModelMatrix;
+    property ViewMatrix: PMatrix read GetViewMatrix;
+    property ProjectionMatrix: PMatrix read GetProjectionMatrix;
 
     property InvModelMatrix: PMatrix read GetInvModelMatrix;
     property ModelViewMatrix: PMatrix read GetModelViewMatrix;
@@ -265,19 +266,19 @@ end;
 
 
 
-function TGLTransformation.GetModelMatrix: TMatrix;
+function TGLTransformation.GetModelMatrix: PMatrix;
 begin
-  Result := FStack[FStackPos].FModelMatrix;
+  Result := @FStack[FStackPos].FModelMatrix;
 end;
 
-function TGLTransformation.GetViewMatrix: TMatrix;
+function TGLTransformation.GetViewMatrix: PMatrix;
 begin
-  Result := FStack[FStackPos].FViewMatrix;
+  Result := @FStack[FStackPos].FViewMatrix;
 end;
 
-function TGLTransformation.GetProjectionMatrix: TMatrix;
+function TGLTransformation.GetProjectionMatrix: PMatrix;
 begin
-  Result := FStack[FStackPos].FProjectionMatrix;
+  Result := @FStack[FStackPos].FProjectionMatrix;
 end;
 
 procedure TGLTransformation.SetModelMatrix(const AMatrix: TMatrix);

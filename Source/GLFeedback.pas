@@ -166,12 +166,12 @@ begin
     ARci.GLStates.Disable(stCullFace);
     ARci.ignoreMaterials := FMode < fm3DColor;
     ARci.PipelineTransformation.Push;
-    ARci.PipelineTransformation.ProjectionMatrix := IdentityHmgMatrix;
-    ARci.PipelineTransformation.ViewMatrix :=
+    ARci.PipelineTransformation.SetProjectionMatrix(IdentityHmgMatrix);
+    ARci.PipelineTransformation.SetViewMatrix(
       CreateScaleMatrix(VectorMake(
         1.0 / FCorrectionScaling,
         1.0 / FCorrectionScaling,
-        1.0 / FCorrectionScaling));
+        1.0 / FCorrectionScaling)));
     ARci.GLStates.ViewPort := Vector4iMake(-1, -1, 2, 2);
     GL.RenderMode(GL_FEEDBACK);
 

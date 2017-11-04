@@ -179,8 +179,8 @@ type
      encouraged. }
   TGLBaseSceneObject = class(TGLCoordinatesUpdateAbleComponent)
   private
-    FAbsoluteMatrix, FInvAbsoluteMatrix: PMatrix;
-    FLocalMatrix: PMatrix;
+    FAbsoluteMatrix, FInvAbsoluteMatrix: TMatrix;
+    FLocalMatrix: TMatrix;
     FObjectStyle: TGLObjectStyles;
     FPosition: TGLCoordinates;
     FDirection, FUp: TGLCoordinates;
@@ -246,6 +246,8 @@ type
     function GetAbsoluteMatrix: TMatrix; inline;
     procedure SetAbsoluteMatrix(const Value: TMatrix);
     procedure SetBBChanges(const Value: TObjectBBChanges);
+    function GetDirectAbsoluteMatrix: PMatrix;
+    function GetLocalMatrix: PMatrix;
   protected
     FListHandle: TGLListHandle;
     procedure Loaded; override;
@@ -312,7 +314,7 @@ type
     function MatrixAsAddress: PMatrix; inline;
     {Holds the local transformation (relative to parent).
        If you're not *sure* the local matrix is up-to-date, use Matrix property. }
-    property LocalMatrix: PMatrix read FLocalMatrix;
+    property LocalMatrix: PMatrix read GetLocalMatrix;
     {Forces the local matrix to the specified value.
        AbsoluteMatrix, InverseMatrix, etc. will honour that change, but
        may become invalid if the specified matrix isn't orthonormal (can
@@ -325,7 +327,7 @@ type
     {Holds the absolute transformation matrix.
        If you're not *sure* the absolute matrix is up-to-date,
        use the AbsoluteMatrix property, this one may be nil... }
-    property DirectAbsoluteMatrix: PMatrix read FAbsoluteMatrix;
+    property DirectAbsoluteMatrix: PMatrix read GetDirectAbsoluteMatrix;
     {Calculates the object's absolute inverse matrix.
        Multiplying an absolute coordinate with this matrix gives a local coordinate.
        The current implem uses transposition(AbsoluteMatrix), which is true
@@ -535,7 +537,7 @@ type
        suits you, you can give an "absolute" meaning to rotation angles
        (they are still applied locally though).
        Scale and Position are not affected. }
-    procedure ResetRotations; inline;
+    procedure ResetRotations;
     {Reset rotations and applies them back in the specified order. }
     procedure ResetAndPitchTurnRoll(const degX, degY, degZ: Single);
     {Applies rotations around absolute X, Y and Z axis.  }
@@ -1974,8 +1976,7 @@ begin
   FDirection := TGLCoordinates.CreateInitialized(Self, ZHmgVector, csVector);
   FUp := TGLCoordinates.CreateInitialized(Self, YHmgVector, csVector);
   FScaling := TGLCoordinates.CreateInitialized(Self, XYZHmgVector, csVector);
-  GetMem(FLocalMatrix, SizeOf(TMatrix));
-  FLocalMatrix^ := IdentityHmgMatrix;
+  FLocalMatrix := IdentityHmgMatrix;
   FVisible := True;
   FPickable := True;
   FObjectsSorting := osInherited;
@@ -2001,11 +2002,6 @@ end;
 destructor TGLBaseSceneObject.Destroy;
 begin
   DeleteChildCameras;
-  if assigned(FLocalMatrix) then
-    FreeMem(FLocalMatrix, SizeOf(TMatrix));
-  if assigned(FAbsoluteMatrix) then
-    // This bug have coming surely from a bad commit file.
-    FreeMem(FAbsoluteMatrix, SizeOf(TMatrix) * 2);
   // k00m memory fix and remove some leak of the old version.
   FGLObjectEffects.Free;
   FGLBehaviours.Free;
@@ -2278,6 +2274,11 @@ begin
   Result := FChildren.Count;
 end;
 
+function TGLBaseSceneObject.GetDirectAbsoluteMatrix: PMatrix;
+begin
+  Result := @FAbsoluteMatrix;
+end;
+
 function TGLBaseSceneObject.HasSubChildren: Boolean;
 var
   I: Integer;
@@ -2349,10 +2350,10 @@ procedure TGLBaseSceneObject.RebuildMatrix;
 begin
   if ocTransformation in Changes then
   begin
-    VectorScale(LeftVector, Scale.X, FLocalMatrix^.X);
-    VectorScale(FUp.AsVector, Scale.Y, FLocalMatrix^.Y);
-    VectorScale(FDirection.AsVector, Scale.Z, FLocalMatrix^.Z);
-    SetVector(FLocalMatrix^.W, FPosition.AsVector);
+    VectorScale(LeftVector, Scale.X, FLocalMatrix.X);
+    VectorScale(FUp.AsVector, Scale.Y, FLocalMatrix.Y);
+    VectorScale(FDirection.AsVector, Scale.Z, FLocalMatrix.Z);
+    SetVector(FLocalMatrix.W, FPosition.AsVector);
     Exclude(FChanges, ocTransformation);
     Include(FChanges, ocAbsoluteMatrix);
     Include(FChanges, ocInvAbsoluteMatrix);
@@ -2361,7 +2362,7 @@ end;
 
 procedure TGLBaseSceneObject.ForceLocalMatrix(const aMatrix: TMatrix);
 begin
-  FLocalMatrix^ := aMatrix;
+  FLocalMatrix := aMatrix;
   Exclude(FChanges, ocTransformation);
   Include(FChanges, ocAbsoluteMatrix);
   Include(FChanges, ocInvAbsoluteMatrix);
@@ -2372,23 +2373,18 @@ begin
   if ocAbsoluteMatrix in FChanges then
   begin
     RebuildMatrix;
-    if not Assigned(FAbsoluteMatrix) then
-    begin
-      GetMem(FAbsoluteMatrix, SizeOf(TMatrix) * 2);
-      FInvAbsoluteMatrix := PMatrix(PtrUInt(FAbsoluteMatrix) + SizeOf(TMatrix));
-    end;
     if Assigned(Parent) {and (not (Parent is TGLSceneRootObject))} then
     begin
-      MatrixMultiply(FLocalMatrix^,
+      MatrixMultiply(FLocalMatrix,
         TGLBaseSceneObject(Parent).AbsoluteMatrixAsAddress^,
-        FAbsoluteMatrix^);
+        FAbsoluteMatrix);
     end
     else
-      FAbsoluteMatrix^ := FLocalMatrix^;
+      FAbsoluteMatrix := FLocalMatrix;
     Exclude(FChanges, ocAbsoluteMatrix);
     Include(FChanges, ocInvAbsoluteMatrix);
   end;
-  Result := FAbsoluteMatrix;
+  Result := @FAbsoluteMatrix;
 end;
 
 function TGLBaseSceneObject.InvAbsoluteMatrix: TMatrix;
@@ -2402,28 +2398,22 @@ begin
   begin
     if VectorEquals(Scale.DirectVector, XYZHmgVector) then
     begin
-      if not Assigned(FAbsoluteMatrix) then
-      begin
-        GetMem(FAbsoluteMatrix, SizeOf(TMatrix) * 2);
-        FInvAbsoluteMatrix := PMatrix(PtrUInt(FAbsoluteMatrix) +
-          SizeOf(TMatrix));
-      end;
       RebuildMatrix;
       if Parent <> nil then
-        FInvAbsoluteMatrix^ :=
+        FInvAbsoluteMatrix :=
           MatrixMultiply(Parent.InvAbsoluteMatrixAsAddress^,
-          AnglePreservingMatrixInvert(FLocalMatrix^))
+          AnglePreservingMatrixInvert(FLocalMatrix))
       else
-        FInvAbsoluteMatrix^ := AnglePreservingMatrixInvert(FLocalMatrix^);
+        FInvAbsoluteMatrix := AnglePreservingMatrixInvert(FLocalMatrix);
     end
     else
     begin
-      FInvAbsoluteMatrix^ := AbsoluteMatrixAsAddress^;
-      InvertMatrix(FInvAbsoluteMatrix^);
+      FInvAbsoluteMatrix := AbsoluteMatrixAsAddress^;
+      InvertMatrix(FInvAbsoluteMatrix);
     end;
     Exclude(FChanges, ocInvAbsoluteMatrix);
   end;
-  Result := FInvAbsoluteMatrix;
+  Result := @FInvAbsoluteMatrix;
 end;
 
 function TGLBaseSceneObject.GetAbsoluteMatrix: TMatrix;
@@ -2433,11 +2423,11 @@ end;
 
 procedure TGLBaseSceneObject.SetAbsoluteMatrix(const Value: TMatrix);
 begin
-  if not MatrixEquals(Value, FAbsoluteMatrix^) then
+  if not MatrixEquals(Value, FAbsoluteMatrix) then
   begin
-    FAbsoluteMatrix^ := Value;
+    FAbsoluteMatrix := Value;
     if Parent <> nil then
-      SetMatrix(MatrixMultiply(FAbsoluteMatrix^,
+      SetMatrix(MatrixMultiply(FAbsoluteMatrix,
         Parent.InvAbsoluteMatrixAsAddress^))
     else
       SetMatrix(Value);
@@ -2900,7 +2890,7 @@ begin
     DestroyHandles;
     FVisible := TGLBaseSceneObject(Source).FVisible;
     TGLBaseSceneObject(Source).RebuildMatrix;
-    SetMatrix(TGLBaseSceneObject(Source).FLocalMatrix^);
+    SetMatrix(TGLBaseSceneObject(Source).FLocalMatrix);
     FShowAxes := TGLBaseSceneObject(Source).FShowAxes;
     FObjectsSorting := TGLBaseSceneObject(Source).FObjectsSorting;
     FVisibilityCulling := TGLBaseSceneObject(Source).FVisibilityCulling;
@@ -2973,11 +2963,11 @@ end;
 
 procedure TGLBaseSceneObject.ResetRotations;
 begin
-  FillChar(FLocalMatrix^, SizeOf(TMatrix), 0);
-  FLocalMatrix^.X.X := Scale.DirectX;
-  FLocalMatrix^.Y.Y := Scale.DirectY;
-  FLocalMatrix^.Z.Z := Scale.DirectZ;
-  SetVector(FLocalMatrix^.W, Position.DirectVector);
+  FillChar(FLocalMatrix, SizeOf(TMatrix), 0);
+  FLocalMatrix.X.X := Scale.DirectX;
+  FLocalMatrix.Y.Y := Scale.DirectY;
+  FLocalMatrix.Z.Z := Scale.DirectZ;
+  SetVector(FLocalMatrix.W, Position.DirectVector);
   FRotation.DirectVector := NullHmgPoint;
   FDirection.DirectVector := ZHmgVector;
   FUp.DirectVector := YHmgVector;
@@ -3313,6 +3303,11 @@ begin
     Result := FParent.FChildren.IndexOf(Self)
   else
     Result := -1;
+end;
+
+function TGLBaseSceneObject.GetLocalMatrix: PMatrix;
+begin
+  Result := @FLocalMatrix;
 end;
 
 procedure TGLBaseSceneObject.SetIndex(aValue: Integer);
@@ -3788,10 +3783,9 @@ begin
     RebuildMatrix;
 
   if ARci.proxySubObject then
-    ARci.PipelineTransformation.ModelMatrix :=
-      MatrixMultiply(LocalMatrix^, ARci.PipelineTransformation.ModelMatrix)
+    ARci.PipelineTransformation.SetModelMatrix(MatrixMultiply(LocalMatrix^, ARci.PipelineTransformation.ModelMatrix^))
   else
-    ARci.PipelineTransformation.ModelMatrix := AbsoluteMatrix;
+    ARci.PipelineTransformation.SetModelMatrix(AbsoluteMatrix);
 
   master := nil;
   if ARci.drawState = dsPicking then
@@ -3994,24 +3988,24 @@ end;
 function TGLBaseSceneObject.GetMatrix: TMatrix;
 begin
   RebuildMatrix;
-  Result := FLocalMatrix^;
+  Result := FLocalMatrix;
 end;
 
 function TGLBaseSceneObject.MatrixAsAddress: PMatrix;
 begin
   RebuildMatrix;
-  Result := FLocalMatrix;
+  Result := @FLocalMatrix;
 end;
 
 procedure TGLBaseSceneObject.SetMatrix(const aValue: TMatrix);
 begin
-  FLocalMatrix^ := aValue;
-  FDirection.DirectVector := VectorNormalize(FLocalMatrix^.Z);
-  FUp.DirectVector := VectorNormalize(FLocalMatrix^.Y);
-  Scale.SetVector(VectorLength(FLocalMatrix^.X),
-    VectorLength(FLocalMatrix^.Y),
-    VectorLength(FLocalMatrix^.Z), 0);
-  FPosition.DirectVector := FLocalMatrix^.W;
+  FLocalMatrix := aValue;
+  FDirection.DirectVector := VectorNormalize(FLocalMatrix.Z);
+  FUp.DirectVector := VectorNormalize(FLocalMatrix.Y);
+  Scale.SetVector(VectorLength(FLocalMatrix.X),
+    VectorLength(FLocalMatrix.Y),
+    VectorLength(FLocalMatrix.Z), 0);
+  FPosition.DirectVector := FLocalMatrix.W;
   TransformationChanged;
 end;
 
@@ -4631,7 +4625,7 @@ begin
       LM := CreateLookAtMatrix(absPos, v2, d);
     end;
     with CurrentGLContext.PipelineTransformation do
-      ViewMatrix := MatrixMultiply(LM, ViewMatrix);
+      SetViewMatrix(MatrixMultiply(LM, ViewMatrix^));
     ClearStructureChanged;
   end;
 end;
@@ -4665,7 +4659,7 @@ begin
     vFar := 1;
     mat := CreateOrthoMatrix(vLeft, vRight, vBottom, vTop, FNearPlane, vFar);
     with CurrentGLContext.PipelineTransformation do
-      ProjectionMatrix := MatrixMultiply(mat, ProjectionMatrix);
+      SetProjectionMatrix(MatrixMultiply(mat, ProjectionMatrix^));
     FViewPortRadius := VectorLength(AWidth, AHeight) / 2;
   end
   else if CameraStyle = csCustom then
@@ -4776,7 +4770,7 @@ begin
     end;
 
     with CurrentGLContext.PipelineTransformation do
-      ProjectionMatrix := MatrixMultiply(mat, ProjectionMatrix);
+      SetProjectionMatrix(MatrixMultiply(mat, ProjectionMatrix^));
       FViewPortRadius := VectorLength(vRight, vTop) / FNearPlane
   end;
 end;
@@ -5261,20 +5255,20 @@ begin
         case CamInvarianceMode of
           cimPosition:
             begin
-              ViewMatrix := MatrixMultiply(
+              SetViewMatrix(MatrixMultiply(
                 CreateTranslationMatrix(ARci.cameraPosition),
-                ARci.PipelineTransformation.ViewMatrix);
+                ARci.PipelineTransformation.ViewMatrix^));
             end;
           cimOrientation:
             begin
               // makes the coordinates system more 'intuitive' (Z+ forward)
-              ViewMatrix := CreateScaleMatrix(Vector3fMake(1, -1, -1))
+              SetViewMatrix(CreateScaleMatrix(Vector3fMake(1, -1, -1)))
             end;
         else
           Assert(False);
         end;
         // Apply local transform
-        ModelMatrix := LocalMatrix^;
+        SetModelMatrix(LocalMatrix^);
 
         if ARenderSelf then
         begin
@@ -5483,7 +5477,7 @@ begin
         ARci.proxySubObject := True;
         if pooTransformation in FProxyOptions then
           with ARci.PipelineTransformation do
-            ModelMatrix := MatrixMultiply(FMasterObject.Matrix, ModelMatrix);
+            SetModelMatrix(MatrixMultiply(FMasterObject.Matrix, ModelMatrix^));
         FMasterObject.DoRender(ARci, ARenderSelf, (FMasterObject.Count > 0));
         ARci.proxySubObject := oldProxySubObject;
       end;
@@ -6185,12 +6179,12 @@ begin
               RebuildMatrix;
               if LightStyle in [lsParallel, lsParallelSpot] then
               begin
-                ModelMatrix := AbsoluteMatrix;
+                SetModelMatrix(AbsoluteMatrix);
                 GL.Lightfv(GL_LIGHT0 + FLightID, GL_POSITION, SpotDirection.AsAddress);
               end
               else
               begin
-                ModelMatrix := Parent.AbsoluteMatrix;
+                SetModelMatrix(Parent.AbsoluteMatrix);
                 GL.Lightfv(GL_LIGHT0 + FLightID, GL_POSITION, Position.AsAddress);
               end;
               if LightStyle in [lsSpot, lsParallelSpot] then
@@ -6226,7 +6220,7 @@ begin
     // turn off other lights
     for i := nbLights to maxLights - 1 do
       LightEnabling[i] := False;
-    ModelMatrix := IdentityHmgMatrix;
+    SetModelMatrix(IdentityHmgMatrix);
   end;
 end;
 
@@ -6975,8 +6969,8 @@ var
 begin
   n := Length(FViewMatrixStack);
   SetLength(FViewMatrixStack, n + 1);
-  FViewMatrixStack[n] := RenderingContext.PipelineTransformation.ViewMatrix;
-  RenderingContext.PipelineTransformation.ViewMatrix := newMatrix;
+  FViewMatrixStack[n] := RenderingContext.PipelineTransformation.ViewMatrix^;
+  RenderingContext.PipelineTransformation.SetViewMatrix(newMatrix);
 end;
 
 procedure TGLSceneBuffer.PopViewMatrix;
@@ -6985,7 +6979,7 @@ var
 begin
   n := High(FViewMatrixStack);
   Assert(n >= 0, 'Unbalanced PopViewMatrix');
-  RenderingContext.PipelineTransformation.ViewMatrix := FViewMatrixStack[n];
+  RenderingContext.PipelineTransformation.SetViewMatrix(FViewMatrixStack[n]);
   SetLength(FViewMatrixStack, n);
 end;
 
@@ -6995,8 +6989,8 @@ var
 begin
   n := Length(FProjectionMatrixStack);
   SetLength(FProjectionMatrixStack, n + 1);
-  FProjectionMatrixStack[n] := RenderingContext.PipelineTransformation.ProjectionMatrix;
-  RenderingContext.PipelineTransformation.ProjectionMatrix := newMatrix;
+  FProjectionMatrixStack[n] := RenderingContext.PipelineTransformation.ProjectionMatrix^;
+  RenderingContext.PipelineTransformation.SetProjectionMatrix(newMatrix);
 end;
 
 procedure TGLSceneBuffer.PopProjectionMatrix;
@@ -7005,23 +6999,23 @@ var
 begin
   n := High(FProjectionMatrixStack);
   Assert(n >= 0, 'Unbalanced PopProjectionMatrix');
-  RenderingContext.PipelineTransformation.ProjectionMatrix := FProjectionMatrixStack[n];
+  RenderingContext.PipelineTransformation.SetProjectionMatrix(FProjectionMatrixStack[n]);
   SetLength(FProjectionMatrixStack, n);
 end;
 
 function TGLSceneBuffer.ProjectionMatrix;
 begin
-  Result := RenderingContext.PipelineTransformation.ProjectionMatrix;
+  Result := RenderingContext.PipelineTransformation.ProjectionMatrix^;
 end;
 
 function TGLSceneBuffer.ViewMatrix: TMatrix;
 begin
-  Result := RenderingContext.PipelineTransformation.ViewMatrix;
+  Result := RenderingContext.PipelineTransformation.ViewMatrix^;
 end;
 
 function TGLSceneBuffer.ModelMatrix: TMatrix;
 begin
-  Result := RenderingContext.PipelineTransformation.ModelMatrix;
+  Result := RenderingContext.PipelineTransformation.ModelMatrix^;
 end;
 
 function TGLSceneBuffer.OrthoScreenToWorld(screenX, screenY: Integer):
@@ -7421,14 +7415,15 @@ begin
   // setup projection matrix
   if Assigned(pickingRect) then
   begin
-    CurrentGLContext.PipelineTransformation.ProjectionMatrix := CreatePickMatrix(
+    CurrentGLContext.PipelineTransformation.SetProjectionMatrix(
+      CreatePickMatrix(
       (pickingRect^.Left + pickingRect^.Right) div 2,
       FViewPort.Height - ((pickingRect^.Top + pickingRect^.Bottom) div 2),
       Abs(pickingRect^.Right - pickingRect^.Left),
       Abs(pickingRect^.Bottom - pickingRect^.Top),
-      TVector4i(FViewport));
+      TVector4i(FViewport)));
   end;
-  FBaseProjectionMatrix := CurrentGLContext.PipelineTransformation.ProjectionMatrix;
+  FBaseProjectionMatrix := CurrentGLContext.PipelineTransformation.ProjectionMatrix^;
 
   if Assigned(FCamera) then
   begin
@@ -8004,9 +7999,9 @@ begin
   // Setup appropriate FOV
   with CurrentGLContext.PipelineTransformation do
   begin
-    ProjectionMatrix := CreatePerspectiveMatrix(90, 1, FCubeMapZNear, FCubeMapZFar);
+    SetProjectionMatrix(CreatePerspectiveMatrix(90, 1, FCubeMapZNear, FCubeMapZFar));
     TM := CreateTranslationMatrix(FCubeMapTranslation);
-    ViewMatrix := MatrixMultiply(cFaceMat[FCubeMapRotIdx], TM);
+    SetViewMatrix(MatrixMultiply(cFaceMat[FCubeMapRotIdx], TM));
   end;
 end;
 

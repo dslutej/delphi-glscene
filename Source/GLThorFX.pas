@@ -593,7 +593,7 @@ begin
     end;
     QuickSortLists(0, N - 1, distList, objList);
 
-    mat := rci.PipelineTransformation.ModelViewMatrix;
+    mat := rci.PipelineTransformation.ModelViewMatrix^;
     for m := 0 to 2 do
     begin
       vx.V[m] := mat.V[m].X * Manager.GlowSize;

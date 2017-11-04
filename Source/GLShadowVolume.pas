@@ -417,7 +417,7 @@ begin
   end;
 
   // Calculate the window-space bounds of the light's bounding box.
-  mvp := rci.PipelineTransformation.ViewProjectionMatrix;
+  mvp := rci.PipelineTransformation.ViewProjectionMatrix^;
 
   clipRect := AABBToClipRect(aabb, mvp, rci.viewPortSize.cx,
     rci.viewPortSize.cy);
@@ -825,7 +825,7 @@ begin
           if Assigned(sil) then
             try
               // render the silhouette
-              ARci.PipelineTransformation.ModelMatrix := obj.AbsoluteMatrix;
+              ARci.PipelineTransformation.SetModelMatrix(obj.AbsoluteMatrix);
               GL.VertexPointer(4, GL_FLOAT, 0, sil.Vertices.List);
 
               if Boolean(PtrUInt(opaqueCapping[k])) then

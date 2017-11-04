@@ -2236,7 +2236,7 @@ procedure TGLGizmoEx.InternalRender(Sender: TObject; var rci: TGLRenderContextIn
 
     GL.MatrixMode(GL_MODELVIEW);
     GL.PushMatrix;
-    wm := rci.PipelineTransformation.ViewMatrix;
+    wm := rci.PipelineTransformation.ViewMatrix^;
 
     TransposeMatrix(wm);
 

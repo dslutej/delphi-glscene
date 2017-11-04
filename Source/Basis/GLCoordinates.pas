@@ -37,7 +37,7 @@ type
      csUnknown : aucune contrainte }
   TGLCoordinatesStyle = (csPoint2D, csPoint, csVector, csUnknown);
 
-  {  Stores and homogenous vector. 
+  {  Stores and homogenous vector.
     This class is basicly a container for a TVector, allowing proper use of
     delphi property editors and editing in the IDE. Vector/Coordinates
     manipulation methods are only minimal.
@@ -58,7 +58,7 @@ type
     function GetDirectCoordinate(const Index: Integer): TGLFloat; inline;
     procedure SetDirectCoordinate(const Index: Integer; const AValue: TGLFloat);
   protected
-    
+
     procedure SetDirectVector(const V: TVector); inline;
     procedure DefineProperties(Filer: TFiler); override;
     procedure ReadData(Stream: TStream);
@@ -75,7 +75,7 @@ type
 
     { Identifies the coordinates styles.
       The property is NOT persistent, csUnknown by default, and should be
-      managed by owner object only (internally). 
+      managed by owner object only (internally).
       It is used by the TGLCustomCoordinates for internal "assertion" checks
       to detect "misuses" or "misunderstandings" of what the homogeneous
       coordinates system implies. }
@@ -109,7 +109,7 @@ type
     procedure SetToZero;
     function AsAddress: PGLFloat; inline;
 
-    {  The coordinates viewed as a vector. 
+    {  The coordinates viewed as a vector.
       Assigning a value to this property will trigger notification events,
       if you don't want so, use DirectVector instead. }
     property AsVector: TVector read FCoords write SetAsVector;
@@ -121,7 +121,7 @@ type
     property AsAffineVector: TAffineVector read GetAsAffineVector
       write SetAsAffineVector;
 
-    {  The coordinates viewed as a 2D point. 
+    {  The coordinates viewed as a 2D point.
       Assigning a value to this property will trigger notification events,
       if you don't want so, use DirectVector instead. }
     property AsPoint2D: TVector2f read GetAsPoint2D write SetAsPoint2D;

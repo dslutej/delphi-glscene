@@ -252,10 +252,10 @@ begin
               ShadowedLight.AbsolutePosition);
           end;
 
-          ARci.PipelineTransformation.ViewMatrix := MatrixMultiply(
+          ARci.PipelineTransformation.SetViewMatrix(MatrixMultiply(
             shadowMat,
-            ARci.PipelineTransformation.ViewMatrix);
-          ARci.PipelineTransformation.ModelMatrix := IdentityHmgMatrix;
+            ARci.PipelineTransformation.ViewMatrix^));
+          ARci.PipelineTransformation.SetModelMatrix(IdentityHmgMatrix);
 
           Disable(stCullFace);
           Enable(stNormalize);
@@ -289,7 +289,7 @@ begin
             if FShadowingObject.Parent <> nil then
               MatrixMultiply(ModelMat, FShadowingObject.Parent.AbsoluteMatrix, ModelMat);
             MatrixMultiply(ModelMat, FShadowingObject.LocalMatrix^, ModelMat);
-            ARci.PipelineTransformation.ModelMatrix := ModelMat;
+            ARci.PipelineTransformation.SetModelMatrix(ModelMat);
             FShadowingObject.DoRender(ARci, True, (FShadowingObject.Count > 0));
           end
           else
