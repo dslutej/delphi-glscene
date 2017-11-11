@@ -29,6 +29,7 @@ unit GLVectorGeometry;
 interface
 
 {$I GLScene.inc}
+
 uses
 
 {$IFDEF GLS_FASTMATH}
@@ -202,13 +203,18 @@ type
   THmgPlane = TVector;
   TDoubleHmgPlane = THomogeneousDblVector;
 
+{$IFDEF GLS_FASTMATH}
+  TQuaternion = Neslib.FastMath.TQuaternion;
+{$ELSE}
+  TQuaternion = record
+    case Integer of
+      0 : ( ImagPart: TAffineVector;
+            RealPart: Single);
+      1:  ( X, Y, Z, W: Single);
+  end;
+{$ENDIF}
   // q = ([x, y, z], w)
   PQuaternion = ^TQuaternion;
-
-  TQuaternion = record
-    ImagPart: TAffineVector;
-    RealPart: Single;
-  end;
 
   PQuaternionArray = ^TQuaternionArray;
   TQuaternionArray = array [0 .. MaxInt shr 5] of TQuaternion;
@@ -220,6 +226,7 @@ type
   TFrustum = record
     pLeft, pTop, pRight, pBottom, pNear, pFar: THmgPlane;
   end;
+  PFrustum = ^TFrustum;
 
   TTransType = (ttScaleX, ttScaleY, ttScaleZ, ttShearXY, ttShearXZ, ttShearYZ,
     ttRotateX, ttRotateY, ttRotateZ, ttTranslateX, ttTranslateY, ttTranslateZ,
@@ -284,7 +291,11 @@ const
 
 
   // Quaternions
+{$IFDEF GLS_FASTMATH}
+//  IdentityQuaternion: TQuaternion = TQuarternion.Identity;
+{$ELSE}
   IdentityQuaternion: TQuaternion = (ImagPart: (X: 0; Y: 0; Z: 0); RealPart: 1);
+{$ENDIF}
 
   // some very small numbers
   EPSILON: Single = 1E-40;
@@ -293,51 +304,58 @@ const
 // ------------------------------------------------------------------------------
 // Vector functions
 // ------------------------------------------------------------------------------
+{$IFDEF GLS_FASTMATH}
+function ToMatrix3(const M: TMatrix4): TMatrix3; inline;
+function ToVector3(const V: TVector4): TVector3; inline;
+function ToVector4(const V: TVector3): TVector4; inline;
+{$ENDIF}
 
 function TexPointMake(const S, T: Single): TTexPoint; inline;
 function AffineVectorMake(const X, Y, Z: Single): TAffineVector; overload; inline;
 function AffineVectorMake(const V: TVector): TAffineVector; overload; inline;
-procedure SetAffineVector(out V: TAffineVector; const X, Y, Z: Single);  overload; {$IFDEF GLS_INLINE}inline; {$ENDIF}
-procedure SetVector(out V: TAffineVector; const X, Y, Z: Single); overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
+procedure SetAffineVector(out V: TAffineVector; const X, Y, Z: Single); overload; inline;
+procedure SetVector(out V: TAffineVector; const X, Y, Z: Single); overload;inline;
 procedure SetVector(out V: TAffineVector; const vSrc: TVector); overload; inline;
-procedure SetVector(out V: TAffineVector; const vSrc: TAffineVector); overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
-procedure SetVector(out V: TAffineDblVector; const vSrc: TAffineVector);  overload; {$IFDEF GLS_INLINE}inline; {$ENDIF}
-procedure SetVector(out V: TAffineDblVector; const vSrc: TVector); overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
-function VectorMake(const V: TAffineVector; W: Single = 0): TVector; overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
+procedure SetVector(out V: TAffineVector; const vSrc: TAffineVector); overload; inline;
+procedure SetVector(out V: TAffineDblVector; const vSrc: TAffineVector);  overload; inline;
+procedure SetVector(out V: TAffineDblVector; const vSrc: TVector); overload; inline;
+function VectorMake(const V: TAffineVector; W: Single = 0): TVector; overload; inline;
 function VectorMake(const X, Y, Z: Single; W: Single = 0): TVector; overload; inline;
+function VectorMake(const Q: TQuaternion): TVector; overload; inline;
+
 function PointMake(const X, Y, Z: Single): TVector; overload; inline;
-function PointMake(const V: TAffineVector): TVector; overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
-function PointMake(const V: TVector): TVector; overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
-procedure SetVector(out V: TVector; const X, Y, Z: Single; W: Single = 0);  overload; {$IFDEF GLS_INLINE}inline; {$ENDIF}
-procedure SetVector(out V: TVector; const av: TAffineVector; W: Single = 0);  overload; {$IFDEF GLS_INLINE}inline; {$ENDIF}
+function PointMake(const V: TAffineVector): TVector; overload; inline;
+function PointMake(const V: TVector): TVector; overload;inline;
+procedure SetVector(out V: TVector; const X, Y, Z: Single; W: Single = 0); overload; inline;
+procedure SetVector(out V: TVector; const av: TAffineVector; W: Single = 0); overload; inline;
 procedure SetVector(out V: TVector; const vSrc: TVector); overload; inline;
-procedure MakePoint(out V: TVector; const X, Y, Z: Single); overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
-procedure MakePoint(out V: TVector; const av: TAffineVector); overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
-procedure MakePoint(out V: TVector; const av: TVector); overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
-procedure MakeVector(out V: TAffineVector; const X, Y, Z: Single); overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
-procedure MakeVector(out V: TVector; const X, Y, Z: Single); overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
-procedure MakeVector(out V: TVector; const av: TAffineVector); overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
-procedure MakeVector(out V: TVector; const av: TVector); overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
-procedure RstVector(var V: TAffineVector); overload;{$IFDEF GLS_INLINE_VICE_ASM}inline; {$ENDIF}
-procedure RstVector(var V: TVector); overload;{$IFDEF GLS_INLINE_VICE_ASM}inline; {$ENDIF}
+procedure MakePoint(out V: TVector; const X, Y, Z: Single); overload; inline;
+procedure MakePoint(out V: TVector; const av: TAffineVector); overload;inline;
+procedure MakePoint(out V: TVector; const av: TVector); overload; inline;
+procedure MakeVector(out V: TAffineVector; const X, Y, Z: Single); overload; inline;
+procedure MakeVector(out V: TVector; const X, Y, Z: Single); overload; inline;
+procedure MakeVector(out V: TVector; const av: TAffineVector); overload; inline;
+procedure MakeVector(out V: TVector; const av: TVector); overload; inline;
+procedure RstVector(var V: TAffineVector); overload; inline;
+procedure RstVector(var V: TVector); overload; inline;
 // 2
-function VectorEquals(const Vector1, Vector2: TVector2f): Boolean; overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
-function VectorEquals(const Vector1, Vector2: TVector2i): Boolean; overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
-function VectorEquals(const V1, V2: TVector2d): Boolean; overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
-function VectorEquals(const V1, V2: TVector2s): Boolean; overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
-function VectorEquals(const V1, V2: TVector2b): Boolean; overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
+function VectorEquals(const Vector1, Vector2: TVector2f): Boolean; overload; inline;
+function VectorEquals(const Vector1, Vector2: TVector2i): Boolean; overload; inline;
+function VectorEquals(const V1, V2: TVector2d): Boolean; overload;inline;
+function VectorEquals(const V1, V2: TVector2s): Boolean; overload;inline;
+function VectorEquals(const V1, V2: TVector2b): Boolean; overload;inline;
 // 3
 // function VectorEquals(const V1, V2: TVector3f): Boolean; overload; //declared further
-function VectorEquals(const V1, V2: TVector3i): Boolean; overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
-function VectorEquals(const V1, V2: TVector3d): Boolean; overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
-function VectorEquals(const V1, V2: TVector3s): Boolean; overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
-function VectorEquals(const V1, V2: TVector3b): Boolean; overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
+function VectorEquals(const V1, V2: TVector3i): Boolean; overload;inline;
+function VectorEquals(const V1, V2: TVector3d): Boolean; overload;inline;
+function VectorEquals(const V1, V2: TVector3s): Boolean; overload;inline;
+function VectorEquals(const V1, V2: TVector3b): Boolean; overload;inline;
 // 4
 // function VectorEquals(const V1, V2: TVector4f): Boolean; overload; //declared further
-function VectorEquals(const V1, V2: TVector4i): Boolean; overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
-function VectorEquals(const V1, V2: TVector4d): Boolean; overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
-function VectorEquals(const V1, V2: TVector4s): Boolean; overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
-function VectorEquals(const V1, V2: TVector4b): Boolean; overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
+function VectorEquals(const V1, V2: TVector4i): Boolean; overload;inline;
+function VectorEquals(const V1, V2: TVector4d): Boolean; overload;inline;
+function VectorEquals(const V1, V2: TVector4s): Boolean; overload;inline;
+function VectorEquals(const V1, V2: TVector4b): Boolean; overload;inline;
 // 3x3
 function MatrixEquals(const Matrix1, Matrix2: TMatrix3f): Boolean; overload;
 function MatrixEquals(const Matrix1, Matrix2: TMatrix3i): Boolean; overload;
@@ -353,84 +371,59 @@ function MatrixEquals(const Matrix1, Matrix2: TMatrix4s): Boolean; overload;
 function MatrixEquals(const Matrix1, Matrix2: TMatrix4b): Boolean; overload;
 
 // 2x
-function Vector2fMake(const X, Y: Single): TVector2f; overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
-function Vector2iMake(const X, Y: Longint): TVector2i; overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
-function Vector2sMake(const X, Y: SmallInt): TVector2s; overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
-function Vector2dMake(const X, Y: Double): TVector2d; overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
-function Vector2bMake(const X, Y: Byte): TVector2b; overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
-function Vector2fMake(const Vector: TVector3f): TVector2f; overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
-function Vector2iMake(const Vector: TVector3i): TVector2i; overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
-function Vector2sMake(const Vector: TVector3s): TVector2s; overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
-function Vector2dMake(const Vector: TVector3d): TVector2d; overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
-function Vector2bMake(const Vector: TVector3b): TVector2b; overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
-function Vector2fMake(const Vector: TVector4f): TVector2f; overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
-function Vector2iMake(const Vector: TVector4i): TVector2i; overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
-function Vector2sMake(const Vector: TVector4s): TVector2s; overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
-function Vector2dMake(const Vector: TVector4d): TVector2d; overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
-function Vector2bMake(const Vector: TVector4b): TVector2b; overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
+function Vector2fMake(const X, Y: Single): TVector2f; overload; inline;
+function Vector2iMake(const X, Y: Longint): TVector2i; overload; inline;
+function Vector2sMake(const X, Y: SmallInt): TVector2s; overload; inline;
+function Vector2dMake(const X, Y: Double): TVector2d; overload; inline;
+function Vector2bMake(const X, Y: Byte): TVector2b; overload; inline;
+function Vector2fMake(const Vector: TVector3f): TVector2f; overload; inline;
+function Vector2iMake(const Vector: TVector3i): TVector2i; overload; inline;
+function Vector2sMake(const Vector: TVector3s): TVector2s; overload; inline;
+function Vector2dMake(const Vector: TVector3d): TVector2d; overload; inline;
+function Vector2bMake(const Vector: TVector3b): TVector2b; overload; inline;
+function Vector2fMake(const Vector: TVector4f): TVector2f; overload; inline;
+function Vector2iMake(const Vector: TVector4i): TVector2i; overload; inline;
+function Vector2sMake(const Vector: TVector4s): TVector2s; overload; inline;
+function Vector2dMake(const Vector: TVector4d): TVector2d; overload; inline;
+function Vector2bMake(const Vector: TVector4b): TVector2b; overload; inline;
 // 3x
-function Vector3fMake(const X: Single; const Y: Single = 0; const Z: Single = 0)
-  : TVector3f; overload; {$IFDEF GLS_INLINE}inline; {$ENDIF}
-function Vector3iMake(const X: Longint; const Y: Longint = 0;
-  const Z: Longint = 0): TVector3i; overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
-function Vector3sMake(const X: SmallInt; const Y: SmallInt = 0;
-  const Z: SmallInt = 0): TVector3s; overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
-function Vector3dMake(const X: Double; const Y: Double = 0; const Z: Double = 0)
-  : TVector3d; overload; {$IFDEF GLS_INLINE}inline; {$ENDIF}
-function Vector3bMake(const X: Byte; const Y: Byte = 0; const Z: Byte = 0)
-  : TVector3b; overload; {$IFDEF GLS_INLINE}inline; {$ENDIF}
-function Vector3fMake(const Vector: TVector2f; const Z: Single = 0): TVector3f;
-  overload; {$IFDEF GLS_INLINE}inline; {$ENDIF}
-function Vector3iMake(const Vector: TVector2i; const Z: Longint = 0): TVector3i;
-  overload; {$IFDEF GLS_INLINE}inline; {$ENDIF}
-function Vector3sMake(const Vector: TVector2s; const Z: SmallInt = 0)
-  : TVector3s; overload; {$IFDEF GLS_INLINE}inline; {$ENDIF}
-function Vector3dMake(const Vector: TVector2d; const Z: Double = 0): TVector3d;
-  overload; {$IFDEF GLS_INLINE}inline; {$ENDIF}
-function Vector3bMake(const Vector: TVector2b; const Z: Byte = 0): TVector3b;
-  overload; {$IFDEF GLS_INLINE}inline; {$ENDIF}
-function Vector3fMake(const Vector: TVector4f): TVector3f; overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
-function Vector3iMake(const Vector: TVector4i): TVector3i; overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
-function Vector3sMake(const Vector: TVector4s): TVector3s; overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
-function Vector3dMake(const Vector: TVector4d): TVector3d; overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
-function Vector3bMake(const Vector: TVector4b): TVector3b; overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
+function Vector3fMake(const X: Single; const Y: Single = 0; const Z: Single = 0) : TVector3f; overload; inline;
+function Vector3iMake(const X: Longint; const Y: Longint = 0; const Z: Longint = 0): TVector3i; overload;inline;
+function Vector3sMake(const X: SmallInt; const Y: SmallInt = 0; const Z: SmallInt = 0): TVector3s; overload;inline;
+function Vector3dMake(const X: Double; const Y: Double = 0; const Z: Double = 0): TVector3d; overload; inline;
+function Vector3bMake(const X: Byte; const Y: Byte = 0; const Z: Byte = 0): TVector3b; overload; inline;
+function Vector3fMake(const Vector: TVector2f; const Z: Single = 0): TVector3f; overload; inline;
+function Vector3iMake(const Vector: TVector2i; const Z: Longint = 0): TVector3i; overload; inline;
+function Vector3sMake(const Vector: TVector2s; const Z: SmallInt = 0): TVector3s; overload; inline;
+function Vector3dMake(const Vector: TVector2d; const Z: Double = 0): TVector3d; overload; inline;
+function Vector3bMake(const Vector: TVector2b; const Z: Byte = 0): TVector3b; overload; inline;
+function Vector3fMake(const Vector: TVector4f): TVector3f; overload; inline;
+function Vector3iMake(const Vector: TVector4i): TVector3i; overload; inline;
+function Vector3sMake(const Vector: TVector4s): TVector3s; overload; inline;
+function Vector3dMake(const Vector: TVector4d): TVector3d; overload; inline;
+function Vector3bMake(const Vector: TVector4b): TVector3b; overload; inline;
 // 4x
-function Vector4fMake(const X: Single; const Y: Single = 0; const Z: Single = 0;
-  const W: Single = 0): TVector4f; overload; {$IFDEF GLS_INLINE}inline;{$ENDIF}
-function Vector4iMake(const X: Longint; const Y: Longint = 0;
-  const Z: Longint = 0; const W: Longint = 0): TVector4i; overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
-function Vector4sMake(const X: SmallInt; const Y: SmallInt = 0;
-  const Z: SmallInt = 0; const W: SmallInt = 0): TVector4s; overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
-function Vector4dMake(const X: Double; const Y: Double = 0; const Z: Double = 0;
-  const W: Double = 0): TVector4d; overload; {$IFDEF GLS_INLINE}inline;{$ENDIF}
-function Vector4bMake(const X: Byte; const Y: Byte = 0; const Z: Byte = 0;
-  const W: Byte = 0): TVector4b; overload; {$IFDEF GLS_INLINE}inline;{$ENDIF}
-function Vector4fMake(const Vector: TVector3f; const W: Single = 0): TVector4f;
-  overload; {$IFDEF GLS_INLINE}inline; {$ENDIF}
-function Vector4iMake(const Vector: TVector3i; const W: Longint = 0): TVector4i;
-  overload; {$IFDEF GLS_INLINE}inline; {$ENDIF}
-function Vector4sMake(const Vector: TVector3s; const W: SmallInt = 0)
-  : TVector4s; overload; {$IFDEF GLS_INLINE}inline; {$ENDIF}
-function Vector4dMake(const Vector: TVector3d; const W: Double = 0): TVector4d;
-  overload; {$IFDEF GLS_INLINE}inline; {$ENDIF}
-function Vector4bMake(const Vector: TVector3b; const W: Byte = 0): TVector4b;
-  overload; {$IFDEF GLS_INLINE}inline; {$ENDIF}
-function Vector4fMake(const Vector: TVector2f; const Z: Single = 0;
-  const W: Single = 0): TVector4f; overload; {$IFDEF GLS_INLINE}inline;{$ENDIF}
-function Vector4iMake(const Vector: TVector2i; const Z: Longint = 0;
-  const W: Longint = 0): TVector4i; overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
-function Vector4sMake(const Vector: TVector2s; const Z: SmallInt = 0;
-  const W: SmallInt = 0): TVector4s; overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
-function Vector4dMake(const Vector: TVector2d; const Z: Double = 0;
-  const W: Double = 0): TVector4d; overload; {$IFDEF GLS_INLINE}inline;{$ENDIF}
-function Vector4bMake(const Vector: TVector2b; const Z: Byte = 0;
-  const W: Byte = 0): TVector4b; overload; {$IFDEF GLS_INLINE}inline;{$ENDIF}
+function Vector4fMake(const X: Single; const Y: Single = 0; const Z: Single = 0; const W: Single = 0): TVector4f; overload; inline;
+function Vector4iMake(const X: Longint; const Y: Longint = 0; const Z: Longint = 0; const W: Longint = 0): TVector4i; overload; inline;
+function Vector4sMake(const X: SmallInt; const Y: SmallInt = 0; const Z: SmallInt = 0; const W: SmallInt = 0): TVector4s; overload; inline;
+function Vector4dMake(const X: Double; const Y: Double = 0; const Z: Double = 0; const W: Double = 0): TVector4d; overload; inline;
+function Vector4bMake(const X: Byte; const Y: Byte = 0; const Z: Byte = 0; const W: Byte = 0): TVector4b; overload; inline;
+function Vector4fMake(const Vector: TVector3f; const W: Single = 0): TVector4f; overload; inline;
+function Vector4iMake(const Vector: TVector3i; const W: Longint = 0): TVector4i; overload; inline;
+function Vector4sMake(const Vector: TVector3s; const W: SmallInt = 0) : TVector4s; overload; inline;
+function Vector4dMake(const Vector: TVector3d; const W: Double = 0): TVector4d; overload; inline;
+function Vector4bMake(const Vector: TVector3b; const W: Byte = 0): TVector4b; overload; inline;
+function Vector4fMake(const Vector: TVector2f; const Z: Single = 0; const W: Single = 0): TVector4f; overload; inline;
+function Vector4iMake(const Vector: TVector2i; const Z: Longint = 0; const W: Longint = 0): TVector4i; overload;inline;
+function Vector4sMake(const Vector: TVector2s; const Z: SmallInt = 0; const W: SmallInt = 0): TVector4s; overload;inline;
+function Vector4dMake(const Vector: TVector2d; const Z: Double = 0; const W: Double = 0): TVector4d; overload; inline;
+function Vector4bMake(const Vector: TVector2b; const Z: Byte = 0; const W: Byte = 0): TVector4b; overload; inline;
 
 // Vector comparison functions:
 // ComparedVector
 // 3f
-function VectorMoreThen(const SourceVector, ComparedVector: TVector3f): Boolean; overload; inline
-function VectorMoreEqualThen(const SourceVector, ComparedVector: TVector3f): Boolean; overload; inline
+function VectorMoreThen(const SourceVector, ComparedVector: TVector3f): Boolean; overload; inline;
+function VectorMoreEqualThen(const SourceVector, ComparedVector: TVector3f): Boolean; overload; inline;
 
 function VectorLessThen(const SourceVector, ComparedVector: TVector3f): Boolean; overload; inline
 function VectorLessEqualThen(const SourceVector, ComparedVector: TVector3f): Boolean; overload; inline
@@ -514,9 +507,9 @@ procedure VectorAdd(const V1, V2: TAffineVector; vr: PAffineVector); overload; i
 function VectorAdd(const V1, V2: TVector): TVector; overload; inline
 procedure VectorAdd(const V1, V2: TVector; var vr: TVector); overload; inline
 // Sums up f to each component of the vector
-function VectorAdd(const V: TAffineVector; const f: Single): TAffineVector; overload; {$IFDEF GLS_INLINE_VICE_ASM}inline; {$ENDIF}
+function VectorAdd(const V: TAffineVector; const f: Single): TAffineVector; overload; inline;
 // Sums up f to each component of the vector
-function VectorAdd(const V: TVector; const f: Single): TVector; overload; {$IFDEF GLS_INLINE_VICE_ASM}inline; {$ENDIF}
+function VectorAdd(const V: TVector; const f: Single): TVector; overload; inline;
 // Adds V2 to V1, result is placed in V1
 procedure AddVector(var V1: TAffineVector; const V2: TAffineVector); overload; inline
 // Adds V2 to V1, result is placed in V1
@@ -558,8 +551,8 @@ function VectorSubtract(const V1, V2: TVector): TVector; overload; inline
 procedure VectorSubtract(const V1, V2: TVector; var result: TVector); overload; inline
 // Subtracts V2 from V1 and return value in result
 procedure VectorSubtract(const V1, V2: TVector; var result: TAffineVector); overload;
-function VectorSubtract(const V1: TAffineVector; delta: Single): TAffineVector; overload; {$IFDEF GLS_INLINE}inline; {$ENDIF}
-function VectorSubtract(const V1: TVector; delta: Single): TVector; overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
+function VectorSubtract(const V1: TAffineVector; delta: Single): TAffineVector; overload; inline;
+function VectorSubtract(const V1: TVector; delta: Single): TVector; overload;inline;
 // Subtracts V2 from V1, result is placed in V1
 procedure SubtractVector(var V1: TAffineVector; const V2: TAffineVector); overload; inline
 // Subtracts V2 from V1, result is placed in V1
@@ -569,33 +562,31 @@ procedure SubtractVector(var V1: TVector; const V2: TVector); overload; inline
 procedure CombineVector(var vr: TAffineVector; const V: TAffineVector; var f: Single); overload; inline
 procedure CombineVector(var vr: TAffineVector; const V: TAffineVector; pf: PFloat); overload; inline
 // Makes a linear combination of two texpoints
-function TexPointCombine(const t1, t2: TTexPoint; f1, f2: Single): TTexPoint;{$IFDEF GLS_INLINE_VICE_ASM}inline; {$ENDIF}
+function TexPointCombine(const t1, t2: TTexPoint; f1, f2: Single): TTexPoint; inline;
 // Makes a linear combination of two vectors and return the result
-function VectorCombine(const V1, V2: TAffineVector; const f1, f2: Single): TAffineVector; overload; {$IFDEF GLS_INLINE_VICE_ASM}inline; {$ENDIF}
+function VectorCombine(const V1, V2: TAffineVector; const f1, f2: Single): TAffineVector; overload; inline;
 // Makes a linear combination of three vectors and return the result
 function VectorCombine3(const V1, V2, V3: TAffineVector;
-  const f1, f2, F3: Single): TAffineVector; overload;{$IFDEF GLS_INLINE_VICE_ASM}inline; {$ENDIF}
+  const f1, f2, F3: Single): TAffineVector; overload;inline;
 procedure VectorCombine3(const V1, V2, V3: TAffineVector;
-  const f1, f2, F3: Single; var vr: TAffineVector); overload;{$IFDEF GLS_INLINE_VICE_ASM}inline; {$ENDIF}
+  const f1, f2, F3: Single; var vr: TAffineVector); overload;inline;
 // Combine the first vector with the second : vr:=vr+v*f
 procedure CombineVector(var vr: TVector; const V: TVector; var f: Single); overload;
 // Combine the first vector with the second : vr:=vr+v*f
 procedure CombineVector(var vr: TVector; const V: TAffineVector; var f: Single); overload;
 // Makes a linear combination of two vectors and return the result
-function VectorCombine(const V1, V2: TVector; const F1, F2: Single): TVector; overload; {$IFDEF GLS_INLINE_VICE_ASM}inline; {$ENDIF}
+function VectorCombine(const V1, V2: TVector; const F1, F2: Single): TVector; overload; inline;
 // Makes a linear combination of two vectors and return the result
 function VectorCombine(const V1: TVector; const V2: TAffineVector;
-  const F1, F2: Single): TVector; overload; {$IFDEF GLS_INLINE_VICE_ASM}inline;{$ENDIF}
+  const F1, F2: Single): TVector; overload; inline;
 // Makes a linear combination of two vectors and place result in vr
-procedure VectorCombine(const V1: TVector; const V2: TAffineVector;
-  const F1, F2: Single; var VR: TVector); overload;{$IFDEF GLS_INLINE_VICE_ASM}inline; {$ENDIF}
+procedure VectorCombine(const V1: TVector; const V2: TAffineVector; const F1, F2: Single; var VR: TVector); overload;inline;
 // Makes a linear combination of two vectors and place result in vr
 procedure VectorCombine(const V1, V2: TVector; const F1, F2: Single; var vr: TVector); overload;
 // Makes a linear combination of two vectors and place result in vr, F1=1.0
 procedure VectorCombine(const V1, V2: TVector; const F2: Single; var vr: TVector); overload;
 // Makes a linear combination of three vectors and return the result
-function VectorCombine3(const V1, V2, V3: TVector; const F1, F2, F3: Single)
-  : TVector; overload; {$IFDEF GLS_INLINE_VICE_ASM}inline; {$ENDIF}
+function VectorCombine3(const V1, V2, V3: TVector; const F1, F2, F3: Single): TVector; overload; inline;
 // Makes a linear combination of three vectors and return the result
 procedure VectorCombine3(const V1, V2, V3: TVector; const F1, F2, F3: Single; var vr: TVector); overload;
 
@@ -633,9 +624,9 @@ procedure VectorCrossProduct(const V1, V2: TVector; var vr: TAffineVector); over
 procedure VectorCrossProduct(const V1, V2: TAffineVector; var vr: TAffineVector); overload;
 
 // Calculates linear interpolation between start and stop at point t
-function Lerp(const start, stop, T: Single): Single;{$IFDEF GLS_INLINE_VICE_ASM}inline; {$ENDIF}
+function Lerp(const start, stop, T: Single): Single; inline;
 // Calculates angular interpolation between start and stop at point t
-function AngleLerp(start, stop, T: Single): Single;{$IFDEF GLS_INLINE_VICE_ASM}inline; {$ENDIF}
+function AngleLerp(start, stop, T: Single): Single; inline;
 { This is used for interpolating between 2 matrices. The result
   is used to reposition the model parts each frame. }
 function MatrixLerp(const m1, m2: TMatrix; const delta: Single): TMatrix; inline
@@ -645,15 +636,15 @@ function MatrixLerp(const m1, m2: TMatrix; const delta: Single): TMatrix; inline
 function DistanceBetweenAngles(angle1, angle2: Single): Single; inline
 
 // Calculates linear interpolation between texpoint1 and texpoint2 at point t
-function TexPointLerp(const t1, t2: TTexPoint; T: Single): TTexPoint; overload;{$IFDEF GLS_INLINE_VICE_ASM}inline; {$ENDIF}
+function TexPointLerp(const t1, t2: TTexPoint; T: Single): TTexPoint; overload; inline;
 // Calculates linear interpolation between vector1 and vector2 at point t
 function VectorLerp(const V1, V2: TAffineVector; T: Single): TAffineVector; overload; inline
 // Calculates linear interpolation between vector1 and vector2 at point t, places result in vr
 procedure VectorLerp(const V1, V2: TAffineVector; T: Single; var vr: TAffineVector); overload; inline
 // Calculates linear interpolation between vector1 and vector2 at point t
-function VectorLerp(const V1, V2: TVector; T: Single): TVector; overload;{$IFDEF GLS_INLINE_VICE_ASM}inline; {$ENDIF}
+function VectorLerp(const V1, V2: TVector; T: Single): TVector; overload; inline;
 // Calculates linear interpolation between vector1 and vector2 at point t, places result in vr
-procedure VectorLerp(const V1, V2: TVector; T: Single; var vr: TVector); overload; {$IFDEF GLS_INLINE_VICE_ASM}inline; {$ENDIF}
+procedure VectorLerp(const V1, V2: TVector; T: Single; var vr: TVector); overload; inline;
 function VectorAngleLerp(const V1, V2: TAffineVector; T: Single): TAffineVector; overload;
 function VectorAngleCombine(const V1, V2: TAffineVector; f: Single): TAffineVector; overload; inline
 
@@ -789,16 +780,14 @@ function VectorScale(const V: TVector; const factor: TVector): TVector; overload
 
 { Divides given vector by another vector.
   v[x]:=v[x]/divider[x], v[y]:=v[y]/divider[y] etc. }
-procedure DivideVector(var V: TVector; const divider: TVector); overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
-procedure DivideVector(var V: TAffineVector; const divider: TAffineVector); overload; {$IFDEF GLS_INLINE}inline; {$ENDIF}
-function VectorDivide(const V: TVector; const divider: TVector): TVector; overload; {$IFDEF GLS_INLINE}inline; {$ENDIF}
-function VectorDivide(const V: TAffineVector; const divider: TAffineVector): TAffineVector; overload; {$IFDEF GLS_INLINE_VICE_ASM}inline; {$ENDIF}
+procedure DivideVector(var V: TVector; const divider: TVector); overload; inline;
+procedure DivideVector(var V: TAffineVector; const divider: TAffineVector); overload; inline;
+function VectorDivide(const V: TVector; const divider: TVector): TVector; overload; inline;
+function VectorDivide(const V: TAffineVector; const divider: TAffineVector): TAffineVector; overload; inline;
 // True if all components are equal.
 function TexpointEquals(const p1, p2: TTexPoint): Boolean; inline;
-{$IFDEF GLS_INLINE_VICE_ASM}inline; {$ENDIF}
 // True if all components are equal.
-function RectEquals(const Rect1, Rect2: TRect): Boolean;
-{$IFDEF GLS_INLINE_VICE_ASM}inline; {$ENDIF}
+function RectEquals(const Rect1, Rect2: TRect): Boolean; inline;
 // True if all components are equal.
 function VectorEquals(const V1, V2: TVector): Boolean; overload; inline;
 // True if all components are equal.
@@ -848,13 +837,13 @@ procedure VectorRotateAroundY(const V: TAffineVector; alpha: Single; var vr: TAf
 function VectorRotateAroundZ(const V: TAffineVector; alpha: Single): TAffineVector; overload; inline
 
 // Vector components are replaced by their Abs() value. }
-procedure AbsVector(var V: TVector); overload;{$IFDEF GLS_INLINE_VICE_ASM}inline; {$ENDIF}
+procedure AbsVector(var V: TVector); overload; inline;
 // Vector components are replaced by their Abs() value. }
-procedure AbsVector(var V: TAffineVector); overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
+procedure AbsVector(var V: TAffineVector); overload;inline;
 // Returns a vector with components replaced by their Abs value. }
-function VectorAbs(const V: TVector): TVector; overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
+function VectorAbs(const V: TVector): TVector; overload; inline;
 // Returns a vector with components replaced by their Abs value. }
-function VectorAbs(const V: TAffineVector): TAffineVector; overload;{$IFDEF GLS_INLINE}inline; {$ENDIF}
+function VectorAbs(const V: TAffineVector): TAffineVector; overload;inline;
 // Returns true if both vector are colinear
 function IsColinear(const V1, V2: TVector2f): Boolean; overload;
 // Returns true if both vector are colinear
@@ -898,7 +887,7 @@ function CreateRotationMatrix(const anAxis: TVector; angle: Single): TMatrix; ov
 function CreateAffineRotationMatrix(const anAxis: TAffineVector; angle: Single): TAffineMatrix;
 
 // Multiplies two 3x3 matrices
-function MatrixMultiply(const m1, m2: TAffineMatrix): TAffineMatrix; overload; inline;
+function MatrixMultiply(const m1, m2: TAffineMatrix): TAffineMatrix; overload; {$IFDEF GLS_FASTMATH}inline;{$ENDIF}
 
 // Multiplies two 4x4 matrices
 function MatrixMultiply(const m1, m2: TMatrix): TMatrix; overload; {$IFDEF GLS_FASTMATH}inline;{$ENDIF}
@@ -906,7 +895,7 @@ function MatrixMultiply(const m1, m2: TMatrix): TMatrix; overload; {$IFDEF GLS_F
 procedure MatrixMultiply(const m1, m2: TMatrix; var MResult: TMatrix); overload; {$IFDEF GLS_FASTMATH}inline;{$ENDIF}
 
 // Transforms a homogeneous vector by multiplying it with a matrix
-function VectorTransform(const V: TVector; const M: TMatrix): TVector; overload; inline;
+function VectorTransform(const V: TVector; const M: TMatrix): TVector; overload; {$IFDEF GLS_FASTMATH}inline;{$ENDIF}
 // Transforms a homogeneous vector by multiplying it with a matrix
 function VectorTransform(const V: TVector; const M: TAffineMatrix): TVector; overload; inline;
 // Transforms an affine vector by multiplying it with a matrix
@@ -915,9 +904,9 @@ function VectorTransform(const V: TAffineVector; const M: TMatrix): TAffineVecto
 function VectorTransform(const V: TAffineVector; const M: TAffineMatrix): TAffineVector; overload; inline;
 
 // Determinant of a 3x3 matrix
-function MatrixDeterminant(const M: TAffineMatrix): Single; overload; inline;
+function MatrixDeterminant(const M: TAffineMatrix): Single; overload;  {$IFDEF GLS_FASTMATH}inline;{$ENDIF}
 // Determinant of a 4x4 matrix
-function MatrixDeterminant(const M: TMatrix): Single; overload;
+function MatrixDeterminant(const M: TMatrix): Single; overload; {$IFDEF GLS_FASTMATH}inline;{$ENDIF}
 
 { Adjoint of a 4x4 matrix, used in the computation of the inverse of a 4x4 matrix }
 procedure AdjointMatrix(var M: TMatrix); overload;
@@ -938,17 +927,17 @@ procedure TranslateMatrix(var M: TMatrix; const V: TVector); overload;
 procedure NormalizeMatrix(var M: TMatrix);
 
 // Computes transpose of 3x3 matrix
-procedure TransposeMatrix(var M: TAffineMatrix); overload;
+procedure TransposeMatrix(var M: TAffineMatrix); overload; {$IFDEF GLS_FASTMATH}inline;{$ENDIF}
 // Computes transpose of 4x4 matrix
-procedure TransposeMatrix(var M: TMatrix); overload;
+procedure TransposeMatrix(var M: TMatrix); overload; {$IFDEF GLS_FASTMATH}inline;{$ENDIF}
 
 // Finds the inverse of a 4x4 matrix
-procedure InvertMatrix(var M: TMatrix); overload;
-function MatrixInvert(const M: TMatrix): TMatrix; overload;
+procedure InvertMatrix(var M: TMatrix); overload; {$IFDEF GLS_FASTMATH}inline;{$ENDIF}
+function MatrixInvert(const M: TMatrix): TMatrix; overload; {$IFDEF GLS_FASTMATH}inline;{$ENDIF}
 
 // Finds the inverse of a 3x3 matrix;
-procedure InvertMatrix(var M: TAffineMatrix); overload;
-function MatrixInvert(const M: TAffineMatrix): TAffineMatrix; overload;
+procedure InvertMatrix(var M: TAffineMatrix); overload; {$IFDEF GLS_FASTMATH}inline;{$ENDIF}
+function  MatrixInvert(const M: TAffineMatrix): TAffineMatrix; overload; {$IFDEF GLS_FASTMATH}inline;{$ENDIF}
 
 { Finds the inverse of an angle preserving matrix.
   Angle preserving matrices can combine translation, rotation and isotropic
@@ -967,8 +956,7 @@ function CreatePerspectiveMatrix(FOV, Aspect, ZNear, ZFar: Single): TMatrix;
 function CreateOrthoMatrix(Left, Right, Bottom, Top, ZNear, ZFar: Single): TMatrix;
 function CreatePickMatrix(X, Y, deltax, deltay: Single; const viewport: TVector4i): TMatrix;
 function Project(objectVector: TVector; const ViewProjMatrix: TMatrix; const viewport: TVector4i; out WindowVector: TVector): Boolean;
-function UnProject(WindowVector: TVector; ViewProjMatrix: TMatrix;
-  const viewport: TVector4i; out objectVector: TVector): Boolean;
+function UnProject(WindowVector: TVector; ViewProjMatrix: TMatrix; const viewport: TVector4i; out objectVector: TVector): Boolean;
 
 // ------------------------------------------------------------------------------
 // Plane functions
@@ -1011,42 +999,28 @@ function PointPlaneDistance(const point, planePoint, planeNormal: TAffineVector)
 function PointPlaneDistance(const point: TAffineVector; const plane: THmgPlane): Single; overload;
 
 { Computes point to plane projection. Plane and direction have to be normalized }
-function PointPlaneOrthoProjection(const point: TAffineVector;
-  const plane: THmgPlane; var inter: TAffineVector;
-  bothface: Boolean = True): Boolean;
-function PointPlaneProjection(const point, direction: TAffineVector;
-  const plane: THmgPlane; var inter: TAffineVector;
-  bothface: Boolean = True): Boolean;
+function PointPlaneOrthoProjection(const point: TAffineVector; const plane: THmgPlane; var inter: TAffineVector; bothface: Boolean = True): Boolean;
+function PointPlaneProjection(const point, direction: TAffineVector; const plane: THmgPlane; var inter: TAffineVector; bothface: Boolean = True): Boolean;
 
 { Computes segment / plane intersection return false if there isn't an intersection }
-function SegmentPlaneIntersection(const ptA, ptB: TAffineVector;
-  const plane: THmgPlane; var inter: TAffineVector): Boolean;
+function SegmentPlaneIntersection(const ptA, ptB: TAffineVector; const plane: THmgPlane; var inter: TAffineVector): Boolean;
 
 { Computes point to triangle projection. Direction has to be normalized }
-function PointTriangleOrthoProjection(const point, ptA, ptB, ptC: TAffineVector;
-  var inter: TAffineVector; bothface: Boolean = True): Boolean;
-function PointTriangleProjection(const point, direction, ptA, ptB,
-  ptC: TAffineVector; var inter: TAffineVector;
-  bothface: Boolean = True): Boolean;
+function PointTriangleOrthoProjection(const point, ptA, ptB, ptC: TAffineVector; var inter: TAffineVector; bothface: Boolean = True): Boolean;
+function PointTriangleProjection(const point, direction, ptA, ptB, ptC: TAffineVector; var inter: TAffineVector; bothface: Boolean = True): Boolean;
 
 { Returns true if line intersect ABC triangle. }
 function IsLineIntersectTriangle(const point, direction, ptA, ptB, ptC: TAffineVector): Boolean;
 { Computes point to Quad projection. Direction has to be normalized. Quad have to be flat and convex }
-function PointQuadOrthoProjection(const point, ptA, ptB, ptC,
-  ptD: TAffineVector; var inter: TAffineVector; bothface: Boolean = True): Boolean;
-function PointQuadProjection(const point, direction, ptA, ptB, ptC,
-  ptD: TAffineVector; var inter: TAffineVector; bothface: Boolean = True): Boolean;
+function PointQuadOrthoProjection(const point, ptA, ptB, ptC, ptD: TAffineVector; var inter: TAffineVector; bothface: Boolean = True): Boolean;
+function PointQuadProjection(const point, direction, ptA, ptB, ptC, ptD: TAffineVector; var inter: TAffineVector; bothface: Boolean = True): Boolean;
 
 { Returns true if line intersect ABCD quad. Quad have to be flat and convex }
 function IsLineIntersectQuad(const point, direction, ptA, ptB, ptC, ptD: TAffineVector): Boolean;
 
 { Computes point to disk projection. Direction has to be normalized }
-function PointDiskOrthoProjection(const point, center, up: TAffineVector;
-  const radius: Single; var inter: TAffineVector;
-  bothface: Boolean = True): Boolean;
-function PointDiskProjection(const point, direction, center, up: TAffineVector;
-  const radius: Single; var inter: TAffineVector;
-  bothface: Boolean = True): Boolean;
+function PointDiskOrthoProjection(const point, center, up: TAffineVector; const radius: Single; var inter: TAffineVector;  bothface: Boolean = True): Boolean;
+function PointDiskProjection(const point, direction, center, up: TAffineVector; const radius: Single; var inter: TAffineVector;  bothface: Boolean = True): Boolean;
 
 { Computes closest point on a segment (a segment is a limited line). }
 function PointSegmentClosestPoint(const point, segmentStart, segmentStop: TAffineVector): TAffineVector; overload;
@@ -1062,8 +1036,7 @@ function PointLineClosestPoint(const point, linePoint, lineDirection: TAffineVec
 function PointLineDistance(const point, linePoint, lineDirection: TAffineVector): Single;
 
 { Computes the closest points (2) given two segments. }
-procedure SegmentSegmentClosestPoint(const S0Start, S0Stop, S1Start,
-  S1Stop: TAffineVector; var Segment0Closest, Segment1Closest: TAffineVector);
+procedure SegmentSegmentClosestPoint(const S0Start, S0Stop, S1Start, S1Stop: TAffineVector; var Segment0Closest, Segment1Closest: TAffineVector);
 
 { Computes the closest distance between two segments. }
 function SegmentSegmentDistance(const S0Start, S0Stop, S1Start, S1Stop: TAffineVector): Single;
@@ -1079,7 +1052,10 @@ type
   TEulerOrder = (eulXYZ, eulXZY, eulYXZ, eulYZX, eulZXY, eulZYX);
 
 // Creates a quaternion from the given values
-function QuaternionMake(const Imag: array of Single; Real: Single): TQuaternion;
+function QuaternionMake(const Imag: array of Single; Real: Single): TQuaternion; overload;
+function QuaternionMake(const X,Y,Z,W: Single): TQuaternion; overload;
+function QuaternionMake(const V: TVector): TQuaternion; overload;
+
 // Returns the conjugate of a quaternion
 function QuaternionConjugate(const Q: TQuaternion): TQuaternion;
 // Returns the magnitude of the quaternion
@@ -1142,9 +1118,9 @@ function RadianToDeg(const Radians: Extended): Extended; overload; inline
 function RadianToDeg(const Radians: Single): Single; overload; inline
 
 // Normalize to an angle in the [-PI; +PI] range
-function NormalizeAngle(angle: Single): Single;
+function NormalizeAngle(angle: Single): Single; inline;
 // Normalize to an angle in the [-180; 180] range
-function NormalizeDegAngle(angle: Single): Single;
+function NormalizeDegAngle(angle: Single): Single; inline;
 
 // Calculates sine and cosine from the given angle Theta
 {$IFDEF GLS_PLATFORM_HAS_EXTENDED}
@@ -1191,10 +1167,6 @@ function ISqrt(i: Integer): Integer;
 function ILength(X, Y: Integer): Integer; overload;
 function ILength(X, Y, Z: Integer): Integer; overload;
 
-{$IFDEF GLS_ASM}
-// Computes Exp(ST(0)) and leaves result on ST(0)
-procedure RegisterBasedExp;
-{$ENDIF}
 // Generates a random point on the unit sphere.
 // Point repartition is correctly isotropic with no privilegied direction
 procedure RandomPointOnSphere(var p: TAffineVector);
@@ -1223,16 +1195,16 @@ function MinFloat(values: PSingleArray; nbItems: Integer): Single; overload;
 function MinFloat(values: PDoubleArray; nbItems: Integer): Double; overload;
 function MinFloat(values: PExtendedArray; nbItems: Integer): Extended; overload;
 // Returns the minimum of given values.
-function MinFloat(const V1, V2: Single): Single; overload;
+function MinFloat(const V1, V2: Single): Single; overload; inline;
 function MinFloat(const V: array of Single): Single; overload;
-function MinFloat(const V1, V2: Double): Double; overload;
+function MinFloat(const V1, V2: Double): Double; overload; inline;
 {$IFDEF GLS_PLATFORM_HAS_EXTENDED}
-function MinFloat(const V1, V2: Extended): Extended; overload;
+function MinFloat(const V1, V2: Extended): Extended; overload; inline;
 {$ENDIF}
-function MinFloat(const V1, V2, V3: Single): Single; overload;
-function MinFloat(const V1, V2, V3: Double): Double; overload;
+function MinFloat(const V1, V2, V3: Single): Single; overload; inline;
+function MinFloat(const V1, V2, V3: Double): Double; overload; inline;
 {$IFDEF GLS_PLATFORM_HAS_EXTENDED}
-function MinFloat(const V1, V2, V3: Extended): Extended; overload;
+function MinFloat(const V1, V2, V3: Extended): Extended; overload; inline;
 {$ENDIF}
 // Returns the maximum value of the array.
 function MaxFloat(values: PSingleArray; nbItems: Integer): Single; overload;
@@ -1259,8 +1231,8 @@ function MaxInteger(const V1, V2: Cardinal): Cardinal; overload;
 function MaxInteger(const V1, V2, V3: Integer): Integer; overload;
 function MaxInteger(const V1, V2, V3: Cardinal): Cardinal; overload;
 
-function ClampInteger(const value, min, max: Integer): Integer; overload;{$IFDEF GLS_INLINE_VICE_ASM}inline; {$ENDIF}
-function ClampInteger(const value, min, max: Cardinal): Cardinal; overload;{$IFDEF GLS_INLINE_VICE_ASM}inline; {$ENDIF}
+function ClampInteger(const value, min, max: Integer): Integer; overload; inline;
+function ClampInteger(const value, min, max: Cardinal): Cardinal; overload; inline;
 // Computes the triangle's area
 function TriangleArea(const p1, p2, p3: TAffineVector): Single; overload;
 // Computes the polygons's area. Points must be coplanar. Polygon needs not be convex
@@ -1540,13 +1512,7 @@ var
   // + 2 : use Intel SSE code (Pentium III, NOT IMPLEMENTED YET !)
   vSIMD: Byte = 0;
 
-// --------------------------------------------------------------
-// --------------------------------------------------------------
-// --------------------------------------------------------------
 implementation
-// --------------------------------------------------------------
-// --------------------------------------------------------------
-// --------------------------------------------------------------
 
 const
 {$IFDEF GLS_ASM}
@@ -1562,6 +1528,26 @@ const
   cZero: Single = 0.0;
   cOne: Single = 1.0;
   cOneDotFive: Single = 0.5;
+
+{$IFDEF GLS_FASTMATH}
+function ToMatrix3(const M: TMatrix4): TMatrix3; inline;
+begin
+  Result.Init(
+    M.m11, M.m12, M.m13,
+    M.m21, M.m22, M.m23,
+    M.m31, M.m32, M.m33);
+end;
+
+function ToVector3(const V: TVector4): TVector3; inline;
+begin
+  Result.Init(V.X, V.Y, V.Z);
+end;
+
+function ToVector4(const V: TVector3): TVector4; inline;
+begin
+  Result.Init(V, 0);
+end;
+{$ENDIF}
 
 function GeometryOptimizationMode: String;
 begin
@@ -1676,6 +1662,14 @@ begin
   result.W := W;
 end;
 
+function VectorMake(const Q: TQuaternion): TVector; overload; inline;
+begin
+  result.X := Q.X;
+  result.Y := Q.Y;
+  result.Z := Q.Z;
+  result.W := Q.W;
+end;
+
 function PointMake(const X, Y, Z: Single): TVector; overload;
 begin
   result.X := X;
@@ -1719,8 +1713,10 @@ end;
 procedure SetVector(out V: TVector; const vSrc: TVector);
 begin
   // faster than memcpy, move or ':=' on the TVector...
-  V._12 := vSrc._12;
-  V._34 := vSrc._34;
+  V.X := vSrc.X;
+  V.Y := vSrc.Y;
+  V.Z := vSrc.Z;
+  V.W := vSrc.W;
 end;
 
 procedure MakePoint(out V: TVector; const X, Y, Z: Single);
@@ -1802,7 +1798,7 @@ end;
 function VectorAdd(const V1, V2: TAffineVector): TAffineVector;
 begin
 {$IFDEF GLS_FASTMATH}
-  Neslib.FastMath.TVector3(Result) := Neslib.FastMath.TVector3(V1) + Neslib.FastMath.TVector3(V2);
+  Result := V1 + V2;
 {$ELSE}
   result.X := V1.X + V2.X;
   result.Y := V1.Y + V2.Y;
@@ -1813,7 +1809,7 @@ end;
 procedure VectorAdd(const V1, V2: TAffineVector; var vr: TAffineVector); overload;
 begin
 {$IFDEF GLS_FASTMATH}
-  Neslib.FastMath.TVector3(vr) := Neslib.FastMath.TVector3(V1) + Neslib.FastMath.TVector3(V2);
+  vr := V1 + V2;
 {$ELSE}
   vr.X := V1.X + V2.X;
   vr.Y := V1.Y + V2.Y;
@@ -1824,7 +1820,7 @@ end;
 procedure VectorAdd(const V1, V2: TAffineVector; vr: PAffineVector); overload;
 begin
 {$IFDEF GLS_FASTMATH}
-  Neslib.FastMath.TVector3(vr^) := Neslib.FastMath.TVector3(V1) + Neslib.FastMath.TVector3(V2);
+  vr^ := V1 + V2;
 {$ELSE}
   vr^.X := V1.X + V2.X;
   vr^.Y := V1.Y + V2.Y;
@@ -1835,7 +1831,7 @@ end;
 function VectorAdd(const V1, V2: TVector): TVector;
 begin
 {$IFDEF GLS_FASTMATH}
-  Neslib.FastMath.TVector4(Result) := Neslib.FastMath.TVector4(V1) + Neslib.FastMath.TVector4(V2);
+  Result := V1 + V2;
 {$ELSE}
   result.X := V1.X + V2.X;
   result.Y := V1.Y + V2.Y;
@@ -1847,7 +1843,7 @@ end;
 procedure VectorAdd(const V1, V2: TVector; var vr: TVector);
 begin
 {$IFDEF GLS_FASTMATH}
-  Neslib.FastMath.TVector4(vr) := Neslib.FastMath.TVector4(V1) + Neslib.FastMath.TVector4(V2);
+  vr := V1 + V2;
 {$ELSE}
   vr.X := V1.X + V2.X;
   vr.Y := V1.Y + V2.Y;
@@ -1859,7 +1855,7 @@ end;
 function VectorAdd(const V: TAffineVector; const f: Single): TAffineVector;
 begin
 {$IFDEF GLS_FASTMATH}
-  Neslib.FastMath.TVector3(Result) := Neslib.FastMath.TVector3(V) + f;
+  Result := V + f;
 {$ELSE}
   result.X := V.X + f;
   result.Y := V.Y + f;
@@ -1870,7 +1866,7 @@ end;
 function VectorAdd(const V: TVector; const f: Single): TVector;
 begin
 {$IFDEF GLS_FASTMATH}
-  Neslib.FastMath.TVector4(Result) := Neslib.FastMath.TVector4(V) + f;
+  Result := V + f;
 {$ELSE}
   result.X := V.X + f;
   result.Y := V.Y + f;
@@ -1881,16 +1877,21 @@ end;
 
 function PointAdd(var V1: TVector; const V2: TVector): TVector;
 begin
+{$IFDEF GLS_FASTMATH}
+  Result    := V1 + V2;
+  Result.W  := 1;
+{$ELSE}
   result.X := V1.X + V2.X;
   result.Y := V1.Y + V2.Y;
   result.Z := V1.Z + V2.Z;
   result.W := 1;
+{$ENDIF}
 end;
 
 procedure AddVector(var V1: TAffineVector; const V2: TAffineVector);
 begin
 {$IFDEF GLS_FASTMATH}
-  Neslib.FastMath.TVector3(V1) := Neslib.FastMath.TVector3(V1) + Neslib.FastMath.TVector3(V2);
+  V1 := V1 + V2;
 {$ELSE}
   V1.X := V1.X + V2.X;
   V1.Y := V1.Y + V2.Y;
@@ -1908,7 +1909,7 @@ end;
 procedure AddVector(var V1: TVector; const V2: TVector);
 begin
 {$IFDEF GLS_FASTMATH}
-  Neslib.FastMath.TVector4(V1) := Neslib.FastMath.TVector4(V1) + Neslib.FastMath.TVector4(V2);
+  V1 := V1 + V2;
 {$ELSE}
   V1.X := V1.X + V2.X;
   V1.Y := V1.Y + V2.Y;
@@ -1920,7 +1921,7 @@ end;
 procedure AddVector(var V: TAffineVector; const f: Single);
 begin
 {$IFDEF GLS_FASTMATH}
-  Neslib.FastMath.TVector3(V) := Neslib.FastMath.TVector3(V) + f;
+  V := V + f;
 {$ELSE}
   V.X := V.X + f;
   V.Y := V.Y + f;
@@ -1931,7 +1932,7 @@ end;
 procedure AddVector(var V: TVector; const f: Single);
 begin
 {$IFDEF GLS_FASTMATH}
-  Neslib.FastMath.TVector4(V) := Neslib.FastMath.TVector4(V) + f;
+  V := V + f;
 {$ELSE}
   V.X := V.X + f;
   V.Y := V.Y + f;
@@ -1942,10 +1943,15 @@ end;
 
 procedure AddPoint(var V1: TVector; const V2: TVector);
 begin
+{$IFDEF GLS_FASTMATH}
+  V1 := V1 + V2;
+  V1.W := 1;
+{$ELSE}
   V1.X := V1.X + V2.X;
   V1.Y := V1.Y + V2.Y;
   V1.Z := V1.Z + V2.Z;
   V1.W := 1;
+{$ENDIF}
 end;
 
 procedure TexPointArrayAdd(const src: PTexPointArray; const delta: TTexPoint;
@@ -1990,7 +1996,7 @@ end;
 function VectorSubtract(const V1, V2: TAffineVector): TAffineVector;
 begin
 {$IFDEF GLS_FASTMATH}
-  Neslib.FastMath.TVector3(Result) := Neslib.FastMath.TVector3(V1) - Neslib.FastMath.TVector3(V2);
+  Result := V1 - V2;
 {$ELSE}
   result.X := V1.X - V2.X;
   result.Y := V1.Y - V2.Y;
@@ -2008,7 +2014,7 @@ procedure VectorSubtract(const V1, V2: TAffineVector;
   var result: TAffineVector);
 begin
 {$IFDEF GLS_FASTMATH}
-  Neslib.FastMath.TVector3(Result) := Neslib.FastMath.TVector3(V1) - Neslib.FastMath.TVector3(V2);
+  Result := V1 - V2;
 {$ELSE}
   result.X := V1.X - V2.X;
   result.Y := V1.Y - V2.Y;
@@ -2036,7 +2042,7 @@ end;
 function VectorSubtract(const V1, V2: TVector): TVector;
 begin
 {$IFDEF GLS_FASTMATH}
-  Neslib.FastMath.TVector4(Result) := Neslib.FastMath.TVector4(V1) - Neslib.FastMath.TVector4(V2);
+  Result := V1 - V2;
 {$ELSE}
   result.X := V1.X - V2.X;
   result.Y := V1.Y - V2.Y;
@@ -2048,7 +2054,7 @@ end;
 procedure VectorSubtract(const V1, V2: TVector; var result: TVector);
 begin
 {$IFDEF GLS_FASTMATH}
-  Neslib.FastMath.TVector4(Result) := Neslib.FastMath.TVector4(V1) - Neslib.FastMath.TVector4(V2);
+  Result := V1 - V2;
 {$ELSE}
   result.X := V1.X - V2.X;
   result.Y := V1.Y - V2.Y;
@@ -2068,7 +2074,7 @@ end;
 function VectorSubtract(const V1: TAffineVector; delta: Single): TAffineVector;
 begin
 {$IFDEF GLS_FASTMATH}
-  Neslib.FastMath.TVector3(Result) := Neslib.FastMath.TVector3(V1) - delta;
+  Result := V1 - delta;
 {$ELSE}
   result.X := V1.X - delta;
   result.Y := V1.Y - delta;
@@ -2079,7 +2085,7 @@ end;
 function VectorSubtract(const V1: TVector; delta: Single): TVector;
 begin
 {$IFDEF GLS_FASTMATH}
-  Neslib.FastMath.TVector4(Result) := Neslib.FastMath.TVector4(V1) - delta;
+  Result := V1 - delta;
 {$ELSE}
   result.X := V1.X - delta;
   result.Y := V1.Y - delta;
@@ -2091,7 +2097,7 @@ end;
 procedure SubtractVector(var V1: TAffineVector; const V2: TAffineVector);
 begin
 {$IFDEF GLS_FASTMATH}
-  Neslib.FastMath.TVector3(V1) := Neslib.FastMath.TVector3(V1) - Neslib.FastMath.TVector3(V2);
+  V1 := V1 - V2;
 {$ELSE}
   V1.X := V1.X - V2.X;
   V1.Y := V1.Y - V2.Y;
@@ -2108,7 +2114,7 @@ end;
 procedure SubtractVector(var V1: TVector; const V2: TVector);
 begin
 {$IFDEF GLS_FASTMATH}
-  Neslib.FastMath.TVector4(V1) := Neslib.FastMath.TVector4(V1) - Neslib.FastMath.TVector4(V2);
+  V1 := V1 - V2;
 {$ELSE}
   V1.X := V1.X - V2.X;
   V1.Y := V1.Y - V2.Y;
@@ -2121,7 +2127,7 @@ procedure CombineVector(var vr: TAffineVector; const V: TAffineVector;
   var f: Single);
 begin
 {$IFDEF GLS_FASTMATH}
-  Neslib.FastMath.TVector3(vr) := Neslib.FastMath.TVector3(vr) + Neslib.FastMath.TVector3(V)*f;
+  vr := vr + V*f;
 {$ELSE}
   vr.X := vr.X + V.X * f;
   vr.Y := vr.Y + V.Y * f;
@@ -2133,7 +2139,7 @@ procedure CombineVector(var vr: TAffineVector; const V: TAffineVector;
   pf: PFloat);
 begin
 {$IFDEF GLS_FASTMATH}
-  Neslib.FastMath.TVector3(vr) := Neslib.FastMath.TVector3(vr) + Neslib.FastMath.TVector3(V)*pf^;
+  vr := vr + V*pf^;
 {$ELSE}
   vr.X := vr.X + V.X * pf^;
   vr.Y := vr.Y + V.Y * pf^;
@@ -2153,9 +2159,7 @@ function VectorCombine(const V1, V2: TAffineVector; const f1, f2: Single)
   : TAffineVector;
 begin
 {$IFDEF GLS_FASTMATH}
-  Neslib.FastMath.TVector3(Result) :=
-    Neslib.FastMath.TVector3(V1)*F1 +
-    Neslib.FastMath.TVector3(V2)*F2;
+  Result := f1*V1 + f2*V2;
 {$ELSE}
   result.V[X] := (f1 * V1.V[X]) + (f2 * V2.V[X]);
   result.V[Y] := (f1 * V1.V[Y]) + (f2 * V2.V[Y]);
@@ -2167,10 +2171,7 @@ function VectorCombine3(const V1, V2, V3: TAffineVector;
   const f1, f2, F3: Single): TAffineVector;
 begin
 {$IFDEF GLS_FASTMATH}
-  Neslib.FastMath.TVector3(Result) :=
-    Neslib.FastMath.TVector3(V1)*F1 +
-    Neslib.FastMath.TVector3(V2)*F2 +
-    Neslib.FastMath.TVector3(V3)*F3;
+  Result := f1*V1 + f2*V2 + f3*V3;
 {$ELSE}
   result.V[X] := (f1 * V1.V[X]) + (f2 * V2.V[X]) + (F3 * V3.V[X]);
   result.V[Y] := (f1 * V1.V[Y]) + (f2 * V2.V[Y]) + (F3 * V3.V[Y]);
@@ -2182,10 +2183,7 @@ procedure VectorCombine3(const V1, V2, V3: TAffineVector;
   const f1, f2, F3: Single; var vr: TAffineVector);
 begin
 {$IFDEF GLS_FASTMATH}
-  Neslib.FastMath.TVector3(vr) :=
-    Neslib.FastMath.TVector3(V1)*F1 +
-    Neslib.FastMath.TVector3(V2)*F2 +
-    Neslib.FastMath.TVector3(V3)*F3;
+  vr := f1*V1 + f2*V2 + f3*V3;
 {$ELSE}
   vr.V[X] := (f1 * V1.V[X]) + (f2 * V2.V[X]) + (F3 * V3.V[X]);
   vr.V[Y] := (f1 * V1.V[Y]) + (f2 * V2.V[Y]) + (F3 * V3.V[Y]);
@@ -2197,9 +2195,7 @@ procedure CombineVector(var vr: TVector; const V: TVector;
   var f: Single); overload;
 begin
 {$IFDEF GLS_FASTMATH}
-  Neslib.FastMath.TVector4(vr) :=
-    Neslib.FastMath.TVector4(vr) +
-    NesLib.FastMath.TVector4(V) * f;
+  vr := vr + V*f;
 {$ELSE}
   vr.X := vr.X + V.X * f;
   vr.Y := vr.Y + V.Y * f;
@@ -2219,9 +2215,7 @@ end;
 function VectorCombine(const V1, V2: TVector; const F1, F2: Single): TVector;
 begin
 {$IFDEF GLS_FASTMATH}
-  Neslib.FastMath.TVector4(Result) :=
-    Neslib.FastMath.TVector4(V1)*F1 +
-    Neslib.FastMath.TVector4(V1)*F2;
+  Result := f1*V1 + f2*V2;
 {$ELSE}
   result.V[X] := (F1 * V1.V[X]) + (F2 * V2.V[X]);
   result.V[Y] := (F1 * V1.V[Y]) + (F2 * V2.V[Y]);
@@ -2232,56 +2226,84 @@ end;
 
 function VectorCombine(const V1: TVector; const V2: TAffineVector;
   const F1, F2: Single): TVector; overload;
+{$IFDEF GLS_FASTMATH}
+var
+  vext: TVector4;
+begin
+  vext.Init(v2, 0);
+  Result := V1*F1 + vext*F2;
+{$ELSE}
 begin
   result.V[X] := (F1 * V1.V[X]) + (F2 * V2.V[X]);
   result.V[Y] := (F1 * V1.V[Y]) + (F2 * V2.V[Y]);
   result.V[Z] := (F1 * V1.V[Z]) + (F2 * V2.V[Z]);
   result.V[W] := F1 * V1.V[W];
+{$ENDIF}
 end;
 
 procedure VectorCombine(const V1, V2: TVector; const F1, F2: Single;
   var vr: TVector); overload;
 begin
+{$IFDEF GLS_FASTMATH}
+  vr := f1*V1 + f2*V2;
+{$ELSE}
   vr.X := (F1 * V1.X) + (F2 * V2.X);
   vr.Y := (F1 * V1.Y) + (F2 * V2.Y);
   vr.Z := (F1 * V1.Z) + (F2 * V2.Z);
   vr.W := (F1 * V1.W) + (F2 * V2.W);
+{$ENDIF}
 end;
 
 procedure VectorCombine(const V1, V2: TVector; const f2: Single;
   var vr: TVector); overload;
-begin // 201283
+begin
+{$IFDEF GLS_FASTMATH}
+  vr := V1 + f2*V2;
+{$ELSE}
   vr.X := V1.X + (f2 * V2.X);
   vr.Y := V1.Y + (f2 * V2.Y);
   vr.Z := V1.Z + (f2 * V2.Z);
   vr.W := V1.W + (f2 * V2.W);
+{$ENDIF}
 end;
 
 procedure VectorCombine(const V1: TVector; const V2: TAffineVector;
   const F1, F2: Single; var vr: TVector);
 begin
+{$IFDEF GLS_FASTMATH}
+  vr := f1*V1 + f2*ToVector4(V2);
+{$ELSE}
   vr.V[X] := (F1 * V1.V[X]) + (F2 * V2.V[X]);
   vr.V[Y] := (F1 * V1.V[Y]) + (F2 * V2.V[Y]);
   vr.V[Z] := (F1 * V1.V[Z]) + (F2 * V2.V[Z]);
   vr.V[W] := F1 * V1.V[W];
+{$ENDIF}
 end;
 
 function VectorCombine3(const V1, V2, V3: TVector;
   const F1, F2, F3: Single): TVector;
 begin
+{$IFDEF GLS_FASTMATH}
+  Result := f1*V1 + f2*V2 + f3*V3;
+{$ELSE}
   result.V[X] := (F1 * V1.V[X]) + (F2 * V2.V[X]) + (F3 * V3.V[X]);
   result.V[Y] := (F1 * V1.V[Y]) + (F2 * V2.V[Y]) + (F3 * V3.V[Y]);
   result.V[Z] := (F1 * V1.V[Z]) + (F2 * V2.V[Z]) + (F3 * V3.V[Z]);
   result.V[W] := (F1 * V1.V[W]) + (F2 * V2.V[W]) + (F3 * V3.V[W]);
+{$ENDIF}
 end;
 
 procedure VectorCombine3(const V1, V2, V3: TVector; const F1, F2, F3: Single;
   var vr: TVector);
 begin
+{$IFDEF GLS_FASTMATH}
+  vr := f1*V1 + f2*V2 + f3*V3;
+{$ELSE}
   vr.V[X] := (F1 * V1.V[X]) + (F2 * V2.V[X]) + (F3 * V3.V[X]);
   vr.V[Y] := (F1 * V1.V[Y]) + (F2 * V2.V[Y]) + (F3 * V3.V[Y]);
   vr.V[Z] := (F1 * V1.V[Z]) + (F2 * V2.V[Z]) + (F3 * V3.V[Z]);
   vr.V[W] := (F1 * V1.V[W]) + (F2 * V2.V[W]) + (F3 * V3.V[W]);
+{$ENDIF}
 end;
 
 function VectorDotProduct(const V1, V2: TVector2f): Single;
@@ -2291,12 +2313,20 @@ end;
 
 function VectorDotProduct(const V1, V2: TAffineVector): Single;
 begin
+{$IFDEF GLS_FASTMATH}
+  Result := V1.dot(V2);
+{$ELSE}
   result := V1.X * V2.X + V1.Y * V2.Y + V1.Z * V2.Z;
+{$ENDIF}
 end;
 
 function VectorDotProduct(const V1, V2: TVector): Single;
 begin
+{$IFDEF GLS_FASTMATH}
+  Result := V1.dot(V2);
+{$ELSE}
   result := V1.X * V2.X + V1.Y * V2.Y + V1.Z * V2.Z + V1.W * V2.W;
+{$ENDIF}
 end;
 
 function VectorDotProduct(const V1: TVector; const V2: TAffineVector): Single;
@@ -2304,318 +2334,89 @@ begin
   result := V1.X * V2.X + V1.Y * V2.Y + V1.Z * V2.Z;
 end;
 
-{$IFDEF GLS_ASM}
-function PointProject(const p, origin, direction: TAffineVector): Single;
-// EAX -> p, EDX -> origin, ECX -> direction
-asm
-  fld   dword ptr [eax]
-  fsub  dword ptr [edx]
-  fmul  dword ptr [ecx]
-  fld   dword ptr [eax+4]
-  fsub  dword ptr [edx+4]
-  fmul  dword ptr [ecx+4]
-  fadd
-  fld   dword ptr [eax+8]
-  fsub  dword ptr [edx+8]
-  fmul  dword ptr [ecx+8]
-  fadd
-end;
-{$ELSE}
 function PointProject(const p, origin, direction: TAffineVector): Single;
 begin
   result := direction.X * (p.X - origin.X) + direction.Y *
     (p.Y - origin.Y) + direction.Z * (p.Z - origin.Z);
 end;
-{$ENDIF}
 
-{$IFDEF GLS_ASM}
-function PointProject(const p, origin, direction: TVector): Single;
-// EAX -> p, EDX -> origin, ECX -> direction
-asm
-  fld   dword ptr [eax]
-  fsub  dword ptr [edx]
-  fmul  dword ptr [ecx]
-  fld   dword ptr [eax+4]
-  fsub  dword ptr [edx+4]
-  fmul  dword ptr [ecx+4]
-  fadd
-  fld   dword ptr [eax+8]
-  fsub  dword ptr [edx+8]
-  fmul  dword ptr [ecx+8]
-  fadd
-end;
-{$ELSE}
 function PointProject(const p, origin, direction: TVector): Single;
 begin
   result := direction.X * (p.X - origin.X) + direction.Y *
     (p.Y - origin.Y) + direction.Z * (p.Z - origin.Z);
 end;
-{$ENDIF}
 
 function VectorCrossProduct(const V1, V2: TAffineVector): TAffineVector;
 begin
 {$IFDEF GLS_FASTMATH}
-  Neslib.FastMath.TVector3(Result) := Neslib.FastMath.TVector3(V1).Cross(Neslib.FastMath.TVector3(V2));
+  Result := V1.Cross(V2);
 {$ELSE}
-  result.V[X] := V1.V[Y] * V2.V[Z] - V1.V[Z] * V2.V[Y];
-  result.V[Y] := V1.V[Z] * V2.V[X] - V1.V[X] * V2.V[Z];
-  result.V[Z] := V1.V[X] * V2.V[Y] - V1.V[Y] * V2.V[X];
+  result.X := V1.Y * V2.Z - V1.Z * V2.Y;
+  result.Y := V1.Z * V2.X - V1.X * V2.Z;
+  result.Z := V1.X * V2.Y - V1.Y * V2.X;
 {$ENDIF}
 end;
 
-{$IFDEF GLS_ASM}
-function VectorCrossProduct(const V1, V2: TVector): TVector;
-// EAX contains address of V1
-// EDX contains address of V2
-// ECX contains the result
-asm
-  fld   dword ptr [eax+$4]
-  fmul  dword ptr [edx+$8]
-  fld   dword ptr [eax+$8]
-  fmul  dword ptr [edx+$4]
-  fsubp
-  fstp  dword ptr [ecx]
-
-  fld   dword ptr [eax+$8]
-  fmul  dword ptr [edx]
-  fld   dword ptr [eax]
-  fmul  dword ptr [edx+$8]
-  fsubp
-  fstp  dword ptr [ecx+$4]
-
-  fld   dword ptr [eax]
-  fmul  dword ptr [edx+$4]
-  fld   dword ptr [eax+$4]
-  fmul  dword ptr [edx]
-  fsubp
-  fstp  dword ptr [ecx+$8]
-
-  xor   eax, eax
-  mov   [ecx+$c], eax
-end;
-{$ELSE}
-
-{$codealign 16}
-function VectorCrossProduct(const V1, V2: TVector): TVector;
-asm
-
-  // Faster 3 shuffle optimization from http://threadlocalmutex.com/?p=8
-  // One movaps less also
-
-  movups xmm0, [v1]
-  movaps xmm1, xmm0
-  shufps xmm1, xmm1, 11001001b // WXZY
-
-  movups xmm2, [v2]
-  mulps  xmm1, xmm2
-  shufps xmm2, xmm2, 11001001b // WXZY
-
-  mulps  xmm0, xmm2
-
-  subps  xmm0, xmm1
-
-  shufps xmm0, xmm0, 11001001b // WXZY
-
-  movups [Result], xmm0
-
-end;
-{
 function VectorCrossProduct(const V1, V2: TVector): TVector;
 begin
-  result.V[X] := V1.V[Y] * V2.V[Z] - V1.V[Z] * V2.V[Y];
-  result.V[Y] := V1.V[Z] * V2.V[X] - V1.V[X] * V2.V[Z];
-  result.V[Z] := V1.V[X] * V2.V[Y] - V1.V[Y] * V2.V[X];
-  result.V[W] := 0;
-end;
-{}
-{$ENDIF}
-
-{$IFDEF GLS_ASM}
-procedure VectorCrossProduct(const V1, V2: TVector; var vr: TVector);
-// EAX contains address of V1
-// EDX contains address of V2
-// ECX contains the result
-asm
-  fld   dword ptr [eax+$4]
-  fmul  dword ptr [edx+$8]
-  fld   dword ptr [eax+$8]
-  fmul  dword ptr [edx+$4]
-  fsubp
-  fstp  dword ptr [ecx]
-
-  fld   dword ptr [eax+$8]
-  fmul  dword ptr [edx]
-  fld   dword ptr [eax]
-  fmul  dword ptr [edx+$8]
-  fsubp
-  fstp  dword ptr [ecx+$4]
-
-  fld   dword ptr [eax]
-  fmul  dword ptr [edx+$4]
-  fld   dword ptr [eax+$4]
-  fmul  dword ptr [edx]
-  fsubp
-  fstp  dword ptr [ecx+$8]
-
-  xor   eax, eax
-  mov   [ecx+$c], eax
-end;
+{$IFDEF GLS_FASTMATH}
+  Result.Init(ToVector3(V1).Cross(ToVector3(V2)), 0)
 {$ELSE}
-
-{$codealign 16}
-procedure VectorCrossProduct(const V1, V2: TVector; var vr: TVector);
-asm
-
-  // Faster 3 shuffle optimization from http://threadlocalmutex.com/?p=8
-  // One movaps less also
-
-  movups xmm0, [v1]
-  movaps xmm1, xmm0
-  shufps xmm1, xmm1, 11001001b // WXZY
-
-  movups xmm2, [v2]
-  mulps  xmm1, xmm2
-  shufps xmm2, xmm2, 11001001b // WXZY
-
-  mulps  xmm0, xmm2
-
-  subps  xmm0, xmm1
-
-  shufps xmm0, xmm0, 11001001b // WXZY
-
-  movups [vr], xmm0
-
-
+  result.X := V1.Y * V2.Z - V1.Z * V2.Y;
+  result.Y := V1.Z * V2.X - V1.X * V2.Z;
+  result.Z := V1.X * V2.Y - V1.Y * V2.X;
+  result.W := 0;
+{$ENDIF}
 end;
 
-{
 procedure VectorCrossProduct(const V1, V2: TVector; var vr: TVector);
 begin
-  vr.V[X] := V1.V[Y] * V2.V[Z] - V1.V[Z] * V2.V[Y];
-  vr.V[Y] := V1.V[Z] * V2.V[X] - V1.V[X] * V2.V[Z];
-  vr.V[Z] := V1.V[X] * V2.V[Y] - V1.V[Y] * V2.V[X];
-  vr.V[W] := 0;
-end;
-}
-{$ENDIF}
-
-{$IFDEF GLS_ASM}
-procedure VectorCrossProduct(const V1, V2: TAffineVector;
-  var vr: TVector); overload;
-// EAX contains address of V1
-// EDX contains address of V2
-// ECX contains the result
-asm
-  fld   dword ptr [eax+$4]
-  fmul  dword ptr [edx+$8]
-  fld   dword ptr [eax+$8]
-  fmul  dword ptr [edx+$4]
-  fsubp
-  fstp  dword ptr [ecx]
-
-  fld   dword ptr [eax+$8]
-  fmul  dword ptr [edx]
-  fld   dword ptr [eax]
-  fmul  dword ptr [edx+$8]
-  fsubp
-  fstp  dword ptr [ecx+$4]
-
-  fld   dword ptr [eax]
-  fmul  dword ptr [edx+$4]
-  fld   dword ptr [eax+$4]
-  fmul  dword ptr [edx]
-  fsubp
-  fstp  dword ptr [ecx+$8]
-
-  xor   eax, eax
-  mov   [ecx+$c], eax
-end;
+{$IFDEF GLS_FASTMATH}
+  vr.Init(ToVector3(V1).Cross(ToVector3(V2)), 0)
 {$ELSE}
+  vr.X := V1.Y * V2.Z - V1.Z * V2.Y;
+  vr.Y := V1.Z * V2.X - V1.X * V2.Z;
+  vr.Z := V1.X * V2.Y - V1.Y * V2.X;
+  vr.W := 0;
+{$ENDIF}
+end;
+
 procedure VectorCrossProduct(const V1, V2: TAffineVector;
   var vr: TVector); overload;
 begin
-  vr.V[X] := V1.V[Y] * V2.V[Z] - V1.V[Z] * V2.V[Y];
-  vr.V[Y] := V1.V[Z] * V2.V[X] - V1.V[X] * V2.V[Z];
-  vr.V[Z] := V1.V[X] * V2.V[Y] - V1.V[Y] * V2.V[X];
-  vr.V[W] := 0;
-end;
-{$ENDIF}
-
-{$IFDEF GLS_ASM}
-procedure VectorCrossProduct(const V1, V2: TVector;
-  var vr: TAffineVector); overload;
-// EAX contains address of V1
-// EDX contains address of V2
-// ECX contains the result
-asm
-  fld   dword ptr [eax+$4]
-  fmul  dword ptr [edx+$8]
-  fld   dword ptr [eax+$8]
-  fmul  dword ptr [edx+$4]
-  fsubp
-  fstp  dword ptr [ecx]
-
-  fld   dword ptr [eax+$8]
-  fmul  dword ptr [edx]
-  fld   dword ptr [eax]
-  fmul  dword ptr [edx+$8]
-  fsubp
-  fstp  dword ptr [ecx+$4]
-
-  fld   dword ptr [eax]
-  fmul  dword ptr [edx+$4]
-  fld   dword ptr [eax+$4]
-  fmul  dword ptr [edx]
-  fsubp
-  fstp  dword ptr [ecx+$8]
-end;
+{$IFDEF GLS_FASTMATH}
+  vr.Init(V1.Cross(V2), 0)
 {$ELSE}
+  vr.X := V1.Y * V2.Z - V1.Z * V2.Y;
+  vr.Y := V1.Z * V2.X - V1.X * V2.Z;
+  vr.Z := V1.X * V2.Y - V1.Y * V2.X;
+  vr.W := 0;
+{$ENDIF}
+end;
+
 procedure VectorCrossProduct(const V1, V2: TVector;
   var vr: TAffineVector); overload;
 begin
+{$IFDEF GLS_FASTMATH}
+  vr := ToVector3(V1).Cross(ToVector3(V2));
+{$ELSE}
   vr.V[X] := V1.V[Y] * V2.V[Z] - V1.V[Z] * V2.V[Y];
   vr.V[Y] := V1.V[Z] * V2.V[X] - V1.V[X] * V2.V[Z];
   vr.V[Z] := V1.V[X] * V2.V[Y] - V1.V[Y] * V2.V[X];
-end;
 {$ENDIF}
-
-{$IFDEF GLS_ASM}
-procedure VectorCrossProduct(const V1, V2: TAffineVector;
-  var vr: TAffineVector); overload;
-// EAX contains address of V1
-// EDX contains address of V2
-// ECX contains the result
-asm
-  fld   dword ptr [eax+$4]
-  fmul  dword ptr [edx+$8]
-  fld   dword ptr [eax+$8]
-  fmul  dword ptr [edx+$4]
-  fsubp
-  fstp  dword ptr [ecx]
-
-  fld   dword ptr [eax+$8]
-  fmul  dword ptr [edx]
-  fld   dword ptr [eax]
-  fmul  dword ptr [edx+$8]
-  fsubp
-  fstp  dword ptr [ecx+$4]
-
-  fld   dword ptr [eax]
-  fmul  dword ptr [edx+$4]
-  fld   dword ptr [eax+$4]
-  fmul  dword ptr [edx]
-  fsubp
-  fstp  dword ptr [ecx+$8]
 end;
-{$ELSE}
+
 procedure VectorCrossProduct(const V1, V2: TAffineVector;
   var vr: TAffineVector); overload;
 begin
+{$IFDEF GLS_FASTMATH}
+  vr := V1.Cross(V2);
+{$ELSE}
   vr.V[X] := V1.V[Y] * V2.V[Z] - V1.V[Z] * V2.V[Y];
   vr.V[Y] := V1.V[Z] * V2.V[X] - V1.V[X] * V2.V[Z];
   vr.V[Z] := V1.V[X] * V2.V[Y] - V1.V[Y] * V2.V[X];
-end;
 {$ENDIF}
+end;
 
 function Lerp(const start, stop, T: Single): Single;
 begin
@@ -2660,11 +2461,11 @@ end;
 function VectorLerp(const V1, V2: TAffineVector; T: Single): TAffineVector;
 begin
 {$IFDEF GLS_FASTMATH}
-  Neslib.FastMath.TVector3(Result) := Neslib.FastMath.TVector3(V1).Lerp(Neslib.FastMath.TVector3(V2),T);
+  Result := V1.Lerp(V2,T);
 {$ELSE}
-  result.V[X] := V1.V[X] + (V2.V[X] - V1.V[X]) * T;
-  result.V[Y] := V1.V[Y] + (V2.V[Y] - V1.V[Y]) * T;
-  result.V[Z] := V1.V[Z] + (V2.V[Z] - V1.V[Z]) * T;
+  result.X := V1.X + (V2.X - V1.X) * T;
+  result.Y := V1.Y + (V2.Y - V1.Y) * T;
+  result.Z := V1.Z + (V2.Z - V1.Z) * T;
 {$ENDIF}
 end;
 
@@ -2672,35 +2473,35 @@ procedure VectorLerp(const V1, V2: TAffineVector; T: Single;
   var vr: TAffineVector);
 begin
 {$IFDEF GLS_FASTMATH}
-  Neslib.FastMath.TVector3(vr) := Neslib.FastMath.TVector3(V1).Lerp(Neslib.FastMath.TVector3(V2),T);
+  vr := V1.Lerp(V2,T);
 {$ELSE}
-  vr.V[X] := V1.V[X] + (V2.V[X] - V1.V[X]) * T;
-  vr.V[Y] := V1.V[Y] + (V2.V[Y] - V1.V[Y]) * T;
-  vr.V[Z] := V1.V[Z] + (V2.V[Z] - V1.V[Z]) * T;
+  vr.X := V1.X + (V2.X - V1.X) * T;
+  vr.Y := V1.Y + (V2.Y - V1.Y) * T;
+  vr.Z := V1.Z + (V2.Z - V1.Z) * T;
 {$ENDIF}
 end;
 
 function VectorLerp(const V1, V2: TVector; T: Single): TVector;
 begin
 {$IFDEF GLS_FASTMATH}
-  Neslib.FastMath.TVector4(Result) := Neslib.FastMath.TVector4(V1).Lerp(Neslib.FastMath.TVector4(V2),T);
+  Result := V1.Lerp(V2,T);
 {$ELSE}
-  result.V[X] := V1.V[X] + (V2.V[X] - V1.V[X]) * T;
-  result.V[Y] := V1.V[Y] + (V2.V[Y] - V1.V[Y]) * T;
-  result.V[Z] := V1.V[Z] + (V2.V[Z] - V1.V[Z]) * T;
-  result.V[W] := V1.V[W] + (V2.V[W] - V1.V[W]) * T;
+  result.X := V1.X + (V2.X - V1.X) * T;
+  result.Y := V1.Y + (V2.Y - V1.Y) * T;
+  result.Z := V1.Z + (V2.Z - V1.Z) * T;
+  result.W := V1.W + (V2.W - V1.W) * T;
 {$ENDIF}
 end;
 
 procedure VectorLerp(const V1, V2: TVector; T: Single; var vr: TVector);
 begin
 {$IFDEF GLS_FASTMATH}
-  Neslib.FastMath.TVector4(vr) := Neslib.FastMath.TVector4(V1).Lerp(Neslib.FastMath.TVector4(V2),T);
+  vr := V1.Lerp(V2,T);
 {$ELSE}
-  vr.V[X] := V1.V[X] + (V2.V[X] - V1.V[X]) * T;
-  vr.V[Y] := V1.V[Y] + (V2.V[Y] - V1.V[Y]) * T;
-  vr.V[Z] := V1.V[Z] + (V2.V[Z] - V1.V[Z]) * T;
-  vr.V[W] := V1.V[W] + (V2.V[W] - V1.V[W]) * T;
+  vr.X := V1.X + (V2.X - V1.X) * T;
+  vr.Y := V1.Y + (V2.Y - V1.Y) * T;
+  vr.Z := V1.Z + (V2.Z - V1.Z) * T;
+  vr.W := V1.W + (V2.W - V1.W) * T;
 {$ENDIF}
 end;
 
@@ -2889,9 +2690,15 @@ function MatrixLerp(const m1, m2: TMatrix; const delta: Single): TMatrix;
 var
   i, J: Integer;
 begin
+{$IFDEF GLS_FASTMATH}
+  for J := 0 to 3 do
+    for i := 0 to 3 do
+      result.V[i].C[J] := m1.V[i].C[J] + (m2.V[i].C[J] - m1.V[i].C[J]) * delta;
+{$ELSE}
   for J := 0 to 3 do
     for i := 0 to 3 do
       result.V[i].V[J] := m1.V[i].V[J] + (m2.V[i].V[J] - m1.V[i].V[J]) * delta;
+{$ENDIF}
 end;
 
 function RSqrt(V: Single): Single;
@@ -2903,23 +2710,6 @@ begin
 {$ENDIF}
 end;
 
-
-{$IFDEF GLS_ASM}
-function VectorLength(const V: array of Single): Single;
-// EAX contains address of V
-// EDX contains the highest index of V
-// the result is returned in ST(0)
-asm
-  FLDZ                           // initialize sum
-@@Loop:
-  FLD  DWORD PTR [EAX  +  4 * EDX] // load a component
-  FMUL ST, ST
-  FADDP
-  SUB  EDX, 1
-  JNL  @@Loop
-  FSQRT
-end;
-{$ELSE}
 function VectorLength(const V: array of Single): Single;
 var
   i: Integer;
@@ -2929,7 +2719,6 @@ begin
     result := result + Sqr(V[i]);
   result := Sqrt(result);
 end;
-{$ENDIF}
 
 function VectorLength(const X, Y: Single): Single;
 begin
@@ -2949,7 +2738,7 @@ end;
 function VectorLength(const V: TAffineVector): Single;
 begin
 {$IFDEF GLS_FASTMATH}
-  Result := Neslib.FastMath.TVector3(V).Length;
+  Result := V.Length;
 {$ELSE}
   result := Sqrt(VectorNorm(V));
 {$ENDIF}
@@ -2958,7 +2747,7 @@ end;
 function VectorLength(const V: TVector): Single;
 begin
 {$IFDEF GLS_FASTMATH}
-  Result := Neslib.FastMath.TVector4(V).Length;
+  Result := V.Length;
 {$ELSE}
   result := Sqrt(VectorNorm(V));
 {$ENDIF}
@@ -2969,63 +2758,16 @@ begin
   result := Sqr(X) + Sqr(Y);
 end;
 
-{$IFDEF GLS_ASM}
-function VectorNorm(const V: TAffineVector): Single;
-// EAX contains address of V
-// result is passed in ST(0)
-asm
-  FLD DWORD PTR [EAX];
-  FMUL ST, ST
-  FLD DWORD PTR [EAX+4];
-  FMUL ST, ST
-  FADD
-  FLD DWORD PTR [EAX+8];
-  FMUL ST, ST
-  FADD
-end;
-{$ELSE}
 function VectorNorm(const V: TAffineVector): Single;
 begin
   result := V.X * V.X + V.Y * V.Y + V.Z * V.Z;
 end;
-{$ENDIF}
 
-{$IFDEF GLS_ASM}
-function VectorNorm(const V: TVector): Single;
-// EAX contains address of V
-// result is passed in ST(0)
-asm
-  FLD DWORD PTR [EAX];
-  FMUL ST, ST
-  FLD DWORD PTR [EAX+4];
-  FMUL ST, ST
-  FADD
-  FLD DWORD PTR [EAX+8];
-  FMUL ST, ST
-  FADD
-end;
-{$ELSE}
 function VectorNorm(const V: TVector): Single;
 begin
   result := V.X * V.X + V.Y * V.Y + V.Z * V.Z;
 end;
-{$ENDIF}
 
-{$IFDEF GLS_ASM}
-function VectorNorm(var V: array of Single): Single;
-// EAX contains address of V
-// EDX contains highest index in V
-// result is passed in ST(0)
-asm
-  FLDZ                           // initialize sum
-@@Loop:
-  FLD  DWORD PTR [EAX + 4 * EDX] // load a component
-  FMUL ST, ST                    // make square
-  FADDP                          // add previous calculated sum
-  SUB  EDX, 1
-  JNL  @@Loop
-end;
-{$ELSE}
 function VectorNorm(var V: array of Single): Single;
 var
   i: Integer;
@@ -3034,42 +2776,13 @@ begin
   for i := Low(V) to High(V) do
     result := result + V[i] * V[i];
 end;
-{$ENDIF}
 
-{$IFDEF GLS_ASM}
-procedure NormalizeVector(var V: TVector2f);
-asm
-  test vSIMD, 1
-@@FPU:
-  mov   ecx, eax
-  FLD  DWORD PTR [ECX]
-  FMUL ST, ST
-  FLD  DWORD PTR [ECX+4]
-  FMUL ST, ST
-  FADD
-  FLDZ
-  FCOMP
-  FNSTSW AX
-  sahf
-  jz @@result
-  FSQRT
-  FLD1
-  FDIVR
-@@result:
-  FLD  ST
-  FMUL DWORD PTR [ECX]
-  FSTP DWORD PTR [ECX]
-  FLD  ST
-  FMUL DWORD PTR [ECX+4]
-  FSTP DWORD PTR [ECX+4]
-end;
-{$ELSE}
 procedure NormalizeVector(var V: TVector2f);
 var
   invLen: Single;
   vn: Single;
 begin
-  vn := VectorNorm(V.V);
+  vn := VectorNorm(V.X, V.Y);
   if vn > 0 then
   begin
     invLen := RSqrt(vn);
@@ -3077,66 +2790,6 @@ begin
     V.Y := V.Y * invLen;
   end;
 end;
-{$ENDIF}
-
-{$IFDEF GLS_ASM}
-procedure NormalizeVector(var V: TAffineVector);
-asm
-  test vSIMD, 1
-  jz @@FPU
-@@3DNow:
-  db $0F,$6F,$00           /// movq        mm0,[eax]
-  db $0F,$6E,$48,$08       /// movd        mm1,[eax+8]
-  db $0F,$6F,$E0           /// movq        mm4,mm0
-  db $0F,$6F,$D9           /// movq        mm3,mm1
-  db $0F,$0F,$C0,$B4       /// pfmul       mm0,mm0
-  db $0F,$0F,$C9,$B4       /// pfmul       mm1,mm1
-  db $0F,$0F,$C0,$AE       /// pfacc       mm0,mm0
-  db $0F,$0F,$C1,$9E       /// pfadd       mm0,mm1
-  db $0F,$0F,$C8,$97       /// pfrsqrt     mm1,mm0
-  db $0F,$6F,$D1           /// movq        mm2,mm1
-
-  db $0F,$0F,$C9,$B4       /// pfmul       mm1,mm1
-  db $0F,$0F,$C8,$A7       /// pfrsqit1    mm1,mm0
-  db $0F,$0F,$CA,$B6       /// pfrcpit2    mm1,mm2
-  db $0F,$62,$C9           /// punpckldq   mm1,mm1
-  db $0F,$0F,$D9,$B4       /// pfmul       mm3,mm1
-  db $0F,$0F,$E1,$B4       /// pfmul       mm4,mm1
-  db $0F,$7E,$58,$08       /// movd        [eax+8],mm3
-  db $0F,$7F,$20           /// movq        [eax],mm4
-@@norm_end:
-  db $0F,$0E               /// femms
-  ret
-
-@@FPU:
-  mov   ecx, eax
-  FLD  DWORD PTR [ECX]
-  FMUL ST, ST
-  FLD  DWORD PTR [ECX+4]
-  FMUL ST, ST
-  FADD
-  FLD  DWORD PTR [ECX+8]
-  FMUL ST, ST
-  FADD
-  FLDZ
-  FCOMP
-  FNSTSW AX
-  sahf
-  jz @@result
-  FSQRT
-  FLD1
-  FDIVR
-@@result:
-  FLD  ST
-  FMUL DWORD PTR [ECX]
-  FSTP DWORD PTR [ECX]
-  FLD  ST
-  FMUL DWORD PTR [ECX+4]
-  FSTP DWORD PTR [ECX+4]
-  FMUL DWORD PTR [ECX+8]
-  FSTP DWORD PTR [ECX+8]
-end;
-{$ELSE}
 procedure NormalizeVector(var V: TAffineVector);
 var
   invLen: Single;
@@ -3151,7 +2804,6 @@ begin
     V.Z := V.Z * invLen;
   end;
 end;
-{$ENDIF}
 
 function VectorNormalize(const V: TVector2f): TVector2f;
 var
@@ -3169,64 +2821,6 @@ begin
   end;
 end;
 
-{$IFDEF GLS_ASM}
-function VectorNormalize(const V: TAffineVector): TAffineVector;
-asm
-  test vSIMD, 1
-  jz @@FPU
-@@3DNow:
-  db $0F,$6F,$00           /// movq        mm0,[eax]
-  db $0F,$6E,$48,$08       /// movd        mm1,[eax+8]
-  db $0F,$6F,$E0           /// movq        mm4,mm0
-  db $0F,$6F,$D9           /// movq        mm3,mm1
-  db $0F,$0F,$C0,$B4       /// pfmul       mm0,mm0
-  db $0F,$0F,$C9,$B4       /// pfmul       mm1,mm1
-  db $0F,$0F,$C0,$AE       /// pfacc       mm0,mm0
-  db $0F,$0F,$C1,$9E       /// pfadd       mm0,mm1
-  db $0F,$0F,$C8,$97       /// pfrsqrt     mm1,mm0
-  db $0F,$6F,$D1           /// movq        mm2,mm1
-
-  db $0F,$0F,$C9,$B4       /// pfmul       mm1,mm1
-  db $0F,$0F,$C8,$A7       /// pfrsqit1    mm1,mm0
-  db $0F,$0F,$CA,$B6       /// pfrcpit2    mm1,mm2
-  db $0F,$62,$C9           /// punpckldq   mm1,mm1
-  db $0F,$0F,$D9,$B4       /// pfmul       mm3,mm1
-  db $0F,$0F,$E1,$B4       /// pfmul       mm4,mm1
-  db $0F,$7E,$5A,$08       /// movd        [edx+8],mm3
-  db $0F,$7F,$22           /// movq        [edx],mm4
-@@norm_end:
-  db $0F,$0E               /// femms
-  ret
-
-@@FPU:
-  mov   ecx, eax
-  FLD  DWORD PTR [ECX]
-  FMUL ST, ST
-  FLD  DWORD PTR [ECX+4]
-  FMUL ST, ST
-  FADD
-  FLD  DWORD PTR [ECX+8]
-  FMUL ST, ST
-  FADD
-  FLDZ
-  FCOMP
-  FNSTSW AX
-  sahf
-  jz @@result
-  FSQRT
-  FLD1
-  FDIVR
-@@result:
-  FLD  ST
-  FMUL DWORD PTR [ECX]
-  FSTP DWORD PTR [EDX]
-  FLD  ST
-  FMUL DWORD PTR [ECX+4]
-  FSTP DWORD PTR [EDX+4]
-  FMUL DWORD PTR [ECX+8]
-  FSTP DWORD PTR [EDX+8]
-end;
-{$ELSE}
 function VectorNormalize(const V: TAffineVector): TAffineVector;
 var
   invLen: Single;
@@ -3243,79 +2837,7 @@ begin
     result.Z := V.Z * invLen;
   end;
 end;
-{$ENDIF}
 
-{$IFDEF GLS_ASM}
-procedure NormalizeVectorArray(list: PAffineVectorArray; n: Integer);
-// EAX contains list
-// EDX contains n
-asm
-  OR    EDX, EDX
-  JZ    @@End
-  test vSIMD, 1
-  jz @@FPU
-@@3DNowLoop:
-  db $0F,$6F,$00           /// movq        mm0,[eax]
-  db $0F,$6E,$48,$08       /// movd        mm1,[eax+8]
-  db $0F,$6F,$E0           /// movq        mm4,mm0
-  db $0F,$6F,$D9           /// movq        mm3,mm1
-  db $0F,$0F,$C0,$B4       /// pfmul       mm0,mm0
-  db $0F,$0F,$C9,$B4       /// pfmul       mm1,mm1
-  db $0F,$0F,$C0,$AE       /// pfacc       mm0,mm0
-  db $0F,$0F,$C1,$9E       /// pfadd       mm0,mm1
-  db $0F,$0F,$C8,$97       /// pfrsqrt     mm1,mm0
-  db $0F,$6F,$D1           /// movq        mm2,mm1
-
-  db $0F,$0F,$C9,$B4       /// pfmul       mm1,mm1
-  db $0F,$0F,$C8,$A7       /// pfrsqit1    mm1,mm0
-  db $0F,$0F,$CA,$B6       /// pfrcpit2    mm1,mm2
-  db $0F,$62,$C9           /// punpckldq   mm1,mm1
-  db $0F,$0F,$D9,$B4       /// pfmul       mm3,mm1
-  db $0F,$0F,$E1,$B4       /// pfmul       mm4,mm1
-  db $0F,$7E,$58,$08       /// movd        [eax+8],mm3
-  db $0F,$7F,$20           /// movq        [eax],mm4
-@@norm_end:
-  db $0F,$0E               /// femms
-  add   eax, 12
-  db $0F,$0D,$40,$60       /// PREFETCH    [EAX+96]
-  dec   edx
-  jnz   @@3DNowLOOP
-  ret
-
-@@FPU:
-  mov   ecx, eax
-@@FPULoop:
-  FLD   DWORD PTR [ECX]
-  FMUL  ST, ST
-  FLD   DWORD PTR [ECX+4]
-  FMUL  ST, ST
-  FADD
-  FLD   DWORD PTR [ECX+8]
-  FMUL  ST, ST
-  FADD
-  FLDZ
-  FCOMP
-  FNSTSW AX
-  sahf
-  jz @@result
-  FSQRT
-  FLD1
-  FDIVR
-@@result:
-  FLD   ST
-  FMUL  DWORD PTR [ECX]
-  FSTP  DWORD PTR [ECX]
-  FLD   ST
-  FMUL  DWORD PTR [ECX+4]
-  FSTP  DWORD PTR [ECX+4]
-  FMUL  DWORD PTR [ECX+8]
-  FSTP  DWORD PTR [ECX+8]
-  ADD   ECX, 12
-  DEC   EDX
-  JNZ   @@FPULOOP
-@@End:
-end;
-{$ELSE}
 procedure NormalizeVectorArray(list: PAffineVectorArray; n: Integer);
 var
   i: Integer;
@@ -3323,70 +2845,7 @@ begin
   for i := 0 to n - 1 do
     NormalizeVector(list^[i]);
 end;
-{$ENDIF}
 
-{$IFDEF GLS_ASM}
-procedure NormalizeVector(var V: TVector);
-asm
-  test vSIMD, 1
-  jz @@FPU
-@@3DNow:
-  db $0F,$6F,$00           /// movq        mm0,[eax]
-  db $0F,$6E,$48,$08       /// movd        mm1,[eax+8]
-  db $0F,$6F,$E0           /// movq        mm4,mm0
-  db $0F,$6F,$D9           /// movq        mm3,mm1
-  db $0F,$0F,$C0,$B4       /// pfmul       mm0,mm0
-  db $0F,$0F,$C9,$B4       /// pfmul       mm1,mm1
-  db $0F,$0F,$C0,$AE       /// pfacc       mm0,mm0
-  db $0F,$0F,$C1,$9E       /// pfadd       mm0,mm1
-  db $0F,$0F,$C8,$97       /// pfrsqrt     mm1,mm0
-  db $0F,$6F,$D1           /// movq        mm2,mm1
-
-  db $0F,$0F,$C9,$B4       /// pfmul       mm1,mm1
-  db $0F,$0F,$C8,$A7       /// pfrsqit1    mm1,mm0
-  db $0F,$0F,$CA,$B6       /// pfrcpit2    mm1,mm2
-  db $0F,$62,$C9           /// punpckldq   mm1,mm1
-  db $0F,$0F,$D9,$B4       /// pfmul       mm3,mm1
-  db $0F,$0F,$E1,$B4       /// pfmul       mm4,mm1
-  db $0F,$7E,$58,$08       /// movd        [eax+8],mm3
-  db $0F,$7F,$20           /// movq        [eax],mm4
-@@norm_end:
-  db $0F,$0E               /// femms
-  xor   edx, edx
-  mov   [eax+12], edx
-  ret
-
-@@FPU:
-  mov   ecx, eax
-  FLD  DWORD PTR [ECX]
-  FMUL ST, ST
-  FLD  DWORD PTR [ECX+4]
-  FMUL ST, ST
-  FADD
-  FLD  DWORD PTR [ECX+8]
-  FMUL ST, ST
-  FADD
-  FLDZ
-  FCOMP
-  FNSTSW AX
-  sahf
-  jz @@result
-  FSQRT
-  FLD1
-  FDIVR
-@@result:
-  FLD  ST
-  FMUL DWORD PTR [ECX]
-  FSTP DWORD PTR [ECX]
-  FLD  ST
-  FMUL DWORD PTR [ECX+4]
-  FSTP DWORD PTR [ECX+4]
-  FMUL DWORD PTR [ECX+8]
-  FSTP DWORD PTR [ECX+8]
-  xor   edx, edx
-  mov   [ecx+12], edx
-end;
-{$ELSE}
 procedure NormalizeVector(var V: TVector);
 var
   invLen: Single;
@@ -3402,70 +2861,7 @@ begin
   end;
   V.W := 0;
 end;
-{$ENDIF}
 
-{$IFDEF GLS_ASM}
-function VectorNormalize(const V: TVector): TVector;
-asm
-  test vSIMD, 1
-  jz @@FPU
-@@3DNow:
-  db $0F,$6F,$00           /// movq        mm0,[eax]
-  db $0F,$6E,$48,$08       /// movd        mm1,[eax+8]
-  db $0F,$6F,$E0           /// movq        mm4,mm0
-  db $0F,$6F,$D9           /// movq        mm3,mm1
-  db $0F,$0F,$C0,$B4       /// pfmul       mm0,mm0
-  db $0F,$0F,$C9,$B4       /// pfmul       mm1,mm1
-  db $0F,$0F,$C0,$AE       /// pfacc       mm0,mm0
-  db $0F,$0F,$C1,$9E       /// pfadd       mm0,mm1
-  db $0F,$0F,$C8,$97       /// pfrsqrt     mm1,mm0
-  db $0F,$6F,$D1           /// movq        mm2,mm1
-
-  db $0F,$0F,$C9,$B4       /// pfmul       mm1,mm1
-  db $0F,$0F,$C8,$A7       /// pfrsqit1    mm1,mm0
-  db $0F,$0F,$CA,$B6       /// pfrcpit2    mm1,mm2
-  db $0F,$62,$C9           /// punpckldq   mm1,mm1
-  db $0F,$0F,$D9,$B4       /// pfmul       mm3,mm1
-  db $0F,$0F,$E1,$B4       /// pfmul       mm4,mm1
-  db $0F,$7E,$5A,$08       /// movd        [edx+8],mm3
-  db $0F,$7F,$22           /// movq        [edx],mm4
-@@norm_end:
-  db $0F,$0E               /// femms
-  xor   eax, eax
-  mov   [edx+12], eax
-  ret
-
-@@FPU:
-  mov	ecx, eax
-  FLD  DWORD PTR [ECX]
-  FMUL ST, ST
-  FLD  DWORD PTR [ECX+4]
-  FMUL ST, ST
-  FADD
-  FLD  DWORD PTR [ECX+8]
-  FMUL ST, ST
-  FADD
-  FLDZ
-  FCOMP
-  FNSTSW AX
-  sahf
-  jz @@result
-  FSQRT
-  FLD1
-  FDIVR
-@@result:
-  FLD  ST
-  FMUL DWORD PTR [ECX]
-  FSTP DWORD PTR [EDX]
-  FLD  ST
-  FMUL DWORD PTR [ECX+4]
-  FSTP DWORD PTR [EDX+4]
-  FMUL DWORD PTR [ECX+8]
-  FSTP DWORD PTR [EDX+8]
-  xor   ecx, ecx
-  mov   [edx+12], ecx
-end;
-{$ELSE}
 function VectorNormalize(const V: TVector): TVector;
 var
   invLen: Single;
@@ -3483,208 +2879,63 @@ begin
   end;
   result.W := 0;
 end;
-{$ENDIF}
 
-{$IFDEF GLS_ASM}
-function VectorAngleCosine(const V1, V2: TAffineVector): Single;
-// EAX contains address of Vector1
-// EDX contains address of Vector2
-asm
-  FLD DWORD PTR [EAX]           // V1[0]
-  FLD ST                        // double V1[0]
-  FMUL ST, ST                   // V1[0]^2 (prep. for divisor)
-  FLD DWORD PTR [EDX]           // V2[0]
-  FMUL ST(2), ST                // ST(2):=V1[0] * V2[0]
-  FMUL ST, ST                   // V2[0]^2 (prep. for divisor)
-  FLD DWORD PTR [EAX + 4]       // V1[1]
-  FLD ST                        // double V1[1]
-  FMUL ST, ST                   // ST(0):=V1[1]^2
-  FADDP ST(3), ST               // ST(2):=V1[0]^2 + V1[1] *  * 2
-  FLD DWORD PTR [EDX + 4]       // V2[1]
-  FMUL ST(1), ST                // ST(1):=V1[1] * V2[1]
-  FMUL ST, ST                   // ST(0):=V2[1]^2
-  FADDP ST(2), ST               // ST(1):=V2[0]^2 + V2[1]^2
-  FADDP ST(3), ST               // ST(2):=V1[0] * V2[0] + V1[1] * V2[1]
-  FLD DWORD PTR [EAX + 8]       // load V2[1]
-  FLD ST                        // same calcs go here
-  FMUL ST, ST                   // (compare above)
-  FADDP ST(3), ST
-  FLD DWORD PTR [EDX + 8]
-  FMUL ST(1), ST
-  FMUL ST, ST
-  FADDP ST(2), ST
-  FADDP ST(3), ST
-  FMULP                         // ST(0):=(V1[0]^2 + V1[1]^2 + V1[2]) *
-  // (V2[0]^2 + V2[1]^2 + V2[2])
-  FSQRT                         // sqrt(ST(0))
-  FDIVP                         // ST(0):=Result:=ST(1) / ST(0)
-  // the result is expected in ST(0), if it's invalid, an error is raised
-end;
-{$ELSE}
 function VectorAngleCosine(const V1, V2: TAffineVector): Single;
 begin
   result := VectorDotProduct(V1, V2) / (VectorLength(V1) * VectorLength(V2));
 end;
-{$ENDIF}
 
-{$IFDEF GLS_ASM}
-function VectorAngleCosine(const V1, V2: TVector): Single;
-// EAX contains address of Vector1
-// EDX contains address of Vector2
-asm
-  FLD DWORD PTR [EAX]           // V1[0]
-  FLD ST                        // double V1[0]
-  FMUL ST, ST                   // V1[0]^2 (prep. for divisor)
-  FLD DWORD PTR [EDX]           // V2[0]
-  FMUL ST(2), ST                // ST(2):=V1[0] * V2[0]
-  FMUL ST, ST                   // V2[0]^2 (prep. for divisor)
-  FLD DWORD PTR [EAX + 4]       // V1[1]
-  FLD ST                        // double V1[1]
-  FMUL ST, ST                   // ST(0):=V1[1]^2
-  FADDP ST(3), ST               // ST(2):=V1[0]^2 + V1[1] *  * 2
-  FLD DWORD PTR [EDX + 4]       // V2[1]
-  FMUL ST(1), ST                // ST(1):=V1[1] * V2[1]
-  FMUL ST, ST                   // ST(0):=V2[1]^2
-  FADDP ST(2), ST               // ST(1):=V2[0]^2 + V2[1]^2
-  FADDP ST(3), ST               // ST(2):=V1[0] * V2[0] + V1[1] * V2[1]
-  FLD DWORD PTR [EAX + 8]       // load V2[1]
-  FLD ST                        // same calcs go here
-  FMUL ST, ST                   // (compare above)
-  FADDP ST(3), ST
-  FLD DWORD PTR [EDX + 8]
-  FMUL ST(1), ST
-  FMUL ST, ST
-  FADDP ST(2), ST
-  FADDP ST(3), ST
-  FMULP                         // ST(0):=(V1[0]^2 + V1[1]^2 + V1[2]) *
-  // (V2[0]^2 + V2[1]^2 + V2[2])
-  FSQRT                         // sqrt(ST(0))
-  FDIVP                         // ST(0):=Result:=ST(1) / ST(0)
-  // the result is expected in ST(0), if it's invalid, an error is raised
-end;
-{$ELSE}
 function VectorAngleCosine(const V1, V2: TVector): Single;
 begin
   result := VectorDotProduct(V1, V2) / (VectorLength(V1) * VectorLength(V2));
 end;
-{$ENDIF}
 
-{$IFDEF GLS_ASM}
-function VectorNegate(const Vector: TAffineVector): TAffineVector;
-// EAX contains address of v
-// EDX contains address of Result
-asm
-  FLD DWORD PTR [EAX]
-  FCHS
-  FSTP DWORD PTR [EDX]
-  FLD DWORD PTR [EAX+4]
-  FCHS
-  FSTP DWORD PTR [EDX+4]
-  FLD DWORD PTR [EAX+8]
-  FCHS
-  FSTP DWORD PTR [EDX+8]
-end;
-{$ELSE}
 function VectorNegate(const Vector: TAffineVector): TAffineVector;
 begin
+{$IFDEF GLS_FASTMATH}
+  Result := -Vector;
+{$ELSE}
   result.X := -Vector.X;
   result.Y := -Vector.Y;
   result.Z := -Vector.Z;
-end;
 {$ENDIF}
-
-{$IFDEF GLS_ASM}
-function VectorNegate(const Vector: TVector): TVector;
-// EAX contains address of v
-// EDX contains address of Result
-asm
-  FLD DWORD PTR [EAX]
-  FCHS
-  FSTP DWORD PTR [EDX]
-  FLD DWORD PTR [EAX+4]
-  FCHS
-  FSTP DWORD PTR [EDX+4]
-  FLD DWORD PTR [EAX+8]
-  FCHS
-  FSTP DWORD PTR [EDX+8]
-  FLD DWORD PTR [EAX+12]
-  FCHS
-  FSTP DWORD PTR [EDX+12]
 end;
-{$ELSE}
+
 function VectorNegate(const Vector: TVector): TVector;
 begin
+{$IFDEF GLS_FASTMATH}
+  Result := -Vector;
+{$ELSE}
   result.X := -Vector.X;
   result.Y := -Vector.Y;
   result.Z := -Vector.Z;
   result.W := -Vector.W;
-end;
 {$ENDIF}
-
-{$IFDEF GLS_ASM}
-procedure NegateVector(var V: TAffineVector);
-// EAX contains address of v
-asm
-  FLD DWORD PTR [EAX]
-  FCHS
-  FSTP DWORD PTR [EAX]
-  FLD DWORD PTR [EAX+4]
-  FCHS
-  FSTP DWORD PTR [EAX+4]
-  FLD DWORD PTR [EAX+8]
-  FCHS
-  FSTP DWORD PTR [EAX+8]
 end;
-{$ELSE}
+
 procedure NegateVector(var V: TAffineVector);
 begin
+{$IFDEF GLS_FASTMATH}
+  V := -V;
+{$ELSE}
   V.X := -V.X;
   V.Y := -V.Y;
   V.Z := -V.Z;
-end;
 {$ENDIF}
-
-{$IFDEF GLS_ASM}
-procedure NegateVector(var V: TVector);
-// EAX contains address of v
-asm
-  FLD DWORD PTR [EAX]
-  FCHS
-  FSTP DWORD PTR [EAX]
-  FLD DWORD PTR [EAX+4]
-  FCHS
-  FSTP DWORD PTR [EAX+4]
-  FLD DWORD PTR [EAX+8]
-  FCHS
-  FSTP DWORD PTR [EAX+8]
-  FLD DWORD PTR [EAX+12]
-  FCHS
-  FSTP DWORD PTR [EAX+12]
 end;
-{$ELSE}
+
 procedure NegateVector(var V: TVector);
 begin
+{$IFDEF GLS_FASTMATH}
+  V := -V;
+{$ELSE}
   V.X := -V.X;
   V.Y := -V.Y;
   V.Z := -V.Z;
   V.W := -V.W;
-end;
 {$ENDIF}
-
-{$IFDEF GLS_ASM}
-procedure NegateVector(var V: array of Single);
-// EAX contains address of V
-// EDX contains highest index in V
-asm
-@@Loop:
-  FLD DWORD PTR [EAX + 4 * EDX]
-  FCHS
-  WAIT
-  FSTP DWORD PTR [EAX + 4 * EDX]
-  DEC EDX
-  JNS @@Loop
 end;
-{$ELSE}
+
 procedure NegateVector(var V: array of Single);
 var
   i: Integer;
@@ -3692,52 +2943,24 @@ begin
   for i := Low(V) to High(V) do
     V[i] := -V[i];
 end;
-{$ENDIF}
 
-{$IFDEF GLS_ASM}
-procedure ScaleVector(var V: TVector2f; factor: Single);
-asm
-  FLD  DWORD PTR [EAX]
-  FMUL DWORD PTR [EBP+8]
-  FSTP DWORD PTR [EAX]
-  FLD  DWORD PTR [EAX+4]
-  FMUL DWORD PTR [EBP+8]
-  FSTP DWORD PTR [EAX+4]
-end;
-{$ELSE}
 procedure ScaleVector(var V: TVector2f; factor: Single);
 begin
   V.X := V.X * factor;
   V.Y := V.Y * factor;
 end;
-{$ENDIF}
 
-{$IFDEF GLS_ASM}
-procedure ScaleVector(var V: TAffineVector; factor: Single);
-asm
-  FLD  DWORD PTR [EAX]
-  FMUL DWORD PTR [EBP+8]
-  FSTP DWORD PTR [EAX]
-  FLD  DWORD PTR [EAX+4]
-  FMUL DWORD PTR [EBP+8]
-  FSTP DWORD PTR [EAX+4]
-  FLD  DWORD PTR [EAX+8]
-  FMUL DWORD PTR [EBP+8]
-  FSTP DWORD PTR [EAX+8]
-end;
-{$ELSE}
 procedure ScaleVector(var V: TAffineVector; factor: Single);
 begin
   V.X := V.X * factor;
   V.Y := V.Y * factor;
   V.Z := V.Z * factor;
 end;
-{$ENDIF}
 
 procedure ScaleVector(var V: TVector; factor: Single);
 begin
 {$IFDEF GLS_FASTMATH}
-  Neslib.FastMath.TVector4(V) := Neslib.FastMath.TVector4(V)*factor;
+  V := V*factor;
 {$ELSE}
   V.X := V.X * factor;
   V.Y := V.Y * factor;
@@ -3770,7 +2993,7 @@ end;
 function VectorScale(const V: TAffineVector; factor: Single): TAffineVector;
 begin
 {$IFDEF GLS_FASTMATH}
-  Neslib.FastMath.TVector3(Result) := Neslib.FastMath.TVector3(V) * factor;
+  Result := V * factor;
 {$ELSE}
   result.X := V.X * factor;
   result.Y := V.Y * factor;
@@ -3782,7 +3005,7 @@ procedure VectorScale(const V: TAffineVector; factor: Single;
   var vr: TAffineVector);
 begin
 {$IFDEF GLS_FASTMATH}
-  Neslib.FastMath.TVector3(vr) := Neslib.FastMath.TVector3(V) * factor;
+  vr := V * factor;
 {$ELSE}
   vr.X := V.X * factor;
   vr.Y := V.Y * factor;
@@ -3793,7 +3016,7 @@ end;
 function VectorScale(const V: TVector; factor: Single): TVector;
 begin
 {$IFDEF GLS_FASTMATH}
-  Neslib.FastMath.TVector4(Result) := Neslib.FastMath.TVector4(V) * factor;
+  Result := V * factor;
 {$ELSE}
   result.X := V.X * factor;
   result.Y := V.Y * factor;
@@ -3805,7 +3028,7 @@ end;
 procedure VectorScale(const V: TVector; factor: Single; var vr: TVector);
 begin
 {$IFDEF GLS_FASTMATH}
-  Neslib.FastMath.TVector4(vr) := Neslib.FastMath.TVector4(V) * factor;
+  vr := V * factor;
 {$ELSE}
   vr.X := V.X * factor;
   vr.Y := V.Y * factor;
@@ -3814,27 +3037,12 @@ begin
 {$ENDIF}
 end;
 
-{$IFDEF GLS_ASM}
-procedure VectorScale(const V: TVector; factor: Single; var vr: TAffineVector);
-asm
-  FLD  DWORD PTR [EAX]
-  FMUL DWORD PTR [EBP+8]
-  FSTP DWORD PTR [EDX]
-  FLD  DWORD PTR [EAX+4]
-  FMUL DWORD PTR [EBP+8]
-  FSTP DWORD PTR [EDX+4]
-  FLD  DWORD PTR [EAX+8]
-  FMUL DWORD PTR [EBP+8]
-  FSTP DWORD PTR [EDX+8]
-end;
-{$ELSE}
 procedure VectorScale(const V: TVector; factor: Single; var vr: TAffineVector);
 begin
   vr.X := V.X * factor;
   vr.Y := V.Y * factor;
   vr.Z := V.Z * factor;
 end;
-{$ENDIF}
 
 function VectorScale(const V: TAffineVector; const factor: TAffineVector)
   : TAffineVector;
@@ -3902,18 +3110,18 @@ end;
 
 function VectorEquals(const V1, V2: TVector): Boolean;
 begin
-  result := (V1._1 = V2._1) and (V1._2 = V2._2) and (V1._3 = V2._3)
-    and (V1._4 = V2._4);
+  result := (V1.X = V2.X) and (V1.Y = V2.Y) and (V1.Z = V2.Z)
+    and (V1.W = V2.W);
 end;
 
 function VectorEquals(const V1, V2: TAffineVector): Boolean;
 begin
-  result := (V1._1 = V2._1) and (V1._2 = V2._2) and (V1._3 = V2._3);
+  result := (V1.X = V2.X) and (V1.Y = V2.Y) and (V1.Z = V2.Z);
 end;
 
 function AffineVectorEquals(const V1, V2: TVector): Boolean;
 begin
-  result := (V1._1 = V2._1) and (V1._2 = V2._2) and (V1._3 = V2._3);
+  result := (V1.X = V2.X) and (V1.Y = V2.Y) and (V1.Z = V2.Z);
 end;
 
 function VectorIsNull(const V: TVector): Boolean;
@@ -3926,87 +3134,27 @@ begin
   result := ((V.X = 0) and (V.Y = 0) and (V.Z = 0));
 end;
 
-{$IFDEF GLS_ASM}
-function VectorSpacing(const V1, V2: TTexPoint): Single; overload;
-// EAX contains address of v1
-// EDX contains highest of v2
-// Result  is passed on the stack
-asm
-  FLD  DWORD PTR [EAX]
-  FSUB DWORD PTR [EDX]
-  FABS
-  FLD  DWORD PTR [EAX+4]
-  FSUB DWORD PTR [EDX+4]
-  FABS
-  FADD
-end;
-{$ELSE}
 function VectorSpacing(const V1, V2: TTexPoint): Single; overload;
 begin
   result := Abs(V2.S - V1.S) + Abs(V2.T - V1.T);
 end;
-{$ENDIF}
 
-{$IFDEF GLS_ASM}
-function VectorSpacing(const V1, V2: TAffineVector): Single;
-// EAX contains address of v1
-// EDX contains highest of v2
-// Result  is passed on the stack
-asm
-  FLD  DWORD PTR [EAX]
-  FSUB DWORD PTR [EDX]
-  FABS
-  FLD  DWORD PTR [EAX+4]
-  FSUB DWORD PTR [EDX+4]
-  FABS
-  FADD
-  FLD  DWORD PTR [EAX+8]
-  FSUB DWORD PTR [EDX+8]
-  FABS
-  FADD
-end;
-{$ELSE}
 function VectorSpacing(const V1, V2: TAffineVector): Single;
 begin
   result := Abs(V2.X - V1.X) + Abs(V2.Y - V1.Y) +
     Abs(V2.Z - V1.Z);
 end;
-{$ENDIF}
 
-{$IFDEF GLS_ASM}
-function VectorSpacing(const V1, V2: TVector): Single;
-// EAX contains address of v1
-// EDX contains highest of v2
-// Result  is passed on the stack
-asm
-  FLD  DWORD PTR [EAX]
-  FSUB DWORD PTR [EDX]
-  FABS
-  FLD  DWORD PTR [EAX+4]
-  FSUB DWORD PTR [EDX+4]
-  FABS
-  FADD
-  FLD  DWORD PTR [EAX+8]
-  FSUB DWORD PTR [EDX+8]
-  FABS
-  FADD
-  FLD  DWORD PTR [EAX+12]
-  FSUB DWORD PTR [EDX+12]
-  FABS
-  FADD
-end;
-{$ELSE}
 function VectorSpacing(const V1, V2: TVector): Single;
 begin
   result := Abs(V2.X - V1.X) + Abs(V2.Y - V1.Y) +
     Abs(V2.Z - V1.Z) + Abs(V2.W - V1.W);
 end;
-{$ENDIF}
 
 function VectorDistance(const V1, V2: TAffineVector): Single;
 begin
 {$IFDEF GLS_FASTMATH}
-  Result := NesLib.FastMath.TVector3(V1).Distance(NesLib.FastMath.TVector3(V2));
+  Result := V1.Distance(V2);
 {$ELSE}
   result := Sqrt(Sqr(V2.X - V1.X) + Sqr(V2.Y - V1.Y) + Sqr(V2.Z - V1.Z));
 {$ENDIF}
@@ -4015,7 +3163,7 @@ end;
 function VectorDistance(const V1, V2: TVector): Single;
 begin
 {$IFDEF GLS_FASTMATH}
-  Result := NesLib.FastMath.TVector4(V1).Distance(NesLib.FastMath.TVector4(V2));
+  Result := V1.Distance(V2);
 {$ELSE}
   result := Sqrt(Sqr(V2.X - V1.X) + Sqr(V2.Y - V1.Y) + Sqr(V2.Z - V1.Z));
 {$ENDIF}
@@ -4024,7 +3172,7 @@ end;
 function VectorDistance2(const V1, V2: TAffineVector): Single;
 begin
 {$IFDEF GLS_FASTMATH}
-  Result := NesLib.FastMath.TVector3(V1).DistanceSquared(NesLib.FastMath.TVector3(V2));
+  Result := V1.DistanceSquared(V2);
 {$ELSE}
   result := Sqr(V2.X - V1.X) + Sqr(V2.Y - V1.Y) + Sqr(V2.Z - V1.Z);
 {$ENDIF}
@@ -4033,7 +3181,7 @@ end;
 function VectorDistance2(const V1, V2: TVector): Single;
 begin
 {$IFDEF GLS_FASTMATH}
-  Result := NesLib.FastMath.TVector4(V1).DistanceSquared(NesLib.FastMath.TVector4(V2));
+  Result := V1.DistanceSquared(V2);
 {$ELSE}
   result := Sqr(V2.X - V1.X) + Sqr(V2.Y - V1.Y) + Sqr(V2.Z - V1.Z);
 {$ENDIF}
@@ -4044,15 +3192,19 @@ var
   dot: Single;
 begin
   dot := VectorDotProduct(V, n);
-  result.V[X] := V.V[X] - dot * n.V[X];
-  result.V[Y] := V.V[Y] - dot * n.V[Y];
-  result.V[Z] := V.V[Z] - dot * n.V[Z];
+{$IFDEF GLS_FASTMATH}
+  Result := V - dot*N;
+{$ELSE}
+  result.X := V.X - dot * n.X;
+  result.Y := V.Y - dot * n.Y;
+  result.Z := V.Z - dot * n.Z;
+{$ENDIF}
 end;
 
 function VectorReflect(const V, n: TAffineVector): TAffineVector;
 begin
 {$IFDEF GLS_FASTMATH}
-  Neslib.FastMath.TVector3(Result) := Neslib.FastMath.TVector3(V).Reflect(Neslib.FastMath.TVector3(n));
+  Result := V.Reflect(n);
 {$ELSE}
   result := VectorCombine(V, n, 1, -2 * VectorDotProduct(V, n));
 {$ENDIF}
@@ -4171,6 +3323,10 @@ begin
 end;
 
 function IsColinear(const V1, V2: TAffineVector): Boolean; overload;
+{$IFDEF GLS_FASTMATH}
+begin
+  Result := V1.IsCollinear(V2, cColinearBias);
+{$ELSE}
 var
   a, b, c: Single;
 begin
@@ -4178,9 +3334,14 @@ begin
   b := VectorDotProduct(V1, V2);
   c := VectorDotProduct(V2, V2);
   result := (a * c - b * b) < cColinearBias;
+{$ENDIF}
 end;
 
 function IsColinear(const V1, V2: TVector): Boolean; overload;
+{$IFDEF GLS_FASTMATH}
+begin
+  Result := V1.IsCollinear(V2, cColinearBias);
+{$ELSE}
 var
   a, b, c: Single;
 begin
@@ -4188,6 +3349,7 @@ begin
   b := VectorDotProduct(V1, V2);
   c := VectorDotProduct(V2, V2);
   result := (a * c - b * b) < cColinearBias;
+{$ENDIF}
 end;
 
 procedure SetMatrix(var dest: THomogeneousDblMatrix; const src: TMatrix);
@@ -4205,97 +3367,110 @@ end;
 
 procedure SetMatrix(var dest: TAffineMatrix; const src: TMatrix);
 begin
-  dest.X.X := src.X.X;
-  dest.X.Y := src.X.Y;
-  dest.X.Z := src.X.Z;
-  dest.Y.X := src.Y.X;
-  dest.Y.Y := src.Y.Y;
-  dest.Y.Z := src.Y.Z;
-  dest.Z.X := src.Z.X;
-  dest.Z.Y := src.Z.Y;
-  dest.Z.Z := src.Z.Z;
+{$IFDEF GLS_FASTMATH}
+  dest.V[0] := ToVector3(src.V[0]);
+  dest.V[1] := ToVector3(src.V[1]);
+  dest.V[2] := ToVector3(src.V[2]);
+{$ELSE}
+  dest.V[0].X := src.V[X].X;
+  dest.V[X].Y := src.V[X].Y;
+  dest.V[X].Z := src.V[X].Z;
+  dest.V[Y].X := src.V[Y].X;
+  dest.V[Y].Y := src.V[Y].Y;
+  dest.V[Y].Z := src.V[Y].Z;
+  dest.V[Z].X := src.V[Z].X;
+  dest.V[Z].Y := src.V[Z].Y;
+  dest.V[Z].Z := src.V[Z].Z;
+{$ENDIF}
 end;
 
 procedure SetMatrix(var dest: TMatrix; const src: TAffineMatrix);
 begin
-  dest.X.X := src.X.X;
-  dest.X.Y := src.X.Y;
-  dest.X.Z := src.X.Z;
-  dest.X.W := 0;
-  dest.Y.X := src.Y.X;
-  dest.Y.Y := src.Y.Y;
-  dest.Y.Z := src.Y.Z;
-  dest.Y.W := 0;
-  dest.Z.X := src.Z.X;
-  dest.Z.Y := src.Z.Y;
-  dest.Z.Z := src.Z.Z;
-  dest.Z.W := 0;
-  dest.W.X := 0;
-  dest.W.Y := 0;
-  dest.W.Z := 0;
-  dest.W.W := 1;
+{$IFDEF GLS_FASTMATH}
+  dest.V[0] := ToVector4(src.V[0]);
+  dest.V[1] := ToVector4(src.V[1]);
+  dest.V[2] := ToVector4(src.V[2]);
+  dest.V[3].Init(0,0,0,1);
+{$ELSE}
+  dest.V[X].X := src.V[X].X;
+  dest.V[X].Y := src.V[X].Y;
+  dest.V[X].Z := src.V[X].Z;
+  dest.V[X].W := 0;
+  dest.V[Y].X := src.V[Y].X;
+  dest.V[Y].Y := src.V[Y].Y;
+  dest.V[Y].Z := src.V[Y].Z;
+  dest.V[Y].W := 0;
+  dest.V[Z].X := src.V[Z].X;
+  dest.V[Z].Y := src.V[Z].Y;
+  dest.V[Z].Z := src.V[Z].Z;
+  dest.V[Z].W := 0;
+  dest.V[W].X := 0;
+  dest.V[W].Y := 0;
+  dest.V[W].Z := 0;
+  dest.V[W].W := 1;
+{$ENDIF}
 end;
 
 procedure SetMatrixRow(var dest: TMatrix; rowNb: Integer; const aRow: TVector);
 begin
-  dest.X.V[rowNb] := aRow.X;
-  dest.Y.V[rowNb] := aRow.Y;
-  dest.Z.V[rowNb] := aRow.Z;
-  dest.W.V[rowNb] := aRow.W;
+  dest.V[X].C[rowNb] := aRow.X;
+  dest.V[Y].C[rowNb] := aRow.Y;
+  dest.V[Z].C[rowNb] := aRow.Z;
+  dest.V[W].C[rowNb] := aRow.W;
 end;
 
 function CreateScaleMatrix(const V: TAffineVector): TMatrix;
 begin
   result := IdentityHmgMatrix;
-  result.X.X := V.V[X];
-  result.Y.Y := V.V[Y];
-  result.Z.Z := V.V[Z];
+  result.V[0].X := V.X;
+  result.V[1].Y := V.Y;
+  result.V[2].Z := V.Z;
 end;
 
 function CreateScaleMatrix(const V: TVector): TMatrix;
 begin
   result := IdentityHmgMatrix;
-  result.X.X := V.V[X];
-  result.Y.Y := V.V[Y];
-  result.Z.Z := V.V[Z];
+  result.V[0].X := V.X;
+  result.V[1].Y := V.Y;
+  result.V[2].Z := V.Z;
 end;
 
 function CreateTranslationMatrix(const V: TAffineVector): TMatrix;
 begin
   result := IdentityHmgMatrix;
-  result.W.X := V.V[X];
-  result.W.Y := V.V[Y];
-  result.W.Z := V.V[Z];
+  result.V[3].X := V.X;
+  result.V[3].Y := V.Y;
+  result.V[3].Z := V.Z;
 end;
 
 function CreateTranslationMatrix(const V: TVector): TMatrix;
 begin
   result := IdentityHmgMatrix;
-  result.W.X := V.V[X];
-  result.W.Y := V.V[Y];
-  result.W.Z := V.V[Z];
+  Result.V[3].X := V.X;
+  Result.V[3].Y := V.Y;
+  Result.V[3].Z := V.Z;
 end;
 
 function CreateScaleAndTranslationMatrix(const scale, offset: TVector): TMatrix;
 begin
   result := IdentityHmgMatrix;
-  result.X.X := scale.V[X];
-  result.W.X := offset.V[X];
-  result.Y.Y := scale.V[Y];
-  result.W.Y := offset.V[Y];
-  result.Z.Z := scale.V[Z];
-  result.W.Z := offset.V[Z];
+  Result.V[0].X := scale.X;
+  Result.V[3].X := offset.X;
+  Result.V[1].Y := scale.Y;
+  Result.V[3].Y := offset.Y;
+  Result.V[2].Z := scale.Z;
+  Result.V[3].Z := offset.Z;
 end;
 
 function CreateRotationMatrixX(const sine, cosine: Single): TMatrix;
 begin
   result := EmptyHmgMatrix;
-  result.X.X := 1;
-  result.Y.Y := cosine;
-  result.Y.Z := sine;
-  result.Z.Y := -sine;
-  result.Z.Z := cosine;
-  result.W.W := 1;
+  Result.V[0].X := 1;
+  Result.V[1].X := cosine;
+  Result.V[1].Y := sine;
+  Result.V[2].Y := -sine;
+  Result.V[2].Z := cosine;
+  Result.V[3].W := 1;
 end;
 
 function CreateRotationMatrixX(const angle: Single): TMatrix;
@@ -4309,12 +3484,12 @@ end;
 function CreateRotationMatrixY(const sine, cosine: Single): TMatrix;
 begin
   result := EmptyHmgMatrix;
-  result.X.X := cosine;
-  result.X.Z := -sine;
-  result.Y.Y := 1;
-  result.Z.X := sine;
-  result.Z.Z := cosine;
-  result.W.W := 1;
+  Result.V[0].X := cosine;
+  Result.V[0].Z := -sine;
+  Result.V[1].Y := 1;
+  Result.V[2].X := sine;
+  Result.V[2].Z := cosine;
+  Result.V[3].W := 1;
 end;
 
 function CreateRotationMatrixY(const angle: Single): TMatrix;
@@ -4328,12 +3503,12 @@ end;
 function CreateRotationMatrixZ(const sine, cosine: Single): TMatrix;
 begin
   result := EmptyHmgMatrix;
-  result.X.X := cosine;
-  result.X.Y := sine;
-  result.Y.X := -sine;
-  result.Y.Y := cosine;
-  result.Z.Z := 1;
-  result.W.W := 1;
+  Result.V[0].X := cosine;
+  Result.V[0].Y := sine;
+  Result.V[1].X := -sine;
+  Result.V[1].Y := cosine;
+  Result.V[2].Z := 1;
+  Result.V[3].W := 1;
 end;
 
 function CreateRotationMatrixZ(const angle: Single): TMatrix;
@@ -4354,25 +3529,29 @@ begin
   one_minus_cosine := 1 - cosine;
   axis := VectorNormalize(anAxis);
 
-  result.X.X := (one_minus_cosine * axis.X * axis.X) + cosine;
-  result.X.Y := (one_minus_cosine * axis.X * axis.Y) - (axis.Z * sine);
-  result.X.Z := (one_minus_cosine * axis.Z * axis.X) + (axis.Y * sine);
-  result.X.W := 0;
+{$IFDEF GLS_FASTMATH}
+  Result.InitRotation(axis, -angle);
+{$ELSE}
+  result.V[X].X := (one_minus_cosine * axis.X * axis.X) + cosine;
+  result.V[X].Y := (one_minus_cosine * axis.X * axis.Y) - (axis.Z * sine);
+  result.V[X].Z := (one_minus_cosine * axis.Z * axis.X) + (axis.Y * sine);
+  result.V[X].W := 0;
 
-  result.Y.X := (one_minus_cosine * axis.X * axis.Y) + (axis.Z * sine);
-  result.Y.Y := (one_minus_cosine * axis.Y * axis.Y) + cosine;
-  result.Y.Z := (one_minus_cosine * axis.Y * axis.Z) - (axis.X * sine);
-  result.Y.W := 0;
+  result.V[Y].X := (one_minus_cosine * axis.X * axis.Y) + (axis.Z * sine);
+  result.V[Y].Y := (one_minus_cosine * axis.Y * axis.Y) + cosine;
+  result.V[Y].Z := (one_minus_cosine * axis.Y * axis.Z) - (axis.X * sine);
+  result.V[Y].W := 0;
 
-  result.Z.X := (one_minus_cosine * axis.Z * axis.X) - (axis.Y * sine);
-  result.Z.Y := (one_minus_cosine * axis.Y * axis.Z) + (axis.X * sine);
-  result.Z.Z := (one_minus_cosine * axis.Z * axis.Z) + cosine;
-  result.Z.W := 0;
+  result.V[Z].X := (one_minus_cosine * axis.Z * axis.X) - (axis.Y * sine);
+  result.V[Z].Y := (one_minus_cosine * axis.Y * axis.Z) + (axis.X * sine);
+  result.V[Z].Z := (one_minus_cosine * axis.Z * axis.Z) + cosine;
+  result.V[Z].W := 0;
 
-  result.W.X := 0;
-  result.W.Y := 0;
-  result.W.Z := 0;
-  result.W.W := 1;
+  result.V[W].X := 0;
+  result.V[W].Y := 0;
+  result.V[W].Z := 0;
+  result.V[W].W := 1;
+{$ENDIF}
 end;
 
 function CreateRotationMatrix(const anAxis: TVector; angle: Single): TMatrix;
@@ -4390,6 +3569,9 @@ begin
   one_minus_cosine := 1 - cosine;
   axis := VectorNormalize(anAxis);
 
+{$IFDEF GLS_FASTMATH}
+//TODO: maybe
+{$ELSE}
   result.X.X := (one_minus_cosine * Sqr(axis.X)) + cosine;
   result.X.Y := (one_minus_cosine * axis.X * axis.Y) - (axis.Z * sine);
   result.X.Z := (one_minus_cosine * axis.Z * axis.X) + (axis.Y * sine);
@@ -4401,12 +3583,13 @@ begin
   result.Z.X := (one_minus_cosine * axis.Z * axis.X) - (axis.Y * sine);
   result.Z.Y := (one_minus_cosine * axis.Y * axis.Z) + (axis.X * sine);
   result.Z.Z := (one_minus_cosine * Sqr(axis.Z)) + cosine;
+{$ENDIF}
 end;
 
 function MatrixMultiply(const m1, m2: TAffineMatrix): TAffineMatrix;
 begin
 {$IFDEF GLS_FASTMATH}
-  Neslib.FastMath.TMatrix3(Result) := Neslib.FastMath.TMatrix3(m1) * Neslib.FastMath.TMatrix3(m2);
+  Result := m1 * m2;
 {$ELSE}
   result.X.X := m1.X.X * m2.X.X + m1.X.Y * m2.Y.X + m1.X.Z * m2.Z.X;
   result.X.Y := m1.X.X * m2.X.Y + m1.X.Y * m2.Y.Y + m1.X.Z * m2.Z.Y;
@@ -4423,7 +3606,7 @@ end;
 function MatrixMultiply(const m1, m2: TMatrix): TMatrix;
 begin
 {$IFDEF GLS_FASTMATH}
-  Neslib.FastMath.TMatrix4(Result) := Neslib.FastMath.TMatrix4(m1) * Neslib.FastMath.TMatrix4(m2);
+  Result := m1 * m2;
 {$ELSE}
   result.X.X := m1.X.X * m2.X.X + m1.X.Y * m2.Y.X + m1.X.Z * m2.Z.X +
     m1.X.W * m2.W.X;
@@ -4463,7 +3646,7 @@ end;
 procedure MatrixMultiply(const m1, m2: TMatrix; var MResult: TMatrix);
 begin
 {$IFDEF GLS_FASTMATH}
-  Neslib.FastMath.TMatrix4(MResult) := Neslib.FastMath.TMatrix4(m1) * Neslib.FastMath.TMatrix4(m2);
+  MResult := m1 * m2;
 {$ELSE}
   MResult.X.X := m1.X.X * m2.X.X + m1.X.Y * m2.Y.X + m1.X.Z * m2.Z.X +
     m1.X.W * m2.W.X;
@@ -4503,41 +3686,36 @@ end;
 function VectorTransform(const V: TVector; const M: TMatrix): TVector;
 begin
 {$IFDEF GLS_FASTMATH}
-  Neslib.FastMath.TVector4(Result) := Neslib.FastMath.TVector4(V) * NesLib.FastMath.TMatrix4(M);
+  Result := V * M;
 {$ELSE}
-
-  result.V[X] := V.V[X] * M.X.X + V.V[Y] * M.Y.X + V.V[Z] * M.Z.X +
-    V.V[W] * M.W.X;
-  result.V[Y] := V.V[X] * M.X.Y + V.V[Y] * M.Y.Y + V.V[Z] * M.Z.Y +
-    V.V[W] * M.W.Y;
-  result.V[Z] := V.V[X] * M.X.Z + V.V[Y] * M.Y.Z + V.V[Z] * M.Z.Z +
-    V.V[W] * M.W.Z;
-  result.V[W] := V.V[X] * M.X.W + V.V[Y] * M.Y.W + V.V[Z] * M.Z.W +
-    V.V[W] * M.W.W;
+  result.V[X] := V.V[X] * M.X.X + V.V[Y] * M.Y.X + V.V[Z] * M.Z.X + V.V[W] * M.W.X;
+  result.V[Y] := V.V[X] * M.X.Y + V.V[Y] * M.Y.Y + V.V[Z] * M.Z.Y + V.V[W] * M.W.Y;
+  result.V[Z] := V.V[X] * M.X.Z + V.V[Y] * M.Y.Z + V.V[Z] * M.Z.Z + V.V[W] * M.W.Z;
+  result.V[W] := V.V[X] * M.X.W + V.V[Y] * M.Y.W + V.V[Z] * M.Z.W + V.V[W] * M.W.W;
 {$ENDIF}
 end;
 
 function VectorTransform(const V: TVector; const M: TAffineMatrix): TVector;
 begin
-  result.V[X] := V.V[X] * M.X.X + V.V[Y] * M.Y.X + V.V[Z] * M.Z.X;
-  result.V[Y] := V.V[X] * M.X.Y + V.V[Y] * M.Y.Y + V.V[Z] * M.Z.Y;
-  result.V[Z] := V.V[X] * M.X.Z + V.V[Y] * M.Y.Z + V.V[Z] * M.Z.Z;
-  result.V[W] := V.V[W];
+  result.X := V.X * M.V[X].X + V.Y * M.V[Y].X + V.Z * M.V[Z].X;
+  result.Y := V.X * M.V[X].Y + V.Y * M.V[Y].Y + V.Z * M.V[Z].Y;
+  result.Z := V.X * M.V[X].Z + V.Y * M.V[Y].Z + V.Z * M.V[Z].Z;
+  result.W := V.W;
 end;
 
 function VectorTransform(const V: TAffineVector; const M: TMatrix)
   : TAffineVector;
 begin
-  result.V[X] := V.V[X] * M.X.X + V.V[Y] * M.Y.X + V.V[Z] * M.Z.X + M.W.X;
-  result.V[Y] := V.V[X] * M.X.Y + V.V[Y] * M.Y.Y + V.V[Z] * M.Z.Y + M.W.Y;
-  result.V[Z] := V.V[X] * M.X.Z + V.V[Y] * M.Y.Z + V.V[Z] * M.Z.Z + M.W.Z;
+  result.X := V.X * M.V[X].X + V.Y * M.V[Y].X + V.Z * M.V[Z].X + M.V[W].X;
+  result.Y := V.X * M.V[X].Y + V.Y * M.V[Y].Y + V.Z * M.V[Z].Y + M.V[W].Y;
+  result.Z := V.X * M.V[X].Z + V.Y * M.V[Y].Z + V.Z * M.V[Z].Z + M.V[W].Z;
 end;
 
 function VectorTransform(const V: TAffineVector; const M: TAffineMatrix)
   : TAffineVector;
 begin
 {$IFDEF GLS_FASTMATH}
-  Neslib.FastMath.TVector3(Result) := Neslib.FastMath.TVector3(V) * NesLib.FastMath.TMatrix3(M);
+  Result := V * M;
 {$ELSE}
   result.V[X] := V.V[X] * M.X.X + V.V[Y] * M.Y.X + V.V[Z] * M.Z.X;
   result.V[Y] := V.V[X] * M.X.Y + V.V[Y] * M.Y.Y + V.V[Z] * M.Z.Y;
@@ -4548,7 +3726,7 @@ end;
 function MatrixDeterminant(const M: TAffineMatrix): Single;
 begin
 {$IFDEF GLS_FASTMATH}
-  Result := NesLib.FastMath.TMatrix3(M).Determinant;
+  Result := M.Determinant;
 {$ELSE}
   result := M.X.X * (M.Y.Y * M.Z.Z - M.Z.Y * M.Y.Z) - M.X.Y *
     (M.Y.X * M.Z.Z - M.Z.X * M.Y.Z) + M.X.Z * (M.Y.X * M.Z.Y - M.Z.X * M.Y.Y);
@@ -4565,15 +3743,23 @@ end;
 
 function MatrixDeterminant(const M: TMatrix): Single;
 begin
+{$IFDEF GLS_FASTMATH}
+  Result := M.Determinant;
+{$ELSE}
   result := M.X.X * MatrixDetInternal(M.Y.Y, M.Z.Y, M.W.Y, M.Y.Z, M.Z.Z, M.W.Z,
     M.Y.W, M.Z.W, M.W.W) - M.X.Y * MatrixDetInternal(M.Y.X, M.Z.X, M.W.X, M.Y.Z,
     M.Z.Z, M.W.Z, M.Y.W, M.Z.W, M.W.W) + M.X.Z * MatrixDetInternal(M.Y.X, M.Z.X,
     M.W.X, M.Y.Y, M.Z.Y, M.W.Y, M.Y.W, M.Z.W, M.W.W) - M.X.W *
     MatrixDetInternal(M.Y.X, M.Z.X, M.W.X, M.Y.Y, M.Z.Y, M.W.Y, M.Y.Z,
     M.Z.Z, M.W.Z);
+{$ENDIF}
 end;
 
 procedure AdjointMatrix(var M: TMatrix);
+{$IFDEF GLS_FASTMATH}
+begin
+  raise Exception.Create('Not implemented.');
+{$ELSE}
 var
   a1, a2, a3, a4, b1, b2, b3, b4, c1, c2, c3, c4, d1, d2, d3, d4: Single;
 begin
@@ -4614,9 +3800,14 @@ begin
   M.Y.W := MatrixDetInternal(a1, a2, a3, c1, c2, c3, d1, d2, d3);
   M.Z.W := -MatrixDetInternal(a1, a2, a3, b1, b2, b3, d1, d2, d3);
   M.W.W := MatrixDetInternal(a1, a2, a3, b1, b2, b3, c1, c2, c3);
+{$ENDIF}
 end;
 
 procedure AdjointMatrix(var M: TAffineMatrix);
+{$IFDEF GLS_FASTMATH}
+begin
+  raise Exception.Create('Error Message');
+{$ELSE}
 var
   a1, a2, a3, b1, b2, b3, c1, c2, c3: Single;
 begin
@@ -4640,9 +3831,14 @@ begin
   M.X.Z := (a2 * b3 - b2 * a3);
   M.Y.Z := -(a1 * b3 - b1 * a3);
   M.Z.Z := (a1 * b2 - b1 * a2);
+{$ENDIF}
 end;
 
 procedure ScaleMatrix(var M: TAffineMatrix; const factor: Single);
+{$IFDEF GLS_FASTMATH}
+begin
+  M := M*factor;
+{$ELSE}
 var
   i: Integer;
 begin
@@ -4652,11 +3848,16 @@ begin
     M.V[i].Y := M.V[i].Y * factor;
     M.V[i].Z := M.V[i].Z * factor;
   end;
+{$ENDIF}
 end;
 
 // ScaleMatrix (hmg)
 //
 procedure ScaleMatrix(var M: TMatrix; const factor: Single);
+{$IFDEF GLS_FASTMATH}
+begin
+  M := M*factor;
+{$ELSE}
 var
   i: Integer;
 begin
@@ -4667,24 +3868,34 @@ begin
     M.V[i].Z := M.V[i].Z * factor;
     M.V[i].W := M.V[i].W * factor;
   end;
+{$ENDIF}
 end;
 
 procedure TranslateMatrix(var M: TMatrix; const V: TAffineVector);
 begin
-  M.W.X := M.W.X + V.X;
-  M.W.Y := M.W.Y + V.Y;
-  M.W.Z := M.W.Z + V.Z;
+  M.V[3].X := M.V[3].X + V.X;
+  M.V[3].Y := M.V[3].Y + V.Y;
+  M.V[3].Z := M.V[3].Z + V.Z;
 end;
 
 procedure TranslateMatrix(var M: TMatrix; const V: TVector);
 begin
-  M.W.X := M.W.X + V.X;
-  M.W.Y := M.W.Y + V.Y;
-  M.W.Z := M.W.Z + V.Z;
+  M.V[3].X := M.V[3].X + V.X;
+  M.V[3].Y := M.V[3].Y + V.Y;
+  M.V[3].Z := M.V[3].Z + V.Z;
 end;
 
 procedure NormalizeMatrix(var M: TMatrix);
 begin
+{$IFDEF GLS_FASTMATH}
+  M.V[0].W := 0;
+  M.V[0].SetNormalized;
+  M.V[1].W := 0;
+  M.V[1].SetNormalized;
+  M.V[2] := VectorCrossProduct(M.V[0], M.V[1]);
+  M.V[0] := VectorCrossProduct(M.V[1], M.V[2]);
+  M.V[3] := WHmgVector;
+{$ELSE}
   M.X.W := 0;
   NormalizeVector(M.X);
   M.Y.W := 0;
@@ -4692,9 +3903,14 @@ begin
   M.Z := VectorCrossProduct(M.X, M.Y);
   M.X := VectorCrossProduct(M.Y, M.Z);
   M.W := WHmgVector;
+{$ENDIF}
 end;
 
 procedure TransposeMatrix(var M: TAffineMatrix);
+{$IFDEF GLS_FASTMATH}
+begin
+  M.SetTransposed;
+{$ELSE}
 var
   f: Single;
 begin
@@ -4707,9 +3923,14 @@ begin
   f := M.Y.Z;
   M.Y.Z := M.Z.Y;
   M.Z.Y := f;
+{$ENDIF}
 end;
 
 procedure TransposeMatrix(var M: TMatrix);
+{$IFDEF GLS_FASTMATH}
+begin
+  M.SetTransposed;
+{$ELSE}
 var
   f: Single;
 begin
@@ -4731,9 +3952,14 @@ begin
   f := M.Z.W;
   M.Z.W := M.W.Z;
   M.W.Z := f;
+{$ENDIF}
 end;
 
 procedure InvertMatrix(var M: TMatrix);
+{$IFDEF GLS_FASTMATH}
+begin
+  M.SetInversed;
+{$ELSE}
 var
   det: Single;
 begin
@@ -4745,15 +3971,24 @@ begin
     AdjointMatrix(M);
     ScaleMatrix(M, 1 / det);
   end;
+{$ENDIF}
 end;
 
 function MatrixInvert(const M: TMatrix): TMatrix;
 begin
+{$IFDEF GLS_FASTMATH}
+  Result := M.Inverse;
+{$ELSE}
   result := M;
   InvertMatrix(result);
+{$ENDIF}
 end;
 
 procedure InvertMatrix(var M: TAffineMatrix);
+{$IFDEF GLS_FASTMATH}
+begin
+  M.SetInversed;
+{$ELSE}
 var
   det: Single;
 begin
@@ -4765,64 +4000,25 @@ begin
     AdjointMatrix(M);
     ScaleMatrix(M, 1 / det);
   end;
+{$ENDIF}
 end;
 
 function MatrixInvert(const M: TAffineMatrix): TAffineMatrix;
 begin
+{$IFDEF GLS_FASTMATH}
+  Result := M.Inverse;
+{$ELSE}
   result := M;
   InvertMatrix(result);
+{$ENDIF}
 end;
 
-{$IFDEF GLS_ASM}
-procedure Transpose_Scale_M33(const src: TMatrix; var dest: TMatrix;
-  var scale: Single);
-// EAX src
-// EDX dest
-// ECX scale
-asm
-    // dest[0][0]:=scale*src[0][0];
-    fld   dword ptr [ecx]
-    fld   st(0)
-    fmul  dword ptr [eax]
-    fstp  dword ptr [edx]
-    // dest[1][0]:=scale*src[0][1];
-    fld   st(0)
-    fmul  dword ptr [eax+4]
-    fstp  dword ptr [edx+16]
-    // dest[2][0]:=scale*src[0][2];
-    fmul  dword ptr [eax+8]
-    fstp  dword ptr [edx+32]
-
-    // dest[0][1]:=scale*src[1][0];
-    fld   dword ptr [ecx]
-    fld   st(0)
-    fmul  dword ptr [eax+16]
-    fstp  dword ptr [edx+4]
-    // dest[1][1]:=scale*src[1][1];
-    fld   st(0)
-    fmul  dword ptr [eax+20]
-    fstp  dword ptr [edx+20]
-    // dest[2][1]:=scale*src[1][2];
-    fmul  dword ptr [eax+24]
-    fstp  dword ptr [edx+36]
-
-    // dest[0][2]:=scale*src[2][0];
-    fld   dword ptr [ecx]
-    fld   st(0)
-    fmul  dword ptr [eax+32]
-    fstp  dword ptr [edx+8]
-    // dest[1][2]:=scale*src[2][1];
-    fld   st(0)
-    fmul  dword ptr [eax+36]
-    fstp  dword ptr [edx+24]
-    // dest[2][2]:=scale*src[2][2];
-    fmul  dword ptr [eax+40]
-    fstp  dword ptr [edx+40]
-end;
-{$ELSE}
 procedure Transpose_Scale_M33(const src: TMatrix; var dest: TMatrix;
   var scale: Single);
 begin
+{$IFDEF GLS_FASTMATH}
+  dest := scale * src.Transpose
+{$ELSE}
   dest.X.X := scale * src.X.X;
   dest.Y.X := scale * src.X.Y;
   dest.Z.X := scale * src.X.Z;
@@ -4832,14 +4028,14 @@ begin
   dest.X.Z := scale * src.Z.X;
   dest.Y.Z := scale * src.Z.Y;
   dest.Z.Z := scale * src.Z.Z;
-end;
 {$ENDIF}
+end;
 
 function AnglePreservingMatrixInvert(const mat: TMatrix): TMatrix;
 var
   scale: Single;
 begin
-  scale := VectorNorm(mat.X);
+  scale := VectorNorm(mat.V[X]);
 
   // Is the submatrix A singular?
   if Abs(scale) < EPSILON then
@@ -4855,21 +4051,18 @@ begin
   end;
 
   // Fill in last row while CPU is busy with the division
-  result.X.W := 0.0;
-  result.Y.W := 0.0;
-  result.Z.W := 0.0;
-  result.W.W := 1.0;
+  result.V[X].W := 0.0;
+  result.V[Y].W := 0.0;
+  result.V[Z].W := 0.0;
+  result.V[W].W := 1.0;
 
   // Transpose and scale the 3 by 3 upper-left submatrix
   Transpose_Scale_M33(mat, result, scale);
 
   // Calculate -(transpose(A) / s*s) C
-  result.W.X := -(result.X.X * mat.W.X + result.Y.X *
-    mat.W.Y + result.Z.X * mat.W.Z);
-  result.W.Y := -(result.X.Y * mat.W.X + result.Y.Y *
-    mat.W.Y + result.Z.Y * mat.W.Z);
-  result.W.Z := -(result.X.Z * mat.W.X + result.Y.Z *
-    mat.W.Y + result.Z.Z * mat.W.Z);
+  result.V[W].X := -(result.V[X].X * mat.V[W].X + result.V[Y].X * mat.V[W].Y + result.V[Z].X * mat.V[W].Z);
+  result.V[W].Y := -(result.V[X].Y * mat.V[W].X + result.V[Y].Y * mat.V[W].Y + result.V[Z].Y * mat.V[W].Z);
+  result.V[W].Z := -(result.V[X].Z * mat.V[W].X + result.V[Y].Z * mat.V[W].Y + result.V[Z].Z * mat.V[W].Z);
 end;
 
 function MatrixDecompose(const M: TMatrix; var Tran: TTransformations): Boolean;
@@ -4883,31 +4076,32 @@ begin
   result := False;
   LocMat := M;
   // normalize the matrix
-  if LocMat.W.W = 0 then
+  if LocMat.V[W].W = 0 then
     Exit;
   for i := 0 to 3 do
     for J := 0 to 3 do
-      LocMat.V[i].V[J] := LocMat.V[i].V[J] / LocMat.W.W;
+      LocMat.V[i].C[J] := LocMat.V[i].C[J] / LocMat.V[W].W;
 
   // pmat is used to solve for perspective, but it also provides
   // an easy way to test for singularity of the upper 3x3 component.
 
   pmat := LocMat;
   for i := 0 to 2 do
-    pmat.V[i].V[W] := 0;
-  pmat.W.W := 1;
+    pmat.V[i].C[W] := 0;
+
+  pmat.V[W].W := 1;
 
   if MatrixDeterminant(pmat) = 0 then
     Exit;
 
   // First, isolate perspective.  This is the messiest.
-  if (LocMat.X.W <> 0) or (LocMat.Y.W <> 0) or (LocMat.Z.W <> 0) then
+  if (LocMat.V[X].W <> 0) or (LocMat.V[Y].W <> 0) or (LocMat.V[Z].W <> 0) then
   begin
     // prhs is the right hand side of the equation.
-    prhs.V[X] := LocMat.X.W;
-    prhs.V[Y] := LocMat.Y.W;
-    prhs.V[Z] := LocMat.Z.W;
-    prhs.V[W] := LocMat.W.W;
+    prhs.X := LocMat.V[X].W;
+    prhs.Y := LocMat.V[Y].W;
+    prhs.Z := LocMat.V[Z].W;
+    prhs.W := LocMat.V[W].W;
 
     // Solve the equation by inverting pmat and multiplying
     // prhs by the inverse.  (This is the easiest way, not
@@ -4919,16 +4113,16 @@ begin
     psol := VectorTransform(prhs, invpmat);
 
     // stuff the answer away
-    Tran[ttPerspectiveX] := psol.V[X];
-    Tran[ttPerspectiveY] := psol.V[Y];
-    Tran[ttPerspectiveZ] := psol.V[Z];
-    Tran[ttPerspectiveW] := psol.V[W];
+    Tran[ttPerspectiveX] := psol.X;
+    Tran[ttPerspectiveY] := psol.Y;
+    Tran[ttPerspectiveZ] := psol.Z;
+    Tran[ttPerspectiveW] := psol.W;
 
     // clear the perspective partition
-    LocMat.X.W := 0;
-    LocMat.Y.W := 0;
-    LocMat.Z.W := 0;
-    LocMat.W.W := 1;
+    LocMat.V[X].W := 0;
+    LocMat.V[Y].W := 0;
+    LocMat.V[Z].W := 0;
+    LocMat.V[W].W := 1;
   end
   else
   begin
@@ -4942,14 +4136,14 @@ begin
   // next take care of translation (easy)
   for i := 0 to 2 do
   begin
-    Tran[TTransType(Ord(ttTranslateX) + i)] := LocMat.V[W].V[i];
-    LocMat.V[W].V[i] := 0;
+    Tran[TTransType(Ord(ttTranslateX) + i)] := LocMat.V[W].C[i];
+    LocMat.V[W].C[i] := 0;
   end;
 
   // now get scale and shear
-  SetVector(row0, LocMat.X);
-  SetVector(row1, LocMat.Y);
-  SetVector(row2, LocMat.Z);
+  SetVector(row0, LocMat.V[X]);
+  SetVector(row1, LocMat.V[Y]);
+  SetVector(row2, LocMat.V[Z]);
 
   // compute X scale factor and normalize first row
   Tran[ttScaleX] := VectorNorm(row0);
@@ -4993,15 +4187,15 @@ begin
   end;
 
   // now, get the rotations out, as described in the gem
-  Tran[ttRotateY] := ArcSine(-row0.V[Z]);
+  Tran[ttRotateY] := ArcSine(-row0.Z);
   if Cos(Tran[ttRotateY]) <> 0 then
   begin
-    Tran[ttRotateX] := {$IFDEF GLS_FASTMATH}NesLib.FastMath.{$ENDIF}ArcTan2(row1.V[Z], row2.V[Z]);
-    Tran[ttRotateZ] := {$IFDEF GLS_FASTMATH}NesLib.FastMath.{$ENDIF}ArcTan2(row0.V[Y], row0.V[X]);
+    Tran[ttRotateX] := {$IFDEF GLS_FASTMATH}NesLib.FastMath.{$ENDIF}ArcTan2(row1.Z, row2.Z);
+    Tran[ttRotateZ] := {$IFDEF GLS_FASTMATH}NesLib.FastMath.{$ENDIF}ArcTan2(row0.Y, row0.X);
   end
   else
   begin
-    Tran[ttRotateX] := {$IFDEF GLS_FASTMATH}NesLib.FastMath.{$ENDIF}ArcTan2(row1.V[X], row1.V[Y]);
+    Tran[ttRotateX] := {$IFDEF GLS_FASTMATH}NesLib.FastMath.{$ENDIF}ArcTan2(row1.X, row1.Y);
     Tran[ttRotateZ] := 0;
   end;
   // All done!
@@ -5017,41 +4211,41 @@ begin
   XAxis := VectorCrossProduct(ZAxis, normUp);
   NormalizeVector(XAxis);
   YAxis := VectorCrossProduct(XAxis, ZAxis);
-  result.X := XAxis;
-  result.Y := YAxis;
-  result.Z := ZAxis;
-  NegateVector(result.Z);
-  result.W := NullHmgPoint;
+  result.V[X] := XAxis;
+  result.V[Y] := YAxis;
+  result.V[Z] := ZAxis;
+  NegateVector(result.V[Z]);
+  result.V[W] := NullHmgPoint;
   TransposeMatrix(result);
   negEye := eye;
   NegateVector(negEye);
   negEye.W := 1;
   negEye := VectorTransform(negEye, result);
-  result.W := negEye;
+  result.V[W] := negEye;
 end;
 
 function CreateMatrixFromFrustum(Left, Right, Bottom, Top, ZNear,
   ZFar: Single): TMatrix;
 begin
-  result.X.X := 2 * ZNear / (Right - Left);
-  result.X.Y := 0;
-  result.X.Z := 0;
-  result.X.W := 0;
+  result.V[X].X := 2 * ZNear / (Right - Left);
+  result.V[X].Y := 0;
+  result.V[X].Z := 0;
+  result.V[X].W := 0;
 
-  result.Y.X := 0;
-  result.Y.Y := 2 * ZNear / (Top - Bottom);
-  result.Y.Z := 0;
-  result.Y.W := 0;
+  result.V[Y].X := 0;
+  result.V[Y].Y := 2 * ZNear / (Top - Bottom);
+  result.V[Y].Z := 0;
+  result.V[Y].W := 0;
 
-  result.Z.X := (Right + Left) / (Right - Left);
-  result.Z.Y := (Top + Bottom) / (Top - Bottom);
-  result.Z.Z := -(ZFar + ZNear) / (ZFar - ZNear);
-  result.Z.W := -1;
+  result.V[Z].X := (Right + Left) / (Right - Left);
+  result.V[Z].Y := (Top + Bottom) / (Top - Bottom);
+  result.V[Z].Z := -(ZFar + ZNear) / (ZFar - ZNear);
+  result.V[Z].W := -1;
 
-  result.W.X := 0;
-  result.W.Y := 0;
-  result.W.Z := -2 * ZFar * ZNear / (ZFar - ZNear);
-  result.W.W := 0;
+  result.V[W].X := 0;
+  result.V[W].Y := 0;
+  result.V[W].Z := -2 * ZFar * ZNear / (ZFar - ZNear);
+  result.V[W].W := 0;
 end;
 
 function CreatePerspectiveMatrix(FOV, Aspect, ZNear, ZFar: Single): TMatrix;
@@ -5067,25 +4261,25 @@ end;
 function CreateOrthoMatrix(Left, Right, Bottom, Top, ZNear,
   ZFar: Single): TMatrix;
 begin
-  result.X.X := 2 / (Right - Left);
-  result.X.Y := 0;
-  result.X.Z := 0;
-  result.X.W := 0;
+  result.V[X].X := 2 / (Right - Left);
+  result.V[X].Y := 0;
+  result.V[X].Z := 0;
+  result.V[X].W := 0;
 
-  result.Y.X := 0;
-  result.Y.Y := 2 / (Top - Bottom);
-  result.Y.Z := 0;
-  result.Y.W := 0;
+  result.V[Y].X := 0;
+  result.V[Y].Y := 2 / (Top - Bottom);
+  result.V[Y].Z := 0;
+  result.V[Y].W := 0;
 
-  result.Z.X := 0;
-  result.Z.Y := 0;
-  result.Z.Z := -2 / (ZFar - ZNear);
-  result.Z.W := 0;
+  result.V[Z].X := 0;
+  result.V[Z].Y := 0;
+  result.V[Z].Z := -2 / (ZFar - ZNear);
+  result.V[Z].W := 0;
 
-  result.W.X := (Left + Right) / (Left - Right);
-  result.W.Y := (Bottom + Top) / (Bottom - Top);
-  result.W.Z := (ZNear + ZFar) / (ZNear - ZFar);
-  result.W.W := 1;
+  result.V[W].X := (Left + Right) / (Left - Right);
+  result.V[W].Y := (Bottom + Top) / (Bottom - Top);
+  result.V[W].Z := (ZNear + ZFar) / (ZNear - ZFar);
+  result.V[W].W := 1;
 end;
 
 function CreatePickMatrix(X, Y, deltax, deltay: Single;
@@ -5100,8 +4294,8 @@ begin
   result := CreateTranslationMatrix
     (AffineVectorMake((viewport.Z - 2 * (X - viewport.X)) / deltax,
     (viewport.W - 2 * (Y - viewport.Y)) / deltay, 0.0));
-  result.X.X := viewport.Z / deltax;
-  result.Y.Y := viewport.W / deltay;
+  result.V[0].X := viewport.Z / deltax;
+  result.V[1].Y := viewport.W / deltay;
 end;
 
 function Project(objectVector: TVector; const ViewProjMatrix: TMatrix;
@@ -5236,34 +4430,11 @@ begin
     point.Z + plane.W;
 end;
 
-{$IFDEF GLS_ASM}
-function PointIsInHalfSpace(const point, planePoint,
-  planeNormal: TVector): Boolean;
-asm
-  fld   dword ptr [eax]         // 27
-  fsub  dword ptr [edx]
-  fmul  dword ptr [ecx]
-  fld   dword ptr [eax+4]
-  fsub  dword ptr [edx+4]
-  fmul  dword ptr [ecx+4]
-  faddp
-  fld   dword ptr [eax+8]
-  fsub  dword ptr [edx+8]
-  fmul  dword ptr [ecx+8]
-  faddp
-  ftst
-  fstsw ax
-  sahf
-  setnbe al
-  ffree st(0)
-end;
-  {$ELSE}
 function PointIsInHalfSpace(const point, planePoint,
   planeNormal: TVector): Boolean;
 begin
   result := (PointPlaneDistance(point, planePoint, planeNormal) > 0); // 44
 end;
-{$ENDIF}
 
 function PointIsInHalfSpace(const point, planePoint,
   planeNormal: TAffineVector): Boolean;
@@ -5277,29 +4448,6 @@ begin
   result := (PointPlaneDistance(point, plane) > 0);
 end;
 
-{$IFDEF GLS_ASM}
-function PointPlaneDistance(const point, planePoint,
-  planeNormal: TVector): Single;
-// EAX contains address of point
-// EDX contains address of planepoint
-// ECX contains address of planeNormal
-// result in St(0)
-asm
-  fld   dword ptr [eax]
-  fsub  dword ptr [edx]
-  fmul  dword ptr [ecx]
-
-  fld   dword ptr [eax+$4]
-  fsub  dword ptr [edx+$4]
-  fmul  dword ptr [ecx+$4]
-  faddp
-
-  fld   dword ptr [eax+$8]
-  fsub  dword ptr [edx+$8]
-  fmul  dword ptr [ecx+$8]
-  faddp
-end;
-{$ELSE}
 function PointPlaneDistance(const point, planePoint,
   planeNormal: TVector): Single;
 begin
@@ -5307,31 +4455,7 @@ begin
     (point.Y - planePoint.Y) * planeNormal.Y +
     (point.Z - planePoint.Z) * planeNormal.Z;
 end;
-{$ENDIF}
 
-{$IFDEF GLS_ASM}
-function PointPlaneDistance(const point, planePoint,
-  planeNormal: TAffineVector): Single;
-// EAX contains address of point
-// EDX contains address of planepoint
-// ECX contains address of planeNormal
-// result in St(0)
-asm
-  fld   dword ptr [eax]
-  fsub  dword ptr [edx]
-  fmul  dword ptr [ecx]
-
-  fld   dword ptr [eax+$4]
-  fsub  dword ptr [edx+$4]
-  fmul  dword ptr [ecx+$4]
-  faddp
-
-  fld   dword ptr [eax+$8]
-  fsub  dword ptr [edx+$8]
-  fmul  dword ptr [ecx+$8]
-  faddp
-end;
-{$ELSE}
 function PointPlaneDistance(const point, planePoint,
   planeNormal: TAffineVector): Single;
 begin
@@ -5339,7 +4463,6 @@ begin
     (point.Y - planePoint.Y) * planeNormal.Y +
     (point.Z - planePoint.Z) * planeNormal.Z;
 end;
-{$ENDIF}
 
 function PointPlaneDistance(const point: TAffineVector;
   const plane: THmgPlane): Single;
@@ -5744,7 +4867,11 @@ begin
     result := det / VectorLength(VectorCrossProduct(lineDir0, lineDir1));
 end;
 
-function QuaternionMake(const Imag: array of Single; Real: Single): TQuaternion;
+function QuaternionMake(const Imag: array of Single; Real: Single): TQuaternion; overload;
+{$IFDEF GLS_FASTMATH}
+begin
+  Result.Init(Imag[0], Imag[1], Imag[2], Real);
+{$ELSE}
 var
   n: Integer;
 begin
@@ -5756,27 +4883,55 @@ begin
   if n >= 3 then
     result.ImagPart.Z := Imag[2];
   result.RealPart := Real;
+{$ENDIF}
+end;
+
+function QuaternionMake(const X,Y,Z,W: Single): TQuaternion; overload;
+begin
+  Result.X := X;
+  Result.Y := Y;
+  Result.Z := Z;
+  Result.W := W;
+end;
+
+function QuaternionMake(const V: TVector): TQuaternion; overload;
+begin
+  Result.X := V.X;
+  Result.Y := V.Y;
+  Result.Z := V.Z;
+  Result.W := V.W;
 end;
 
 // QuaternionConjugate
 //
 function QuaternionConjugate(const Q: TQuaternion): TQuaternion;
 begin
+{$IFDEF GLS_FASTMATH}
+  Result := Q.Conjugate;
+{$ELSE}
   result.ImagPart.X := -Q.ImagPart.X;
   result.ImagPart.Y := -Q.ImagPart.Y;
   result.ImagPart.Z := -Q.ImagPart.Z;
   result.RealPart := Q.RealPart;
+{$ENDIF}
 end;
 
 function QuaternionMagnitude(const Q: TQuaternion): Single;
 begin
+{$IFDEF GLS_FASTMATH}
+  Result := Q.Length;
+{$ELSE}
   result := Sqrt(VectorNorm(Q.ImagPart) + Sqr(Q.RealPart));
+{$ENDIF}
 end;
 
 procedure NormalizeQuaternion(var Q: TQuaternion);
 var
   M, f: Single;
 begin
+{$IFDEF GLS_FASTMATH}
+  Q.SetNormalized;
+{$ELSE}
   M := QuaternionMagnitude(Q);
   if M > EPSILON2 then
   begin
@@ -5786,12 +4941,17 @@ begin
   end
   else
     Q := IdentityQuaternion;
+{$ENDIF}
 end;
 
 function QuaternionFromPoints(const V1, V2: TAffineVector): TQuaternion;
 begin
+{$IFDEF GLS_FASTMATH}
+  Result.Init(V1.Cross(V2), Sqrt((VectorDotProduct(V1, V2) + 1) / 2));
+{$ELSE}
   result.ImagPart := VectorCrossProduct(V1, V2);
   result.RealPart := Sqrt((VectorDotProduct(V1, V2) + 1) / 2);
+{$ENDIF}
 end;
 
 function QuaternionFromMatrix(const mat: TMatrix): TQuaternion;
@@ -5799,7 +4959,10 @@ function QuaternionFromMatrix(const mat: TMatrix): TQuaternion;
 var
   traceMat, S, invS: Double;
 begin
-  traceMat := 1 + mat.X.X + mat.Y.Y + mat.Z.Z;
+{$IFDEF GLS_FASTMATH}
+  Result.Init(mat);
+{$ELSE}
+  traceMat := 1 + mat.V[X].X + mat.V[Y].Y + mat.V[Z].Z;
   if traceMat > EPSILON2 then
   begin
     S := Sqrt(traceMat) * 2;
@@ -5841,12 +5004,16 @@ begin
     result.RealPart := (mat.X.Y - mat.Y.X) * invS;
   end;
   NormalizeQuaternion(result);
+{$ENDIF}
 end;
 
 function QuaternionMultiply(const qL, qR: TQuaternion): TQuaternion;
 var
   Temp: TQuaternion;
 begin
+{$IFDEF GLS_FASTMATH}
+  Result := ql * qR;
+{$ELSE}
   Temp.RealPart := qL.RealPart * qR.RealPart - qL.ImagPart.V[X] * qR.ImagPart.V
     [X] - qL.ImagPart.V[Y] * qR.ImagPart.V[Y] - qL.ImagPart.V[Z] *
     qR.ImagPart.V[Z];
@@ -5860,12 +5027,16 @@ begin
     qR.RealPart + qL.ImagPart.V[X] * qR.ImagPart.V[Y] - qL.ImagPart.V[Y] *
     qR.ImagPart.V[X];
   result := Temp;
+{$ENDIF}
 end;
 
 function QuaternionToMatrix(quat: TQuaternion): TMatrix;
 var
   W, X, Y, Z, xx, xy, xz, xw, yy, yz, yw, zz, zw: Single;
 begin
+{$IFDEF GLS_FASTMATH}
+  Result := quat.ToMatrix;
+{$ELSE}
   NormalizeQuaternion(quat);
   W := quat.RealPart;
   X := quat.ImagPart.X;
@@ -5896,12 +5067,16 @@ begin
   result.Y.W := 0;
   result.Z.W := 0;
   result.W.W := 1;
+{$ENDIF}
 end;
 
 function QuaternionToAffineMatrix(quat: TQuaternion): TAffineMatrix;
 var
   W, X, Y, Z, xx, xy, xz, xw, yy, yz, yw, zz, zw: Single;
 begin
+{$IFDEF GLS_FASTMATH}
+  Result := ToMatrix3(quat.ToMatrix);
+{$ELSE}
   NormalizeQuaternion(quat);
   W := quat.RealPart;
   X := quat.ImagPart.X;
@@ -5925,6 +5100,7 @@ begin
   result.X.Z := 2 * (xz - yw);
   result.Y.Z := 2 * (yz + xw);
   result.Z.Z := 1 - 2 * (xx + yy);
+{$ENDIF}
 end;
 
 function QuaternionFromAngleAxis(const angle: Single; const axis: TAffineVector)
@@ -5933,11 +5109,11 @@ var
   f, S, c: Single;
 begin
   SinCosine(DegToRadian(angle * cOneDotFive), S, c);
-  result.RealPart := c;
+  result.W:= c;
   f := S / VectorLength(axis);
-  result.ImagPart.X := axis.X * f;
-  result.ImagPart.Y := axis.Y * f;
-  result.ImagPart.Z := axis.Z * f;
+  result.X := axis.X * f;
+  result.Y := axis.Y * f;
+  result.Z := axis.Z * f;
 end;
 
 function QuaternionFromRollPitchYaw(const r, p, Y: Single): TQuaternion;
@@ -6023,6 +5199,9 @@ procedure QuaternionToPoints(const Q: TQuaternion;
 var
   S, invS: Single;
 begin
+{$IFDEF GLS_FASTMATH}
+  raise Exception.Create('Error Message');
+{$ELSE}
   S := Q.ImagPart.V[X] * Q.ImagPart.V[X] + Q.ImagPart.V[Y] * Q.ImagPart.V[Y];
   if S = 0 then
     SetAffineVector(ArcFrom, 0, 1, 0)
@@ -6037,11 +5216,16 @@ begin
   ArcTo.V[Z] := Q.ImagPart.V[X] * ArcFrom.V[Y] - Q.ImagPart.V[Y] * ArcFrom.V[X];
   if Q.RealPart < 0 then
     SetAffineVector(ArcFrom, -ArcFrom.V[X], -ArcFrom.V[Y], 0);
+{$ENDIF}
 end;
 
 function Logarithm2(const X: Single): Single;
 begin
-  result := {$IFDEF GLS_FASTMATH}NesLib.FastMath.{$ENDIF}Log2(X);
+{$IFDEF GLS_FASTMATH}
+  result := NesLib.FastMath.Log2(X);
+{$ELSE}
+  result := Log2(X);
+{$ENDIF}
 end;
 
 function PowerSingle(const Base, Exponent: Single): Single;
@@ -6077,42 +5261,20 @@ begin
   result := Degrees * (PI / 180);
 end;
 
-{$IFDEF GLS_ASM}
-function DegToRadian(const Degrees: Single): Single;
-// Result:=Degrees * cPIdiv180;
-// don't laugh, Delphi's compiler manages to make a nightmare of this one
-// with pushs, pops, etc. in its default compile... (this one is twice faster !)
-asm
-  FLD  DWORD PTR [EBP+8]
-  FMUL cPIdiv180
-end;
-{$ELSE}
 function DegToRadian(const Degrees: Single): Single;
 begin
   result := Degrees * cPIdiv180;
 end;
-{$ENDIF}
 
 function RadianToDeg(const Radians: Extended): Extended;
 begin
   result := Radians * (180 / PI);
 end;
 
-{$IFDEF GLS_ASM}
-function RadianToDeg(const Radians: Single): Single;
-// Result:=Radians * c180divPI;
-// don't laugh, Delphi's compiler manages to make a nightmare of this one
-// with pushs, pops, etc. in its default compile... (this one is twice faster !)
-asm
-  FLD  DWORD PTR [EBP+8]
-  FMUL c180divPI
-end;
-{$ELSE}
 function RadianToDeg(const Radians: Single): Single;
 begin
   result := Radians * c180divPI;
 end;
-{$ENDIF}
 
 function NormalizeAngle(angle: Single): Single;
 begin
@@ -6133,24 +5295,10 @@ begin
 end;
 
 {$IFDEF GLS_PLATFORM_HAS_EXTENDED}
-
-{$IFDEF GLS_ASM}
-procedure SinCosine(const Theta: Extended; out Sin, Cos: Extended);
-// EAX contains address of Sin
-// EDX contains address of Cos
-// Theta is passed over the stack
-asm
-  FLD  Theta
-  FSinCos
-  FSTP TBYTE PTR [EDX]    // cosine
-  FSTP TBYTE PTR [EAX]    // sine
-end;
-{$ELSE}
 procedure SinCosine(const Theta: Extended; out Sin, Cos: Extended);
 begin
   Math.SinCos(Theta, Sin, Cos);
 end;
-{$ENDIF}
 {$ENDIF GLS_PLATFORM_HAS_EXTENDED}
 
 procedure SinCosine(const Theta: Double; out Sin, Cos: Double);
@@ -6309,23 +5457,6 @@ begin
   result := 1 / Sqrt(X * X + Y * Y);
 end;
 
-{$IFDEF GLS_ASM}
-procedure RegisterBasedExp;
-asm   // Exp(x) = 2^(x.log2(e))
-  fldl2e
-  fmul
-  fld      st(0)
-  frndint
-  fsub     st(1), st
-  fxch     st(1)
-  f2xm1
-  fld1
-  fadd
-  fscale
-  fstp     st(1)
-end;
-{$ENDIF}
-
 procedure RandomPointOnSphere(var p: TAffineVector);
 var
   T, W: Single;
@@ -6456,16 +5587,6 @@ begin
     result := 0;
 end;
 
-{$IFDEF GLS_ASM}
-function MinFloat(const V1, V2: Single): Single;
-asm
-  fld  DWORD PTR[V1]
-  fld  DWORD PTR[V2]
-  db $DB,$F1                 /// fcomi   st(0), st(1)
-  db $DB,$C1                 /// fcmovnb st(0), st(1)
-  ffree   st(1)
-end;
-{$ELSE}
 function MinFloat(const V1, V2: Single): Single;
 begin
   if V1 < V2 then
@@ -6473,18 +5594,7 @@ begin
   else
     result := V2;
 end;
-{$ENDIF}
 
-{$IFDEF GLS_ASM}
-function MinFloat(const V1, V2: Double): Double;
-asm
-  fld  DWORD PTR[v1]
-  fld  DWORD PTR[v2]
-  db $DB,$F1                 /// fcomi   st(0), st(1)
-  db $DB,$C1                 /// fcmovnb st(0), st(1)
-  ffree   st(1)
-end;
-{$ELSE}
 function MinFloat(const V1, V2: Double): Double;
 begin
   if V1 < V2 then
@@ -6492,20 +5602,8 @@ begin
   else
     result := V2;
 end;
-{$ENDIF}
 
 {$IFDEF GLS_PLATFORM_HAS_EXTENDED}
-
-{$IFDEF GLS_ASM}
-function MinFloat(const V1, V2: Extended): Extended;
-asm
-  fld  DWORD PTR[v1]
-  fld  DWORD PTR[v2]
-  db $DB,$F1                 /// fcomi   st(0), st(1)
-  db $DB,$C1                 /// fcmovnb st(0), st(1)
-  ffree   st(1)
-end;
-{$ELSE}
 function MinFloat(const V1, V2: Extended): Extended;
 begin
   if V1 < V2 then
@@ -6513,24 +5611,8 @@ begin
   else
     result := V2;
 end;
-{$ENDIF}
-
 {$ENDIF GLS_PLATFORM_HAS_EXTENDED}
 
-{$IFDEF GLS_ASM}
-function MinFloat(const V1, V2, V3: Single): Single;
-asm
-  fld  DWORD PTR[V1]
-  fld  DWORD PTR[V2]
-  db $DB,$F1                 /// fcomi   st(0), st(1)
-  db $DB,$C1                 /// fcmovnb st(0), st(1)
-  ffree   st(1)
-  fld   DWORD PTR[V3]
-  db $DB,$F1                 /// fcomi   st(0), st(1)
-  db $DB,$C1                 /// fcmovnb st(0), st(1)
-  ffree   st(1)
-end;
-{$ELSE}
 function MinFloat(const V1, V2, V3: Single): Single;
 begin
   if V1 <= V2 then
@@ -6547,22 +5629,6 @@ begin
   else
     result := V1;
 end;
-{$ENDIF}
-
-{$IFDEF GLS_ASM}
-function MinFloat(const V1, V2, V3: Double): Double;
-asm
-  fld  DWORD PTR[v1]
-  fld  DWORD PTR[v2]
-  db $DB,$F1                 /// fcomi   st(0), st(1)
-  db $DB,$C1                 /// fcmovnb st(0), st(1)
-  ffree   st(1)
-  fld  DWORD PTR[v3]
-  db $DB,$F1                 /// fcomi   st(0), st(1)
-  db $DB,$C1                 /// fcmovnb st(0), st(1)
-  ffree   st(1)
-end;
-{$ELSE}
 
 function MinFloat(const V1, V2, V3: Double): Double;
 begin
@@ -6580,24 +5646,8 @@ begin
   else
     result := V1;
 end;
-{$ENDIF}
 
 {$IFDEF GLS_PLATFORM_HAS_EXTENDED}
-
-{$IFDEF GLS_ASM}
-function MinFloat(const V1, V2, V3: Extended): Extended;
-asm
-  fld  DWORD PTR[v1]
-  fld  DWORD PTR[v2]
-  db $DB,$F1                 /// fcomi   st(0), st(1)
-  db $DB,$C1                 /// fcmovnb st(0), st(1)
-  ffree   st(1)
-  fld  DWORD PTR[v3]
-  db $DB,$F1                 /// fcomi   st(0), st(1)
-  db $DB,$C1                 /// fcmovnb st(0), st(1)
-  ffree   st(1)
-end;
-{$ELSE}
 function MinFloat(const V1, V2, V3: Extended): Extended;
 begin
   if V1 <= V2 then
@@ -6613,7 +5663,7 @@ begin
     result := V3
   else
     result := V1;
-{$ENDIF}
+end;
 {$ENDIF GLS_PLATFORM_HAS_EXTENDED}
 
 function MaxFloat(values: PSingleArray; nbItems: Integer): Single; overload;
@@ -6679,16 +5729,6 @@ begin
     result := 0;
 end;
 
-{$IFDEF GLS_ASM}
-function MaxFloat(const V1, V2: Single): Single;
-asm
-  fld  DWORD PTR[v1]
-  fld  DWORD PTR[v2]
-  db $DB,$F1                 /// fcomi   st(0), st(1)
-  db $DA,$C1                 /// fcmovb  st(0), st(1)
-  ffree   st(1)
-end;
-{$ELSE}
 function MaxFloat(const V1, V2: Single): Single;
 begin
   if V1 > V2 then
@@ -6696,18 +5736,7 @@ begin
   else
     result := V2;
 end;
-{$ENDIF}
 
-{$IFDEF GLS_ASM}
-function MaxFloat(const V1, V2: Double): Double;
-asm
-  fld  DWORD PTR[v1]
-  fld  DWORD PTR[v2]
-  db $DB,$F1                 /// fcomi   st(0), st(1)
-  db $DA,$C1                 /// fcmovb  st(0), st(1)
-  ffree   st(1)
-end;
-{$ELSE}
 function MaxFloat(const V1, V2: Double): Double;
 begin
   if V1 > V2 then
@@ -6715,20 +5744,8 @@ begin
   else
     result := V2;
 end;
-{$ENDIF}
 
 {$IFDEF GLS_PLATFORM_HAS_EXTENDED}
-
-{$IFDEF GLS_ASM}
-function MaxFloat(const V1, V2: Extended): Extended;
-asm
-  fld DWORD PTR[v1]
-  fld DWORD PTR[v2]
-  db $DB,$F1                 /// fcomi   st(0), st(1)
-  db $DA,$C1                 /// fcmovb  st(0), st(1)
-  ffree   st(1)
-end;
-{$ELSE}
 function MaxFloat(const V1, V2: Extended): Extended;
 begin
   if V1 > V2 then
@@ -6736,23 +5753,8 @@ begin
   else
     result := V2;
 end;
-{$ENDIF}
 {$ENDIF GLS_PLATFORM_HAS_EXTENDED}
 
-{$IFDEF GLS_ASM}
-function MaxFloat(const V1, V2, V3: Single): Single;
-asm
-  fld DWORD PTR[v1]
-  fld DWORD PTR[v2]
-  db $DB,$F1                 /// fcomi   st(0), st(1)
-  db $DA,$C1                 /// fcmovb  st(0), st(1)
-  ffree   st(1)
-  fld DWORD PTR[v3]
-  db $DB,$F1                 /// fcomi   st(0), st(1)
-  db $DA,$C1                 /// fcmovb  st(0), st(1)
-  ffree   st(1)
-end;
-{$ELSE}
 function MaxFloat(const V1, V2, V3: Single): Single;
 begin
   if V1 >= V2 then
@@ -6769,22 +5771,7 @@ begin
   else
     result := V1;
 end;
-{$ENDIF}
 
-{$IFDEF GLS_ASM}
-function MaxFloat(const V1, V2, V3: Double): Double;
-asm
-  fld DWORD PTR[v1]
-  fld DWORD PTR[v2]
-  fld DWORD PTR[v3]
-  db $DB,$F1                 /// fcomi   st(0), st(1)
-  db $DA,$C1                 /// fcmovb  st(0), st(1)
-  db $DB,$F2                 /// fcomi   st(0), st(2)
-  db $DA,$C2                 /// fcmovb  st(0), st(2)
-  ffree   st(2)
-  ffree   st(1)
-end;
-{$ELSE}
 function MaxFloat(const V1, V2, V3: Double): Double;
 begin
   if V1 >= V2 then
@@ -6801,24 +5788,8 @@ begin
   else
     result := V1;
 end;
-{$ENDIF}
 
 {$IFDEF GLS_PLATFORM_HAS_EXTENDED}
-
-{$IFDEF GLS_ASM}
-function MaxFloat(const V1, V2, V3: Extended): Extended;
-asm
-  fld DWORD PTR[v1]
-  fld DWORD PTR[v2]
-  fld DWORD PTR[v3]
-  db $DB,$F1                 /// fcomi   st(0), st(1)
-  db $DA,$C1                 /// fcmovb  st(0), st(1)
-  db $DB,$F2                 /// fcomi   st(0), st(2)
-  db $DA,$C2                 /// fcmovb  st(0), st(2)
-  ffree   st(2)
-  ffree   st(1)
-end;
-{$ELSE}
 function MaxFloat(const V1, V2, V3: Extended): Extended;
 begin
   if V1 >= V2 then
@@ -6835,16 +5806,8 @@ begin
   else
     result := V1;
 end;
-{$ENDIF}
 {$ENDIF GLS_PLATFORM_HAS_EXTENDED}
 
-{$IFDEF GLS_ASM}
-function MinInteger(const V1, V2: Integer): Integer;
-asm
-  cmp   eax, edx
-  db $0F,$4F,$C2             /// cmovg eax, edx
-end;
-{$ELSE}
 function MinInteger(const V1, V2: Integer): Integer;
 begin
   if V1 < V2 then
@@ -6852,15 +5815,7 @@ begin
   else
     result := V2;
 end;
-{$ENDIF}
 
-{$IFDEF GLS_ASM}
-function MinInteger(const V1, V2: Cardinal): Cardinal;
-asm
-  cmp   eax, edx
-  db $0F,$47,$C2             /// cmova eax, edx
-end;
-{$ELSE}
 function MinInteger(const V1, V2: Cardinal): Cardinal;
 begin
   if V1 < V2 then
@@ -6868,7 +5823,6 @@ begin
   else
     result := V2;
 end;
-{$ENDIF}
 
 function MinInteger(const V1, V2, V3: Integer): Integer;
 begin
@@ -6904,14 +5858,6 @@ begin
     result := V1;
 end;
 
-{$IFDEF GLS_ASM}
-function MaxInteger(const V1, V2: Integer): Integer;
-asm
-  cmp   eax, edx
-  db $0F,$4C,$C2             /// cmovl eax, edx
-
-end;
-{$ELSE}
 function MaxInteger(const V1, V2: Integer): Integer;
 begin
   if V1 > V2 then
@@ -6919,15 +5865,7 @@ begin
   else
     result := V2;
 end;
-{$ENDIF}
 
-{$IFDEF GLS_ASM}
-function MaxInteger(const V1, V2: Cardinal): Cardinal;
-asm
-  cmp   eax, edx
-  db $0F,$42,$C2             /// cmovb eax, edx
-end;
-{$ELSE}
 function MaxInteger(const V1, V2: Cardinal): Cardinal;
 begin
   if V1 > V2 then
@@ -6935,7 +5873,6 @@ begin
   else
     result := V2;
 end;
-{$ENDIF}
 
 function MaxInteger(const V1, V2, V3: Integer): Integer;
 begin
@@ -7068,22 +6005,6 @@ begin
     ScaleFloatArray(@values[0], Length(values), delta);
 end;
 
-{$IFDEF GLS_ASM}
-procedure OffsetFloatArray(valuesDest, valuesDelta: PSingleArray; nb: Integer);
-asm
-  test  ecx, ecx
-  jz    @@End
-
-@@FPULoop:
-  dec   ecx
-  fld   dword ptr [eax+ecx*4]
-  fadd  dword ptr [edx+ecx*4]
-  fstp  dword ptr [eax+ecx*4]
-  jnz   @@FPULoop
-
-@@End:
-end;
-  {$ELSE}
 procedure OffsetFloatArray(valuesDest, valuesDelta: PSingleArray; nb: Integer);
 var
   i: Integer;
@@ -7091,7 +6012,6 @@ begin
   for i := 0 to nb - 1 do
     valuesDest^[i] := valuesDest^[i] + valuesDelta^[i];
 end;
-{$ENDIF}
 
 function MaxXYZComponent(const V: TVector): Single; overload;
 begin
@@ -7335,38 +6255,38 @@ var
   i: Integer;
 begin
   // see if we are only rotating about a single Axis
-  if Abs(Angles.V[X]) < EPSILON then
+  if Abs(Angles.X) < EPSILON then
   begin
-    if Abs(Angles.V[Y]) < EPSILON then
+    if Abs(Angles.Y) < EPSILON then
     begin
-      SetVector(result, 0, 0, 1, Angles.V[Z]);
+      SetVector(result, 0, 0, 1, Angles.Z);
       Exit;
     end
-    else if Abs(Angles.V[Z]) < EPSILON then
+    else if Abs(Angles.Z) < EPSILON then
     begin
-      SetVector(result, 0, 1, 0, Angles.V[Y]);
+      SetVector(result, 0, 1, 0, Angles.Y);
       Exit;
     end
   end
-  else if (Abs(Angles.V[Y]) < EPSILON) and (Abs(Angles.V[Z]) < EPSILON) then
+  else if (Abs(Angles.Y) < EPSILON) and (Abs(Angles.Z) < EPSILON) then
   begin
-    SetVector(result, 1, 0, 0, Angles.V[X]);
+    SetVector(result, 1, 0, 0, Angles.X);
     Exit;
   end;
 
   // make the rotation matrix
   Axis1 := XVector;
-  M := CreateRotationMatrix(Axis1, Angles.V[X]);
+  M := CreateRotationMatrix(Axis1, Angles.X);
 
   Axis2 := YVector;
-  m2 := CreateRotationMatrix(Axis2, Angles.V[Y]);
+  m2 := CreateRotationMatrix(Axis2, Angles.Y);
   m1 := MatrixMultiply(M, m2);
 
   Axis2 := ZVector;
-  m2 := CreateRotationMatrix(Axis2, Angles.V[Z]);
+  m2 := CreateRotationMatrix(Axis2, Angles.Z);
   M := MatrixMultiply(m1, m2);
 
-  cost := ((M.X.X + M.Y.Y + M.Z.Z) - 1) / 2;
+  cost := ((M.V[X].X + M.V[Y].Y + M.V[Z].Z) - 1) / 2;
   if cost < -1 then
     cost := -1
   else if cost > 1 - EPSILON then
@@ -7377,8 +6297,8 @@ begin
   end;
 
   cost1 := 1 - cost;
-  SetVector(result, Sqrt((M.X.X - cost) / cost1), Sqrt((M.Y.Y - cost) / cost1),
-    Sqrt((M.Z.Z - cost) / cost1), ArcCosine(cost));
+  SetVector(result, Sqrt((M.V[X].X - cost) / cost1), Sqrt((M.V[Y].Y - cost) / cost1),
+    Sqrt((M.V[Z].Z - cost) / cost1), ArcCosine(cost));
 
   sint := 2 * Sqrt(1 - cost * cost); // This is actually 2 Sin(t)
 
@@ -7397,14 +6317,14 @@ begin
       s3 := -1
     else
       s3 := 1;
-    if (Abs(s1 * result.V[X] * sint - M.Y.Z + M.Z.Y) < EPSILON2) and
-      (Abs(s2 * result.V[Y] * sint - M.Z.X + M.X.Z) < EPSILON2) and
-      (Abs(s3 * result.V[Z] * sint - M.X.Y + M.Y.X) < EPSILON2) then
+    if (Abs(s1 * result.X * sint - M.V[Y].Z + M.V[Z].Y) < EPSILON2) and
+      (Abs(s2 * result.Y * sint - M.V[Z].X + M.V[X].Z) < EPSILON2) and
+      (Abs(s3 * result.Z * sint - M.V[X].Y + M.V[Y].X) < EPSILON2) then
     begin
       // We found the right combination of signs
-      result.V[X] := result.V[X] * s1;
-      result.V[Y] := result.V[Y] * s2;
-      result.V[Z] := result.V[Z] * s3;
+      result.X := result.X * s1;
+      result.Y := result.Y * s2;
+      result.Z := result.Z * s3;
       Exit;
     end;
   end;
@@ -7419,6 +6339,9 @@ var
   phi: Single; // theta plus spins
   bflip: Boolean; // use negativ t?
 begin
+{$IFDEF GLS_FASTMATH}
+  raise Exception.Create('Error Message');
+{$ELSE}
   // cosine theta
   cost := VectorAngleCosine(QStart.ImagPart, QEnd.ImagPart);
 
@@ -7455,6 +6378,7 @@ begin
   result.ImagPart.V[Y] := beta * QStart.ImagPart.V[Y] + T * QEnd.ImagPart.V[Y];
   result.ImagPart.V[Z] := beta * QStart.ImagPart.V[Z] + T * QEnd.ImagPart.V[Z];
   result.RealPart := beta * QStart.RealPart + T * QEnd.RealPart;
+{$ENDIF}
 end;
 
 function QuaternionSlerp(const source, dest: TQuaternion; const T: Single)
@@ -7466,24 +6390,24 @@ var
   // absolute rotations
 begin
   // calc cosine
-  cosom := source.ImagPart.X * dest.ImagPart.X + source.ImagPart.Y *
-    dest.ImagPart.Y + source.ImagPart.Z * dest.ImagPart.Z +
-    source.RealPart * dest.RealPart;
+  cosom := source.X * dest.X + source.Y *
+    dest.Y + source.Z * dest.Z +
+    source.W * dest.W;
   // adjust signs (if necessary)
   if cosom < 0 then
   begin
     cosom := -cosom;
-    to1[0] := -dest.ImagPart.X;
-    to1[1] := -dest.ImagPart.Y;
-    to1[2] := -dest.ImagPart.Z;
-    to1[3] := -dest.RealPart;
+    to1[0] := -dest.X;
+    to1[1] := -dest.Y;
+    to1[2] := -dest.Z;
+    to1[3] := -dest.W;
   end
   else
   begin
-    to1[0] := dest.ImagPart.X;
-    to1[1] := dest.ImagPart.Y;
-    to1[2] := dest.ImagPart.Z;
-    to1[3] := dest.RealPart;
+    to1[0] := dest.X;
+    to1[1] := dest.Y;
+    to1[2] := dest.Z;
+    to1[3] := dest.W;
   end;
   // calculate coefficients
   if ((1.0 - cosom) > EPSILON2) then
@@ -7500,26 +6424,13 @@ begin
     scale1 := T;
   end;
   // calculate final values
-  result.ImagPart.X := scale0 * source.ImagPart.X + scale1 * to1[0];
-  result.ImagPart.Y := scale0 * source.ImagPart.Y + scale1 * to1[1];
-  result.ImagPart.Z := scale0 * source.ImagPart.Z + scale1 * to1[2];
-  result.RealPart := scale0 * source.RealPart + scale1 * to1[3];
+  result.X := scale0 * source.X + scale1 * to1[0];
+  result.Y := scale0 * source.Y + scale1 * to1[1];
+  result.Z := scale0 * source.Z + scale1 * to1[2];
+  result.W := scale0 * source.W + scale1 * to1[3];
   NormalizeQuaternion(result);
 end;
 
-{$IFDEF GLS_ASM}
-function VectorDblToFlt(const V: THomogeneousDblVector): THomogeneousVector;
-asm
-  FLD  QWORD PTR [EAX]
-  FSTP DWORD PTR [EDX]
-  FLD  QWORD PTR [EAX + 8]
-  FSTP DWORD PTR [EDX + 4]
-  FLD  QWORD PTR [EAX + 16]
-  FSTP DWORD PTR [EDX + 8]
-  FLD  QWORD PTR [EAX + 24]
-  FSTP DWORD PTR [EDX + 12]
-end;
-{$ELSE}
 function VectorDblToFlt(const V: THomogeneousDblVector): THomogeneousVector;
 begin
 {$HINTS OFF}
@@ -7529,19 +6440,7 @@ begin
   result.W := V.W;
 {$HINTS ON}
 end;
-{$ENDIF}
 
-{$IFDEF GLS_ASM}
-function VectorAffineDblToFlt(const V: TAffineDblVector): TAffineVector;
-asm
-  FLD  QWORD PTR [EAX]
-  FSTP DWORD PTR [EDX]
-  FLD  QWORD PTR [EAX + 8]
-  FSTP DWORD PTR [EDX + 4]
-  FLD  QWORD PTR [EAX + 16]
-  FSTP DWORD PTR [EDX + 8]
-end;
-{$ELSE}
 function VectorAffineDblToFlt(const V: TAffineDblVector): TAffineVector;
 begin
 {$HINTS OFF}
@@ -7550,40 +6449,14 @@ begin
   result.Z := V.Z;
 {$HINTS ON}
 end;
-{$ENDIF}
 
-{$IFDEF GLS_ASM}
-function VectorAffineFltToDbl(const V: TAffineVector): TAffineDblVector;
-asm
-  FLD  DWORD PTR [EAX]
-  FSTP QWORD PTR [EDX]
-  FLD  DWORD PTR [EAX + 4]
-  FSTP QWORD PTR [EDX + 8]
-  FLD  DWORD PTR [EAX + 8]
-  FSTP QWORD PTR [EDX + 16]
-end;
-{$ELSE}
 function VectorAffineFltToDbl(const V: TAffineVector): TAffineDblVector;
 begin
   result.X := V.X;
   result.Y := V.Y;
   result.Z := V.Z;
 end;
-{$ENDIF}
 
-{$IFDEF GLS_ASM}
-function VectorFltToDbl(const V: TVector): THomogeneousDblVector;
-asm
-  FLD  DWORD PTR [EAX]
-  FSTP QWORD PTR [EDX]
-  FLD  DWORD PTR [EAX + 4]
-  FSTP QWORD PTR [EDX + 8]
-  FLD  DWORD PTR [EAX + 8]
-  FSTP QWORD PTR [EDX + 16]
-  FLD  DWORD PTR [EAX + 12]
-  FSTP QWORD PTR [EDX + 24]
-end;
-{$ELSE}
 function VectorFltToDbl(const V: TVector): THomogeneousDblVector;
 begin
   result.X := V.X;
@@ -7591,15 +6464,14 @@ begin
   result.Z := V.Z;
   result.W := V.W;
 end;
-{$ENDIF}
 
 // ----------------- coordinate system manipulation functions -----------------------------------------------------------
 
 function Turn(const Matrix: TMatrix; angle: Single): TMatrix;
 begin
   result := MatrixMultiply(Matrix,
-    CreateRotationMatrix(AffineVectorMake(Matrix.Y.X, Matrix.Y.Y,
-    Matrix.Y.Z), angle));
+    CreateRotationMatrix(AffineVectorMake(Matrix.V[Y].X, Matrix.V[Y].Y,
+    Matrix.V[Y].Z), angle));
 end;
 
 function Turn(const Matrix: TMatrix; const MasterUp: TAffineVector;
@@ -7611,8 +6483,8 @@ end;
 function Pitch(const Matrix: TMatrix; angle: Single): TMatrix;
 begin
   result := MatrixMultiply(Matrix,
-    CreateRotationMatrix(AffineVectorMake(Matrix.X.X, Matrix.X.Y,
-    Matrix.X.Z), angle));
+    CreateRotationMatrix(AffineVectorMake(Matrix.V[X].X, Matrix.V[X].Y,
+    Matrix.V[X].Z), angle));
 end;
 
 function Pitch(const Matrix: TMatrix; const MasterRight: TAffineVector;
@@ -7624,8 +6496,8 @@ end;
 function Roll(const Matrix: TMatrix; angle: Single): TMatrix;
 begin
   result := MatrixMultiply(Matrix,
-    CreateRotationMatrix(AffineVectorMake(Matrix.Z.X, Matrix.Z.Y,
-    Matrix.Z.Z), angle));
+    CreateRotationMatrix(AffineVectorMake(Matrix.V[Z].X, Matrix.V[Z].Y,
+    Matrix.V[Z].Z), angle));
 end;
 
 function Roll(const Matrix: TMatrix; const MasterDirection: TAffineVector;
@@ -7797,15 +6669,15 @@ begin
   // Find plane.
   result := True;
   for i := 0 to 2 do
-    if rayStart.V[i] < aMinExtent.V[i] then
+    if rayStart.C[i] < aMinExtent.C[i] then
     begin
-      plane.V[i] := aMinExtent.V[i];
+      plane.C[i] := aMinExtent.C[i];
       isMiddle[i] := False;
       result := False;
     end
-    else if rayStart.V[i] > aMaxExtent.V[i] then
+    else if rayStart.C[i] > aMaxExtent.C[i] then
     begin
-      plane.V[i] := aMaxExtent.V[i];
+      plane.C[i] := aMaxExtent.C[i];
       isMiddle[i] := False;
       result := False;
     end
@@ -7824,14 +6696,14 @@ begin
     // Distance to plane.
     planeInd := 0;
     for i := 0 to 2 do
-      if isMiddle[i] or (rayVector.V[i] = 0) then
-        MaxDist.V[i] := -1
+      if isMiddle[i] or (rayVector.C[i] = 0) then
+        MaxDist.C[i] := -1
       else
       begin
-        MaxDist.V[i] := (plane.V[i] - rayStart.V[i]) / rayVector.V[i];
-        if MaxDist.V[i] > 0 then
+        MaxDist.C[i] := (plane.C[i] - rayStart.C[i]) / rayVector.C[i];
+        if MaxDist.C[i] > 0 then
         begin
-          if MaxDist.V[planeInd] < MaxDist.V[i] then
+          if MaxDist.C[planeInd] < MaxDist.C[i] then
             planeInd := i;
           result := True;
         end;
@@ -7841,12 +6713,12 @@ begin
     begin
       for i := 0 to 2 do
         if planeInd = i then
-          ResAFV.V[i] := plane.V[i]
+          ResAFV.C[i] := plane.C[i]
         else
         begin
-          ResAFV.V[i] := rayStart.V[i] + MaxDist.V[planeInd] * rayVector.V[i];
-          result := (ResAFV.V[i] >= aMinExtent.V[i]) and
-            (ResAFV.V[i] <= aMaxExtent.V[i]);
+          ResAFV.C[i] := rayStart.C[i] + MaxDist.C[planeInd] * rayVector.C[i];
+          result := (ResAFV.C[i] >= aMinExtent.C[i]) and
+            (ResAFV.C[i] <= aMaxExtent.C[i]);
           if not result then
             Exit;
         end;
@@ -7983,8 +6855,8 @@ function IntersectSphereBox(const SpherePos: TVector;
   function dDOTByColumn(const V: TAffineVector; const M: TMatrix;
     const aColumn: Integer): Single;
   begin
-    result := V.X * M.X.V[aColumn] + V.Y * M.Y.V[aColumn] + V.Z *
-      M.Z.V[aColumn];
+    result := V.X * M.V[X].C[aColumn] + V.Y * M.V[Y].C[aColumn] + V.Z *
+      M.V[Z].C[aColumn];
   end;
 
   function dDotByRow(const V: TAffineVector; const M: TMatrix;
@@ -8023,23 +6895,23 @@ begin
   // if q is inside the box, the sphere is inside the box, so set a contact
   // normal to push the sphere to the closest box face.
 
-  p.X := SpherePos.X - BoxMatrix.W.X;
-  p.Y := SpherePos.Y - BoxMatrix.W.Y;
-  p.Z := SpherePos.Z - BoxMatrix.W.Z;
+  p.X := SpherePos.X - BoxMatrix.V[W].X;
+  p.Y := SpherePos.Y - BoxMatrix.V[W].Y;
+  p.Z := SpherePos.Z - BoxMatrix.V[W].Z;
 
   isSphereCenterInsideBox := True;
   for i := 0 to 2 do
   begin
-    l.V[i] := 0.5 * BoxScale.V[i];
-    T.V[i] := dDotByRow(p, BoxMatrix, i);
-    if T.V[i] < -l.V[i] then
+    l.C[i] := 0.5 * BoxScale.C[i];
+    T.C[i] := dDotByRow(p, BoxMatrix, i);
+    if T.C[i] < -l.C[i] then
     begin
-      T.V[i] := -l.V[i];
+      T.C[i] := -l.C[i];
       isSphereCenterInsideBox := False;
     end
-    else if T.V[i] > l.V[i] then
+    else if T.C[i] > l.C[i] then
     begin
-      T.V[i] := l.V[i];
+      T.C[i] := l.C[i];
       isSphereCenterInsideBox := False;
     end;
   end;
@@ -8051,7 +6923,7 @@ begin
     mini := 0;
     for i := 1 to 2 do
     begin
-      FaceDistance := l.V[i] - Abs(T.V[i]);
+      FaceDistance := l.C[i] - Abs(T.C[i]);
       if FaceDistance < MinDistance then
       begin
         MinDistance := FaceDistance;
@@ -8065,10 +6937,10 @@ begin
     if normal <> nil then
     begin
       tmp := NullVector;
-      if T.V[mini] > 0 then
-        tmp.V[mini] := 1
+      if T.C[mini] > 0 then
+        tmp.C[mini] := 1
       else
-        tmp.V[mini] := -1;
+        tmp.c[mini] := -1;
       normal^ := dDotMatrByRow(tmp, BoxMatrix);
     end;
 
@@ -8089,7 +6961,7 @@ begin
     else
     begin
       if intersectPoint <> nil then
-        intersectPoint^ := VectorAdd(Q, AffineVectorMake(BoxMatrix.W));
+        intersectPoint^ := VectorAdd(Q, AffineVectorMake(BoxMatrix.V[W]));
       if normal <> nil then
       begin
         normal^ := VectorNormalize(r);
@@ -8107,40 +6979,40 @@ begin
   with result do
   begin
     // extract left plane
-    pLeft.X := modelViewProj.X.W + modelViewProj.X.X;
-    pLeft.Y := modelViewProj.Y.W + modelViewProj.Y.X;
-    pLeft.Z := modelViewProj.Z.W + modelViewProj.Z.X;
-    pLeft.W := modelViewProj.W.W + modelViewProj.W.X;
+    pLeft.X := modelViewProj.V[X].W + modelViewProj.V[X].X;
+    pLeft.Y := modelViewProj.V[Y].W + modelViewProj.V[Y].X;
+    pLeft.Z := modelViewProj.V[Z].W + modelViewProj.V[Z].X;
+    pLeft.W := modelViewProj.V[W].W + modelViewProj.V[W].X;
     NormalizePlane(pLeft);
     // extract top plane
-    pTop.X := modelViewProj.X.W - modelViewProj.X.Y;
-    pTop.Y := modelViewProj.Y.W - modelViewProj.Y.Y;
-    pTop.Z := modelViewProj.Z.W - modelViewProj.Z.Y;
-    pTop.W := modelViewProj.W.W - modelViewProj.W.Y;
+    pTop.X := modelViewProj.V[X].W - modelViewProj.V[X].Y;
+    pTop.Y := modelViewProj.V[Y].W - modelViewProj.V[Y].Y;
+    pTop.Z := modelViewProj.V[Z].W - modelViewProj.V[Z].Y;
+    pTop.W := modelViewProj.V[W].W - modelViewProj.V[W].Y;
     NormalizePlane(pTop);
     // extract right plane
-    pRight.X := modelViewProj.X.W - modelViewProj.X.X;
-    pRight.Y := modelViewProj.Y.W - modelViewProj.Y.X;
-    pRight.Z := modelViewProj.Z.W - modelViewProj.Z.X;
-    pRight.W := modelViewProj.W.W - modelViewProj.W.X;
+    pRight.X := modelViewProj.V[X].W - modelViewProj.V[X].X;
+    pRight.Y := modelViewProj.V[Y].W - modelViewProj.V[Y].X;
+    pRight.Z := modelViewProj.V[Z].W - modelViewProj.V[Z].X;
+    pRight.W := modelViewProj.V[W].W - modelViewProj.V[W].X;
     NormalizePlane(pRight);
     // extract bottom plane
-    pBottom.X := modelViewProj.X.W + modelViewProj.X.Y;
-    pBottom.Y := modelViewProj.Y.W + modelViewProj.Y.Y;
-    pBottom.Z := modelViewProj.Z.W + modelViewProj.Z.Y;
-    pBottom.W := modelViewProj.W.W + modelViewProj.W.Y;
+    pBottom.X := modelViewProj.V[X].W + modelViewProj.V[X].Y;
+    pBottom.Y := modelViewProj.V[Y].W + modelViewProj.V[Y].Y;
+    pBottom.Z := modelViewProj.V[Z].W + modelViewProj.V[Z].Y;
+    pBottom.W := modelViewProj.V[W].W + modelViewProj.V[W].Y;
     NormalizePlane(pBottom);
     // extract far plane
-    pFar.X := modelViewProj.X.W - modelViewProj.X.Z;
-    pFar.Y := modelViewProj.Y.W - modelViewProj.Y.Z;
-    pFar.Z := modelViewProj.Z.W - modelViewProj.Z.Z;
-    pFar.W := modelViewProj.W.W - modelViewProj.W.Z;
+    pFar.X := modelViewProj.V[X].W - modelViewProj.V[X].Z;
+    pFar.Y := modelViewProj.V[Y].W - modelViewProj.V[Y].Z;
+    pFar.Z := modelViewProj.V[Z].W - modelViewProj.V[Z].Z;
+    pFar.W := modelViewProj.V[W].W - modelViewProj.V[W].Z;
     NormalizePlane(pFar);
     // extract near plane
-    pNear.X := modelViewProj.X.W + modelViewProj.X.Z;
-    pNear.Y := modelViewProj.Y.W + modelViewProj.Y.Z;
-    pNear.Z := modelViewProj.Z.W + modelViewProj.Z.Z;
-    pNear.W := modelViewProj.W.W + modelViewProj.W.Z;
+    pNear.X := modelViewProj.V[X].W + modelViewProj.V[X].Z;
+    pNear.Y := modelViewProj.V[Y].W + modelViewProj.V[Y].Z;
+    pNear.Z := modelViewProj.V[Z].W + modelViewProj.V[Z].Z;
+    pNear.W := modelViewProj.V[W].W + modelViewProj.V[W].Z;
     NormalizePlane(pNear);
   end;
 end;
@@ -8187,25 +7059,25 @@ begin
   end;
   invDot := 1 / dot;
 
-  result.X.X := (plane.Y * dir.Y + plane.Z * dir.Z) * invDot;
-  result.Y.X := (-plane.Y * dir.X) * invDot;
-  result.Z.X := (-plane.Z * dir.X) * invDot;
-  result.W.X := (-plane.W * dir.X) * invDot;
+  result.V[X].X := (plane.Y * dir.Y + plane.Z * dir.Z) * invDot;
+  result.V[Y].X := (-plane.Y * dir.X) * invDot;
+  result.V[Z].X := (-plane.Z * dir.X) * invDot;
+  result.V[W].X := (-plane.W * dir.X) * invDot;
 
-  result.X.Y := (-plane.X * dir.Y) * invDot;
-  result.Y.Y := (plane.X * dir.X + plane.Z * dir.Z) * invDot;
-  result.Z.Y := (-plane.Z * dir.Y) * invDot;
-  result.W.Y := (-plane.W * dir.Y) * invDot;
+  result.V[X].Y := (-plane.X * dir.Y) * invDot;
+  result.V[Y].Y := (plane.X * dir.X + plane.Z * dir.Z) * invDot;
+  result.V[Z].Y := (-plane.Z * dir.Y) * invDot;
+  result.V[W].Y := (-plane.W * dir.Y) * invDot;
 
-  result.X.Z := (-plane.X * dir.Z) * invDot;
-  result.Y.Z := (-plane.Y * dir.Z) * invDot;
-  result.Z.Z := (plane.X * dir.X + plane.Y * dir.Y) * invDot;
-  result.W.Z := (-plane.W * dir.Z) * invDot;
+  result.V[X].Z := (-plane.X * dir.Z) * invDot;
+  result.V[Y].Z := (-plane.Y * dir.Z) * invDot;
+  result.V[Z].Z := (plane.X * dir.X + plane.Y * dir.Y) * invDot;
+  result.V[W].Z := (-plane.W * dir.Z) * invDot;
 
-  result.X.W := 0;
-  result.Y.W := 0;
-  result.Z.W := 0;
-  result.W.W := 1;
+  result.V[X].W := 0;
+  result.V[Y].W := 0;
+  result.V[Z].W := 0;
+  result.V[W].W := 1;
 end;
 
 // MakeShadowMatrix
@@ -8223,25 +7095,25 @@ begin
     planeNormal.Z * lightPos.Z + planeNormal3 * lightPos.W;
   // Now do the projection
   // First column
-  result.X.X := dot - lightPos.X * planeNormal.X;
-  result.Y.X := -lightPos.X * planeNormal.Y;
-  result.Z.X := -lightPos.X * planeNormal.Z;
-  result.W.X := -lightPos.X * planeNormal3;
+  result.V[X].X := dot - lightPos.X * planeNormal.X;
+  result.V[Y].X := -lightPos.X * planeNormal.Y;
+  result.V[Z].X := -lightPos.X * planeNormal.Z;
+  result.V[W].X := -lightPos.X * planeNormal3;
   // Second column
-  result.X.Y := -lightPos.Y * planeNormal.X;
-  result.Y.Y := dot - lightPos.Y * planeNormal.Y;
-  result.Z.Y := -lightPos.Y * planeNormal.Z;
-  result.W.Y := -lightPos.Y * planeNormal3;
+  result.V[X].Y := -lightPos.Y * planeNormal.X;
+  result.V[Y].Y := dot - lightPos.Y * planeNormal.Y;
+  result.V[Z].Y := -lightPos.Y * planeNormal.Z;
+  result.V[W].Y := -lightPos.Y * planeNormal3;
   // Third Column
-  result.X.Z := -lightPos.Z * planeNormal.X;
-  result.Y.Z := -lightPos.Z * planeNormal.Y;
-  result.Z.Z := dot - lightPos.Z * planeNormal.Z;
-  result.W.Z := -lightPos.Z * planeNormal3;
+  result.V[X].Z := -lightPos.Z * planeNormal.X;
+  result.V[Y].Z := -lightPos.Z * planeNormal.Y;
+  result.V[Z].Z := dot - lightPos.Z * planeNormal.Z;
+  result.V[W].Z := -lightPos.Z * planeNormal3;
   // Fourth Column
-  result.X.W := -lightPos.W * planeNormal.X;
-  result.Y.W := -lightPos.W * planeNormal.Y;
-  result.Z.W := -lightPos.W * planeNormal.Z;
-  result.W.W := dot - lightPos.W * planeNormal3;
+  result.V[X].W := -lightPos.W * planeNormal.X;
+  result.V[Y].W := -lightPos.W * planeNormal.Y;
+  result.V[Z].W := -lightPos.W * planeNormal.Z;
+  result.V[W].W := dot - lightPos.W * planeNormal3;
 end;
 
 // MakeReflectionMatrix
@@ -8254,25 +7126,25 @@ begin
   // Precalcs
   pv2 := 2 * VectorDotProduct(planePoint, planeNormal);
   // 1st column
-  result.X.X := 1 - 2 * Sqr(planeNormal.X);
-  result.X.Y := -2 * planeNormal.X * planeNormal.Y;
-  result.X.Z := -2 * planeNormal.X * planeNormal.Z;
-  result.X.W := 0;
+  result.V[X].X := 1 - 2 * Sqr(planeNormal.X);
+  result.V[X].Y := -2 * planeNormal.X * planeNormal.Y;
+  result.V[X].Z := -2 * planeNormal.X * planeNormal.Z;
+  result.V[X].W := 0;
   // 2nd column
-  result.Y.X := -2 * planeNormal.Y * planeNormal.X;
-  result.Y.Y := 1 - 2 * Sqr(planeNormal.Y);
-  result.Y.Z := -2 * planeNormal.Y * planeNormal.Z;
-  result.Y.W := 0;
+  result.V[Y].X := -2 * planeNormal.Y * planeNormal.X;
+  result.V[Y].Y := 1 - 2 * Sqr(planeNormal.Y);
+  result.V[Y].Z := -2 * planeNormal.Y * planeNormal.Z;
+  result.V[Y].W := 0;
   // 3rd column
-  result.Z.X := -2 * planeNormal.Z * planeNormal.X;
-  result.Z.Y := -2 * planeNormal.Z * planeNormal.Y;
-  result.Z.Z := 1 - 2 * Sqr(planeNormal.Z);
-  result.Z.W := 0;
+  result.V[Z].X := -2 * planeNormal.Z * planeNormal.X;
+  result.V[Z].Y := -2 * planeNormal.Z * planeNormal.Y;
+  result.V[Z].Z := 1 - 2 * Sqr(planeNormal.Z);
+  result.V[Z].W := 0;
   // 4th column
-  result.W.X := pv2 * planeNormal.X;
-  result.W.Y := pv2 * planeNormal.Y;
-  result.W.Z := pv2 * planeNormal.Z;
-  result.W.W := 1;
+  result.V[W].X := pv2 * planeNormal.X;
+  result.V[W].Y := pv2 * planeNormal.Y;
+  result.V[W].Z := pv2 * planeNormal.Z;
+  result.V[W].W := 1;
 end;
 
 // PackRotationMatrix
@@ -8283,6 +7155,9 @@ var
 const
   cFact: Single = 32767;
 begin
+{$IFDEF GLS_FASTMATH}
+  raise Exception.Create('Error Message');
+{$ELSE}
   Q := QuaternionFromMatrix(mat);
   NormalizeQuaternion(Q);
 {$HINTS OFF}
@@ -8299,6 +7174,7 @@ begin
     result[2] := Round(Q.ImagPart.Z * cFact);
   end;
 {$HINTS ON}
+{$ENDIF}
 end;
 
 function UnPackRotationMatrix(const packedMatrix
@@ -8308,6 +7184,9 @@ var
 const
   cFact: Single = 1 / 32767;
 begin
+{$IFDEF GLS_FASTMATH}
+  raise Exception.Create('Error Message');
+{$ELSE}
   Q.ImagPart.X := packedMatrix[0] * cFact;
   Q.ImagPart.Y := packedMatrix[1] * cFact;
   Q.ImagPart.Z := packedMatrix[2] * cFact;
@@ -8317,6 +7196,7 @@ begin
   else
     Q.RealPart := Sqrt(Q.RealPart);
   result := QuaternionToMatrix(Q);
+{$ENDIF}
 end;
 
 function BarycentricCoordinates(const V1, V2, V3, p: TAffineVector;
@@ -8336,9 +7216,9 @@ begin
   n := VectorCrossProduct(e1, e2);
   AbsVector(n);
   a1 := 0;
-  if n.Y > n.V[a1] then
+  if n.Y > n.C[a1] then
     a1 := 1;
-  if n.Z > n.V[a1] then
+  if n.Z > n.C[a1] then
     a1 := 2;
 
   // use dominant axis for projection
@@ -8359,10 +7239,10 @@ begin
   end;
 
   // solve for u and v
-  u := (pt.V[a2] * e2.V[a1] - pt.V[a1] * e2.V[a2]) /
-    (e1.V[a2] * e2.V[a1] - e1.V[a1] * e2.V[a2]);
-  V := (pt.V[a2] * e1.V[a1] - pt.V[a1] * e1.V[a2]) /
-    (e2.V[a2] * e1.V[a1] - e2.V[a1] * e1.V[a2]);
+  u := (pt.C[a2] * e2.C[a1] - pt.C[a1] * e2.C[a2]) /
+    (e1.C[a2] * e2.C[a1] - e1.C[a1] * e2.C[a2]);
+  V := (pt.C[a2] * e1.C[a1] - pt.C[a1] * e1.C[a2]) /
+    (e2.C[a2] * e1.C[a1] - e2.C[a1] * e1.C[a2]);
 
   result := (u >= 0) and (V >= 0) and (u + V <= 1);
 end;
@@ -8776,9 +7656,13 @@ end;
 
 function MatrixEquals(const Matrix1, Matrix2: TMatrix3f): Boolean;
 begin
+{$IFDEF GLS_FASTMATH}
+  Result := Matrix1 = Matrix2;
+{$ELSE}
   result := VectorEquals(Matrix1.X, Matrix2.X) and
     VectorEquals(Matrix1.Y, Matrix2.Y) and
     VectorEquals(Matrix1.Z, Matrix2.Z);
+{$ENDIF}
 end;
 
 // 3x3i
@@ -8815,10 +7699,14 @@ end;
 // 4x4f
 function MatrixEquals(const Matrix1, Matrix2: TMatrix4f): Boolean;
 begin
+{$IFDEF GLS_FASTMATH}
+  Result := Matrix1 = Matrix2;
+{$ELSE}
   result := VectorEquals(Matrix1.X, Matrix2.X) and
     VectorEquals(Matrix1.Y, Matrix2.Y) and
     VectorEquals(Matrix1.Z, Matrix2.Z) and
     VectorEquals(Matrix1.W, Matrix2.W);
+{$ENDIF}
 end;
 
 // 4x4i
@@ -9558,14 +8446,7 @@ begin
     result := VectorAdd(AOriginalPosition, VectorScale(lDirection, ADistance))
 end;
 
-// --------------------------------------------------------------
-// --------------------------------------------------------------
-// --------------------------------------------------------------
 initialization
-
-// --------------------------------------------------------------
-// --------------------------------------------------------------
-// --------------------------------------------------------------
 
 vSIMD := 0;
 

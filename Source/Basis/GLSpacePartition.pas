@@ -1871,12 +1871,9 @@ var
     for N := 0 to 2 do
     begin
       case Flags[N] of
-        CMIN:
-          Result.V[N] := FAABB.Min.V[N];
-        CMID:
-          Result.V[N] := (FAABB.Max.V[N] + FAABB.Min.V[N]) / 2;
-        CMAX:
-          Result.V[N] := FAABB.Max.V[N];
+        CMIN: Result.C[N] := FAABB.Min.C[N];
+        CMID: Result.C[N] := (FAABB.Max.C[N] + FAABB.Min.C[N]) / 2;
+        CMAX: Result.C[N] := FAABB.Max.C[N];
       end;
     end;
   end;

@@ -482,14 +482,14 @@ begin
       GL.TexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 
     mat := rci.PipelineTransformation.ModelViewMatrix^;
-    FVx.X := mat.X.X;
-    FVx.Y := mat.Y.X;
-    FVx.Z := mat.Z.X;
+    FVx.X := mat.V[0].X;
+    FVx.Y := mat.V[1].X;
+    FVx.Z := mat.V[2].X;
     NormalizeVector(FVx);
 
-    FVy.X := mat.X.Y;
-    FVy.Y := mat.Y.Y;
-    FVy.Z := mat.Z.Y;
+    FVy.X := mat.V[0].Y;
+    FVy.Y := mat.V[1].Y;
+    FVy.Z := mat.V[2].Y;
     NormalizeVector(FVy);
     if impoPerspectiveCorrection in Builder.ImposterOptions then
     begin

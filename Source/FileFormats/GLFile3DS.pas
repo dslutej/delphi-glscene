@@ -400,8 +400,7 @@ begin
   v.Z := axis.Z * invAxisLengthMult;
   v.W := cos(halfAngle);
 
-  Result.ImagPart := AffineVectorMake(v);
-  Result.RealPart := v.W;
+  Result := QuaternionMake(v);
 end;
 
 function QuaternionToRotateMatrix(const Quaternion: TQuaternion): TMatrix;
@@ -410,8 +409,7 @@ var
   quat: TVector;
   m: TMatrix;
 begin
-  quat := VectorMake(Quaternion.ImagPart);
-  quat.W := Quaternion.RealPart;
+  quat := VectorMake(Quaternion);
 
   x2 := quat.X + quat.X;
   y2 := quat.Y + quat.Y;
@@ -426,23 +424,23 @@ begin
   wy := quat.W * y2;
   wz := quat.W * z2;
 
-  m.X.X := 1.0 - (yy + zz);
-  m.X.Y := xy - wz;
-  m.X.Z := xz + wy;
-  m.Y.X := xy + wz;
-  m.Y.Y := 1.0 - (xx + zz);
-  m.Y.Z := yz - wx;
-  m.Z.X := xz - wy;
-  m.Z.Y := yz + wx;
-  m.Z.Z := 1.0 - (xx + yy);
+  m.V[0].X := 1.0 - (yy + zz);
+  m.V[0].Y := xy - wz;
+  m.V[0].Z := xz + wy;
+  m.V[1].X := xy + wz;
+  m.V[1].Y := 1.0 - (xx + zz);
+  m.V[1].Z := yz - wx;
+  m.V[2].X := xz - wy;
+  m.V[2].Y := yz + wx;
+  m.V[2].Z := 1.0 - (xx + yy);
 
-  m.X.W := 0;
-  m.Y.W := 0;
-  m.Z.W := 0;
-  m.W.X := 0;
-  m.W.Y := 0;
-  m.W.Z := 0;
-  m.W.W := 1;
+  m.V[0].W := 0;
+  m.V[1].W := 0;
+  m.V[2].W := 0;
+  m.V[3].X := 0;
+  m.V[3].Y := 0;
+  m.V[3].Z := 0;
+  m.V[3].W := 1;
 
   Result := m;
 end;
@@ -752,8 +750,8 @@ procedure TGLFile3DSPositionAnimationKeys.Apply(var DataTransf: TGLFile3DSAnimat
   const AFrame: real);
 begin
   if FNumKeys > 0 then
-    DataTransf.ModelMatrix.W :=
-      VectorAdd(DataTransf.ModelMatrix.W, VectorMake(InterpolateValue(FPos, AFrame)));
+    DataTransf.ModelMatrix.V[3] :=
+      VectorAdd(DataTransf.ModelMatrix.V[3], VectorMake(InterpolateValue(FPos, AFrame)));
 end;
 
 procedure TGLFile3DSPositionAnimationKeys.Assign(Source: TPersistent);
@@ -1295,9 +1293,9 @@ begin
         Pivot.Z := AffVect.Z;
       end;
 
-      ModelMatrix.W.X := ModelMatrix.W.X - Pivot.X;
-      ModelMatrix.W.Y := ModelMatrix.W.Y - Pivot.Y;
-      ModelMatrix.W.Z := ModelMatrix.W.Z - Pivot.Z;
+      ModelMatrix.V[3].X := ModelMatrix.V[3].X - Pivot.X;
+      ModelMatrix.V[3].Y := ModelMatrix.V[3].Y - Pivot.Y;
+      ModelMatrix.V[3].Z := ModelMatrix.V[3].Z - Pivot.Z;
     end;
   end;
 
@@ -1383,7 +1381,7 @@ begin
   end;
 
   inherited;
-  FLightSrc.Position.SetPoint(FAnimTransf.ModelMatrix.W);
+  FLightSrc.Position.SetPoint(FAnimTransf.ModelMatrix.V[3]);
   FLightSrc.Diffuse.Color := FAnimTransf.Color;
 end;
 
@@ -1544,7 +1542,7 @@ begin
     FCameraSrcName := '';
   end;
 
-  FCameraSrc.Position.SetPoint(FAnimTransf.ModelMatrix.W);
+  FCameraSrc.Position.SetPoint(FAnimTransf.ModelMatrix.V[3]);
   FCameraSrc.RollAngle := FAnimTransf.Roll;
   FTargetObj.Position.SetPoint(FAnimTransf.TargetPos);
 end;
@@ -1835,38 +1833,38 @@ var
       begin
         with Mesh[Index]^ do
         begin
-          Result.X.X := LocMatrix[0];
-          Result.X.Y := LocMatrix[1];
-          Result.X.Z := LocMatrix[2];
-          Result.X.W := 0;
-          Result.Y.X := LocMatrix[3];
-          Result.Y.Y := LocMatrix[4];
-          Result.Y.Z := LocMatrix[5];
-          Result.Y.W := 0;
-          Result.Z.X := LocMatrix[6];
-          Result.Z.Y := LocMatrix[7];
-          Result.Z.Z := LocMatrix[8];
-          Result.Z.W := 0;
-          Result.W.X := LocMatrix[9];
-          Result.W.Y := LocMatrix[10];
-          Result.W.Z := LocMatrix[11];
-          Result.W.W := 1;
+          Result.V[0].X := LocMatrix[0];
+          Result.V[0].Y := LocMatrix[1];
+          Result.V[0].Z := LocMatrix[2];
+          Result.V[0].W := 0;
+          Result.V[1].X := LocMatrix[3];
+          Result.V[1].Y := LocMatrix[4];
+          Result.V[1].Z := LocMatrix[5];
+          Result.V[1].W := 0;
+          Result.V[2].X := LocMatrix[6];
+          Result.V[2].Y := LocMatrix[7];
+          Result.V[2].Z := LocMatrix[8];
+          Result.V[2].W := 0;
+          Result.V[3].X := LocMatrix[9];
+          Result.V[3].Y := LocMatrix[10];
+          Result.V[3].Z := LocMatrix[11];
+          Result.V[3].W := 1;
         end;
         InvertMatrix(Result);
 
         // If the matrix is not normalized, ie the third column is not equal to the vector product of the first two columns,
         // it means that it is necessary to turn to-pi around the axis Y.
         m := Result;
-        v4 := m.W;
-        factor := VectorLength(m.X);
+        v4 := m.V[3];
+        factor := VectorLength(m.V[0]);
         NormalizeMatrix(m);
         ScaleMatrix(m, factor);
-        m.W := v4;
+        m.V[3] := v4;
 
-        v4 := VectorAbs(VectorSubtract(Result.Z, m.Z));
-        boolY := (v4.X > abs(Result.Z.X)) and
-                 (v4.Y > abs(Result.Z.Y)) and
-                 (v4.Z > abs(Result.Z.Z));
+        v4 := VectorAbs(VectorSubtract(Result.V[2], m.V[2]));
+        boolY := (v4.X > abs(Result.V[2].X)) and
+                 (v4.Y > abs(Result.V[2].Y)) and
+                 (v4.Z > abs(Result.V[2].Z));
 
 
         if boolY then

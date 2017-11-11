@@ -1100,7 +1100,7 @@ procedure TGLNGDManager.RebuildAllJoint(Sender: TObject);
       if Assigned(FParentObject) and Assigned(FChildObject) then
       begin
         pinAndPivot := IdentityHmgMatrix;
-        pinAndPivot.W := FCustomBallAndSocketOptions.FPivotPoint.AsVector;
+        pinAndPivot.V[3] := FCustomBallAndSocketOptions.FPivotPoint.AsVector;
         FNewtonUserJoint := CreateCustomBallAndSocket(@pinAndPivot,
           GetBodyFromGLSceneObject(FChildObject),
           GetBodyFromGLSceneObject(FParentObject));
@@ -1134,8 +1134,8 @@ procedure TGLNGDManager.RebuildAllJoint(Sender: TObject);
         bso.AbsolutePosition := FCustomHingeOptions.FPivotPoint.AsVector;
         bso.AbsoluteDirection := FCustomHingeOptions.FPinDirection.AsVector;
         pinAndPivot := bso.AbsoluteMatrix;
-        pinAndPivot.X := bso.AbsoluteMatrix.Z;
-        pinAndPivot.Z := bso.AbsoluteMatrix.X;
+        pinAndPivot.V[0] := bso.AbsoluteMatrix.V[2];
+        pinAndPivot.V[2] := bso.AbsoluteMatrix.V[0];
         bso.Free;
 
         FNewtonUserJoint := CreateCustomHinge(@pinAndPivot,
@@ -1173,8 +1173,8 @@ procedure TGLNGDManager.RebuildAllJoint(Sender: TObject);
         bso.AbsolutePosition := FCustomSliderOptions.FPivotPoint.AsVector;
         bso.AbsoluteDirection := FCustomSliderOptions.FPinDirection.AsVector;
         pinAndPivot := bso.AbsoluteMatrix;
-        pinAndPivot.X := bso.AbsoluteMatrix.Z;
-        pinAndPivot.Z := bso.AbsoluteMatrix.X;
+        pinAndPivot.V[0] := bso.AbsoluteMatrix.V[2];
+        pinAndPivot.V[2] := bso.AbsoluteMatrix.V[0];
         bso.Free;
 
         FNewtonUserJoint := CreateCustomSlider(@pinAndPivot, GetBodyFromGLSceneObject(FChildObject), GetBodyFromGLSceneObject(FParentObject));
@@ -1436,7 +1436,7 @@ begin
   AABBToBSphere(FOwnerBaseSceneObject.AxisAlignedBoundingBoxEx, boundingSphere);
 
   collisionOffsetMatrix := IdentityHmgMatrix;
-  collisionOffsetMatrix.W := VectorMake(boundingSphere.Center, 1);
+  collisionOffsetMatrix.V[3] := VectorMake(boundingSphere.Center, 1);
   Result := NewtonCreateSphere(FManager.FNewtonWorld, boundingSphere.Radius,
     boundingSphere.Radius, boundingSphere.Radius, 0, @collisionOffsetMatrix);
 end;
@@ -2155,10 +2155,10 @@ procedure TGLNGDDynamic.Render;
   begin
     NewtonBodyGetCentreOfMass(FNewtonBody, @Result);
     M := IdentityHmgMatrix;
-    M.W := Result;
-    M.W.W := 1;
+    M.V[3] := Result;
+    M.V[3].W := 1;
     M := MatrixMultiply(M, FOwnerBaseSceneObject.AbsoluteMatrix);
-    Result := M.W;
+    Result := M.V[3];
   end;
 
   procedure DrawForce;
@@ -2792,15 +2792,15 @@ procedure TGLNGDJoint.Render;
     FManager.FCurrentColor := FManager.DebugOption.JointAxisColor;
 
     FManager.AddNode(FParentObject.AbsolutePosition);
-    FManager.AddNode(pickedMatrix.W);
+    FManager.AddNode(pickedMatrix.V[3]);
 
     FManager.FCurrentColor := FManager.DebugOption.JointPivotColor;
-    FManager.AddNode(VectorAdd(pickedMatrix.W, VectorMake(0, 0, size)));
-    FManager.AddNode(VectorAdd(pickedMatrix.W, VectorMake(0, 0, -size)));
-    FManager.AddNode(VectorAdd(pickedMatrix.W, VectorMake(0, size, 0)));
-    FManager.AddNode(VectorAdd(pickedMatrix.W, VectorMake(0, -size, 0)));
-    FManager.AddNode(VectorAdd(pickedMatrix.W, VectorMake(size, 0, 0)));
-    FManager.AddNode(VectorAdd(pickedMatrix.W, VectorMake(-size, 0, 0)));
+    FManager.AddNode(VectorAdd(pickedMatrix.V[3], VectorMake(0, 0, size)));
+    FManager.AddNode(VectorAdd(pickedMatrix.V[3], VectorMake(0, 0, -size)));
+    FManager.AddNode(VectorAdd(pickedMatrix.V[3], VectorMake(0, size, 0)));
+    FManager.AddNode(VectorAdd(pickedMatrix.V[3], VectorMake(0, -size, 0)));
+    FManager.AddNode(VectorAdd(pickedMatrix.V[3], VectorMake(size, 0, 0)));
+    FManager.AddNode(VectorAdd(pickedMatrix.V[3], VectorMake(-size, 0, 0)));
 
   end;
 

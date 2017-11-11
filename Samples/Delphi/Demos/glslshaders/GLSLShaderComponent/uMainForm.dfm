@@ -31,6 +31,8 @@ object GLSLTestForm: TGLSLTestForm
     FieldOfView = 141.760543823242200000
     Align = alClient
     TabOrder = 0
+    ExplicitLeft = -8
+    ExplicitTop = 21
   end
   object Panel1: TPanel
     Left = 0

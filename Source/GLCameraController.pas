@@ -462,7 +462,7 @@ begin
   Result.FTargetPosition := ATargetPosition;
   Result.FTime := ATime;
   Result.FSmoothNavigator := ASmoothNavigator;
-  Result.FShouldBeMatrix := FCameraJobList.FController.FCamera.Matrix;
+  Result.FShouldBeMatrix := FCameraJobList.FController.FCamera.Matrix^;
   Result.FNeedToRecalculateZoom := AFNeedToRecalculateZoom;
   if ACameraUpVector = nil then
     Result.FCameraUpVector := FCameraJobList.FController.FCamera.AbsoluteUp
@@ -989,7 +989,7 @@ begin
   if FElapsedTime < FProceedTime then
   begin
     // Save current matrix.
-    lCurrentMatrix := FJobList.FController.FCamera.Matrix;
+    lCurrentMatrix := FJobList.FController.FCamera.Matrix^;
 
     if FNeedToRecalculateZoom then
       lCurrentDistanceToTarget := FJobList.FController.FCamera.DistanceTo(FJobList.FController.FCameraTarget)
@@ -997,7 +997,7 @@ begin
       lCurrentDistanceToTarget := 0; // To avoid warning message.
 
     // Calculate the position, in which camera should have been.
-    FJobList.FController.FCamera.Matrix := FShouldBeMatrix;
+    FJobList.FController.FCamera.SetMatrix(FShouldBeMatrix);
 
     FJobList.FController.FCamera.AbsolutePosition := MoveObjectAround(
       FJobList.FController.FCamera.AbsolutePosition, FCameraUpVector,
@@ -1008,10 +1008,10 @@ begin
       RestoreDistanceToTarget();
 
     lTargetPosition := FJobList.FController.FCamera.AbsolutePosition;
-    FShouldBeMatrix := FJobList.FController.FCamera.Matrix;
+    FShouldBeMatrix := FJobList.FController.FCamera.Matrix^;
 
     // Restore Camera position and move it to the desired vector.
-    FJobList.FController.FCamera.Matrix := lCurrentMatrix;
+    FJobList.FController.FCamera.SetMatrix(lCurrentMatrix);
     SetTargetValueRelative(lTargetPosition);
   end
   else

@@ -29,6 +29,7 @@ object Form1: TForm1
     FieldOfView = 107.746566772460900000
     Align = alClient
     TabOrder = 0
+    ExplicitTop = -3
   end
   object TrackBar: TTrackBar
     Left = 0

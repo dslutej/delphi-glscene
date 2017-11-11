@@ -310,7 +310,7 @@ begin
         oldProxySubObject := ARci.proxySubObject;
         ARci.proxySubObject := True;
         if pooTransformation in ProxyOptions then
-          GL.MultMatrixf(PGLFloat(MasterObject.MatrixAsAddress));
+          GL.MultMatrixf(PGLFloat(MasterObject.Matrix));
         GetMasterMaterialObject.Material.FrontProperties.Assign(FFrontColor);
         MasterObject.DoRender(ARci, ARenderSelf, MasterObject.Count > 0);
         ARci.proxySubObject := oldProxySubObject;
@@ -542,7 +542,7 @@ begin
         ARci.proxySubObject := True;
         if pooTransformation in ProxyOptions then
           with ARci.PipelineTransformation do
-            SetModelMatrix(MatrixMultiply(MasterActor.Matrix, ModelMatrix^));
+            SetModelMatrix(MatrixMultiply(MasterActor.Matrix^, ModelMatrix^));
 
         // At last TGLActorProxy specific stuff!
         with MasterActor do
@@ -904,7 +904,7 @@ begin
         oldProxySubObject := ARci.proxySubObject;
         ARci.proxySubObject := True;
         if pooTransformation in ProxyOptions then
-          GL.MultMatrixf(PGLFloat(MasterObject.MatrixAsAddress));
+          GL.MultMatrixf(PGLFloat(MasterObject.Matrix));
 
         if (FMasterLibMaterial <> nil) and (FMaterialLibrary <> nil) then
           GetMasterMaterialObject.Material.QuickAssignMaterial(

@@ -279,8 +279,8 @@ type
 
 implementation
 
-{$IFDEF GLS_FASTMATH}
 uses
+{$IFDEF GLS_FASTMATH}
   Neslib.FastMath;
 {$ELSE}
   System.Math;

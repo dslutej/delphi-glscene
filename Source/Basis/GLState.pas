@@ -193,7 +193,7 @@ type
      changes, and there will typically be no more than one state cache per
      OpenGL context. }
   TGLStateCache = class
-  private
+  strict private
     // Legacy state
     FFrontBackColors: array[0..1, 0..3] of TVector;
     FFrontBackShininess: array[0..1] of Integer;
@@ -2317,7 +2317,7 @@ begin
   else
     FTextureMatrixIsIdentity[ActiveTexture] := False;
   GL.MatrixMode(GL_TEXTURE);
-  GL.LoadMatrixf(PGLFloat(@matrix.X.X));
+  GL.LoadMatrixf(PGLFloat(@matrix.V[0].X));
   GL.MatrixMode(GL_MODELVIEW);
 end;
 

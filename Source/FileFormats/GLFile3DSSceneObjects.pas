@@ -117,8 +117,8 @@ begin
   v.Z := axis.Z * invAxisLengthMult;
   v.W := cos(halfAngle);
 
-  Result.ImagPart := AffineVectorMake(v);
-  Result.RealPart := v.W;
+  Result := QuaternionMake(v)
+
 end;
 
 function QuaternionToRotateMatrix(const Quaternion: TQuaternion): TMatrix;
@@ -127,8 +127,7 @@ var
   quat: TVector;
   m: TMatrix;
 begin
-  quat := VectorMake(Quaternion.ImagPart);
-  quat.W := Quaternion.RealPart;
+  quat := VectorMake(Quaternion);
 
   x2 := quat.X + quat.X;
   y2 := quat.Y + quat.Y;
@@ -143,23 +142,23 @@ begin
   wy := quat.W * y2;
   wz := quat.W * z2;
 
-  m.X.X := 1.0 - (yy + zz);
-  m.X.Y := xy - wz;
-  m.X.Z := xz + wy;
-  m.Y.X := xy + wz;
-  m.Y.Y := 1.0 - (xx + zz);
-  m.Y.Z := yz - wx;
-  m.Z.X := xz - wy;
-  m.Z.Y := yz + wx;
-  m.Z.Z := 1.0 - (xx + yy);
+  m.V[0].X := 1.0 - (yy + zz);
+  m.V[0].Y := xy - wz;
+  m.V[0].Z := xz + wy;
+  m.V[1].X := xy + wz;
+  m.V[1].Y := 1.0 - (xx + zz);
+  m.V[1].Z := yz - wx;
+  m.V[2].X := xz - wy;
+  m.V[2].Y := yz + wx;
+  m.V[2].Z := 1.0 - (xx + yy);
 
-  m.X.W := 0;
-  m.Y.W := 0;
-  m.Z.W := 0;
-  m.W.X := 0;
-  m.W.Y := 0;
-  m.W.Z := 0;
-  m.W.W := 1;
+  m.V[0].W := 0;
+  m.V[1].W := 0;
+  m.V[2].W := 0;
+  m.V[3].X := 0;
+  m.V[3].Y := 0;
+  m.V[3].Z := 0;
+  m.V[3].W := 1;
 
   Result := m;
 end;

@@ -680,13 +680,13 @@ begin
   begin
     Diff := Val0 / (Val0 + Val1);
     for i := 0 to 2 do
-      Result.V[i] := V0.V[i] + Diff * (V1.V[i] - V0.V[i]);
+      Result.C[i] := V0.C[i] + Diff * (V1.C[i] - V0.C[i]);
   end
   else
   begin
     Diff := Val1 / (Val0 + Val1);
     for i := 0 to 2 do
-      Result.V[i] := V1.V[i] + Diff * (V0.V[i] - V1.V[i]);
+      Result.C[i] := V1.C[i] + Diff * (V0.C[i] - V1.C[i]);
   end;
 end;
 
@@ -1573,30 +1573,30 @@ var
 
   function GetNrmColor(Nrm: TAffineVector): TVector;
   begin
-    Result.V[0] := 0;
-    if Nrm.V[0] > 0.0 then
-      Result.V[0] := Result.V[0] + Nrm.V[0];
-    if Nrm.V[1] < 0.0 then
-      Result.V[0] := Result.V[0] - 0.5 * Nrm.V[1];
-    if Nrm.V[2] < 0.0 then
-      Result.V[0] := Result.V[0] - 0.5 * Nrm.V[2];
+    Result.C[0] := 0;
+    if Nrm.C[0] > 0.0 then
+      Result.C[0] := Result.C[0] + Nrm.C[0];
+    if Nrm.C[1] < 0.0 then
+      Result.C[0] := Result.C[0] - 0.5 * Nrm.C[1];
+    if Nrm.C[2] < 0.0 then
+      Result.C[0] := Result.C[0] - 0.5 * Nrm.C[2];
 
-    Result.V[1] := 1;
-    if Nrm.V[0] < 0.0 then
-      Result.V[1] := Result.V[1] - 0.5 * Nrm.V[0];
-    if Nrm.V[1] > 0.0 then
-      Result.V[1] := Result.V[1] + Nrm.V[1];
-    if Nrm.V[2] < 0.0 then
-      Result.V[1] := Result.V[1] - 0.5 * Nrm.V[2];
+    Result.C[1] := 1;
+    if Nrm.C[0] < 0.0 then
+      Result.C[1] := Result.C[1] - 0.5 * Nrm.C[0];
+    if Nrm.C[1] > 0.0 then
+      Result.C[1] := Result.C[1] + Nrm.C[1];
+    if Nrm.C[2] < 0.0 then
+      Result.C[1] := Result.C[1] - 0.5 * Nrm.C[2];
 
-    Result.V[2] := 0;
-    if Nrm.V[0] < 0.0 then
-      Result.V[2] := Result.V[2] - 0.5 * Nrm.V[0];
-    if Nrm.V[1] < 0.0 then
-      Result.V[2] := Result.V[2] - 0.5 * Nrm.V[1];
-    if Nrm.V[2] > 0.0 then
-      Result.V[2] := Result.V[2] + Nrm.V[2];
-    Result.V[3] := 0.3
+    Result.C[2] := 0;
+    if Nrm.C[0] < 0.0 then
+      Result.C[2] := Result.C[2] - 0.5 * Nrm.C[0];
+    if Nrm.C[1] < 0.0 then
+      Result.C[2] := Result.C[2] - 0.5 * Nrm.C[1];
+    if Nrm.C[2] > 0.0 then
+      Result.C[2] := Result.C[2] + Nrm.C[2];
+    Result.C[3] := 0.3
   end;
 
   function GetColor(H: TGLScalarValue): TVector;

@@ -295,7 +295,7 @@ var
     try
       for j:=0 to 3 do
         for i:=0 to 3 do
-          Result.V[i].V[j]:=ReadSingle;
+          Result.V[i].C[j]:=ReadSingle;
     except
       on E:Exception do begin
         Result:=IdentityHMGMatrix;

@@ -426,18 +426,13 @@ begin
     GetItems(i).Nodes.GetExtents(lMin, lMax);
     for k := 0 to 2 do
     begin
-      if lMin.V[k] < min.V[k] then
-        min.V[k] := lMin.V[k];
-      if lMax.V[k] > max.V[k] then
-        max.V[k] := lMax.V[k];
+      if lMin.C[k] < min.C[k] then min.C[k] := lMin.C[k];
+      if lMax.C[k] > max.C[k] then max.C[k] := lMax.C[k];
     end;
   end;
 end;
 
 { TMultiPolygonBase }
-
- 
-//
 
 constructor TMultiPolygonBase.Create(AOwner: TComponent);
 begin
@@ -447,9 +442,6 @@ begin
   FContoursNormal := AffineVectorMake(0, 0, 1);
   FAxisAlignedDimensionsCache.X := -1;
 end;
-
- 
-//
 
 destructor TMultiPolygonBase.Destroy;
 begin

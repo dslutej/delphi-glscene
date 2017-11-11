@@ -627,8 +627,8 @@ var
 begin
   for i := 0 to 2 do
   begin
-    vx.V[i] := mat.V[i].X * FParticleSize;
-    vy.V[i] := mat.V[i].Y * FParticleSize;
+    vx.C[i] := mat.V[i].X * FParticleSize;
+    vy.C[i] := mat.V[i].Y * FParticleSize;
   end;
   with GL do
   begin

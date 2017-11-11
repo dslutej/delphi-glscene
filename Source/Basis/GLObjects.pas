@@ -476,7 +476,6 @@ type
   TGLCube = class(TGLSceneObject)
   private
     FCubeSize: TAffineVector;
-    FCubeHalfSize: TAffineVector;
     FParts: TCubeParts;
     FNormalDirection: TNormalDirection;
     function GetCubeWHD(const Index: Integer): TGLFloat; inline;
@@ -489,23 +488,17 @@ type
     procedure WriteData(Stream: TStream); inline;
   public
     constructor Create(AOwner: TComponent); override;
-    function GenerateSilhouette(const silhouetteParameters
-      : TGLSilhouetteParameters): TGLSilhouette; override;
+    function GenerateSilhouette(const silhouetteParameters: TGLSilhouetteParameters): TGLSilhouette; override;
     procedure BuildList(var rci: TGLRenderContextInfo); override;
     procedure Assign(Source: TPersistent); override;
     function AxisAlignedDimensionsUnscaled: TVector; override;
-    function RayCastIntersect(const rayStart, rayVector: TVector;
-      intersectPoint: PVector = nil; intersectNormal: PVector = nil): Boolean; override;
+    function RayCastIntersect(const rayStart, rayVector: TVector; intersectPoint: PVector = nil; intersectNormal: PVector = nil): Boolean; override;
   published
-    property CubeWidth: TGLFloat index 0 read GetCubeWHD write SetCubeWHD
-      stored False;
-    property CubeHeight: TGLFloat index 1 read GetCubeWHD write SetCubeWHD
-      stored False;
+    property CubeWidth: TGLFloat index 0 read GetCubeWHD write SetCubeWHD stored False;
+    property CubeHeight: TGLFloat index 1 read GetCubeWHD write SetCubeWHD stored False;
     property CubeDepth: TGLFloat index 2 read GetCubeWHD write SetCubeWHD stored False;
-    property NormalDirection: TNormalDirection read FNormalDirection
-      write SetNormalDirection default ndOutside;
-    property Parts: TCubeParts read FParts write SetParts
-      default [cpTop, cpBottom, cpFront, cpBack, cpLeft, cpRight];
+    property NormalDirection: TNormalDirection read FNormalDirection write SetNormalDirection default ndOutside;
+    property Parts: TCubeParts read FParts write SetParts default [cpTop, cpBottom, cpFront, cpBack, cpLeft, cpRight];
   end;
 
   {  Determines how and if normals are smoothed.
@@ -1310,12 +1303,12 @@ begin
   // (dunno how they are named in english)
   w := FWidth * 0.5;
   h := FHeight * 0.5;
-  vx.X := mat.X.X;
-  vy.X := mat.X.Y;
-  vx.Y := mat.Y.X;
-  vy.Y := mat.Y.Y;
-  vx.Z := mat.Z.X;
-  vy.Z := mat.Z.Y;
+  vx.X := mat.V[0].X;
+  vy.X := mat.V[0].Y;
+  vx.Y := mat.V[1].X;
+  vy.Y := mat.V[1].Y;
+  vx.Z := mat.V[2].X;
+  vy.Z := mat.V[2].Y;
   ScaleVector(vx, w / VectorLength(vx));
   ScaleVector(vy, h / VectorLength(vy));
   if FMirrorU then
@@ -1342,7 +1335,7 @@ begin
   if FRotation <> 0 then
   begin
     GL.PushMatrix;
-    GL.Rotatef(FRotation, mat.X.Z, mat.Y.Z, mat.Z.Z);
+    GL.Rotatef(FRotation, mat.V[0].Z, mat.V[1].Z, mat.V[2].Z);
   end;
   GL.Begin_(GL_QUADS);
   xgl.TexCoord2f(u1, v1);
@@ -2306,7 +2299,6 @@ constructor TGLCube.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
   FCubeSize := XYZVector;
-  FCubeHalfSize := VectorScale(FCubeSize, 0.5);
 
   FParts := [cpTop, cpBottom, cpFront, cpBack, cpLeft, cpRight];
   FNormalDirection := ndOutside;
@@ -2315,30 +2307,31 @@ end;
 
 procedure TGLCube.BuildList(var rci: TGLRenderContextInfo);
 var
-  x1, x2, y1, y2, z1, z2: TGLfloat;
-  x1d, x2d, y1d, y2d, z1d, z2d: TGLfloat;
+  v1: TAffineVector;
+  v2: TAffineVector;
+
+  v1d: TAffineVector;
+  v2d: TAffineVector;
+
   nd: TGLFloat;
   TanLoc, BinLoc: Integer;
+
 begin
+
+  VectorScale(FCubeSize, 0.5, v2);
+  v1 := VectorNegate(v2);
+
   if FNormalDirection = ndInside then
-    nd := -1
-  else
-    nd := 1;
-
-  x1 := -FCubeHalfSize.X;
-  x2 := -x1;
-  x1d := x1*nd;
-  x2d := x2*nd;
-
-  y1 := -FCubeHalfSize.Y;
-  y2 := -y1;
-  y1d := y1*nd;
-  y2d := y2*nd;
-
-  z1 := -FCubeHalfSize.Z;
-  z2 := -z1;
-  z1d := z1*nd;
-  z2d := z2*nd;
+  begin
+    v1d := v2;
+    v2d := v1;
+    nd  := -1
+  end
+  else begin
+    v1d := v1;
+    v2d := v2;
+    nd  := 1;
+  end;
 
   if GL.ARB_shader_objects and (rci.GLStates.CurrentProgram > 0) then
   begin
@@ -2352,17 +2345,16 @@ begin
   end;
 
   GL.Begin_(GL_QUADS);
-
   if cpFront in FParts then
   begin
     GL.Normal3f(0, 0, nd);
     if TanLoc > -1 then GL.VertexAttrib3f(TanLoc, nd, 0, 0);
     if BinLoc > -1 then GL.VertexAttrib3f(BinLoc, 0, nd, 0);
 
-    xgl.TexCoord2fv(@XYTexPoint);    GL.Vertex3f(x2,  y2,   z2);
-    xgl.TexCoord2fv(@YTexPoint);     GL.Vertex3f(x1d, y2d,  z2);
-    xgl.TexCoord2fv(@NullTexPoint);  GL.Vertex3f(x1,  y1,   z2);
-    xgl.TexCoord2fv(@XTexPoint);     GL.Vertex3f(x2d, y1d,  z2);
+    xgl.TexCoord2fv(@XYTexPoint);    GL.Vertex3fv(@v2);
+    xgl.TexCoord2fv(@YTexPoint);     GL.Vertex3f(v1d.x, v2d.y,  v2.z);
+    xgl.TexCoord2fv(@NullTexPoint);  GL.Vertex3f(v1.x,  v1.y,   v2.z);
+    xgl.TexCoord2fv(@XTexPoint);     GL.Vertex3f(v2d.x, v1d.y,  v2.z);
   end;
   if cpBack in FParts then
   begin
@@ -2370,10 +2362,10 @@ begin
     if TanLoc > -1 then GL.VertexAttrib3f(TanLoc, -nd, 0, 0);
     if BinLoc > -1 then GL.VertexAttrib3f(BinLoc, 0, nd, 0);
 
-    xgl.TexCoord2fv(@YTexPoint);    GL.Vertex3f(x2,   y2,   z1);
-    xgl.TexCoord2fv(@NullTexPoint); GL.Vertex3f(x2d,  y1d,  z1);
-    xgl.TexCoord2fv(@XTexPoint);    GL.Vertex3f(x1,   y1,   z1);
-    xgl.TexCoord2fv(@XYTexPoint);   GL.Vertex3f(x1d,  y2d,  z1);
+    xgl.TexCoord2fv(@YTexPoint);    GL.Vertex3f(v2.x,   v2.y,   v1.z);
+    xgl.TexCoord2fv(@NullTexPoint); GL.Vertex3f(v2d.x,  v1d.y,  v1.z);
+    xgl.TexCoord2fv(@XTexPoint);    GL.Vertex3fv(@v1);
+    xgl.TexCoord2fv(@XYTexPoint);   GL.Vertex3f(v1d.x,  v2d.y,  v1.z);
   end;
   if cpLeft in FParts then
   begin
@@ -2381,10 +2373,10 @@ begin
     if TanLoc > -1 then GL.VertexAttrib3f(TanLoc, 0, 0, nd);
     if BinLoc > -1 then GL.VertexAttrib3f(BinLoc, 0, nd, 0);
 
-    xgl.TexCoord2fv(@XYTexPoint);   GL.Vertex3f(x1,   y2,   z2);
-    xgl.TexCoord2fv(@YTexPoint);    GL.Vertex3f(x1,   y2d,  z1d);
-    xgl.TexCoord2fv(@NullTexPoint); GL.Vertex3f(x1,   y1,   z1);
-    xgl.TexCoord2fv(@XTexPoint);    GL.Vertex3f(x1,   y1d,  z2d);
+    xgl.TexCoord2fv(@XYTexPoint);   GL.Vertex3f(v1.x,   v2.y,   v2.z);
+    xgl.TexCoord2fv(@YTexPoint);    GL.Vertex3f(v1.x,   v2d.y,  v1d.z);
+    xgl.TexCoord2fv(@NullTexPoint); GL.Vertex3fv(@v1);
+    xgl.TexCoord2fv(@XTexPoint);    GL.Vertex3f(v1.x,   v1d.y,  v2d.z);
   end;
   if cpRight in FParts then
   begin
@@ -2392,10 +2384,10 @@ begin
     if TanLoc > -1 then GL.VertexAttrib3f(TanLoc, 0, 0, -nd);
     if BinLoc > -1 then GL.VertexAttrib3f(BinLoc, 0, nd, 0);
 
-    xgl.TexCoord2fv(@YTexPoint);    GL.Vertex3f(x2,   y2,   z2);
-    xgl.TexCoord2fv(@NullTexPoint); GL.Vertex3f(x2,   y1d,  z2d);
-    xgl.TexCoord2fv(@XTexPoint);    GL.Vertex3f(x2,   y1,   z1);
-    xgl.TexCoord2fv(@XYTexPoint);   GL.Vertex3f(x2,   y2d,  z1d);
+    xgl.TexCoord2fv(@YTexPoint);    GL.Vertex3fv(@v2);
+    xgl.TexCoord2fv(@NullTexPoint); GL.Vertex3f(v2.x,   v1d.y,  v2d.z);
+    xgl.TexCoord2fv(@XTexPoint);    GL.Vertex3f(v2.x,   v1.y,   v1.z);
+    xgl.TexCoord2fv(@XYTexPoint);   GL.Vertex3f(v2.x,   v2d.y,  v1d.z);
   end;
   if cpTop in FParts then
   begin
@@ -2403,10 +2395,10 @@ begin
     if TanLoc > -1 then GL.VertexAttrib3f(TanLoc, nd, 0, 0);
     if BinLoc > -1 then GL.VertexAttrib3f(BinLoc, 0, 0, -nd);
 
-    xgl.TexCoord2fv(@YTexPoint);    GL.Vertex3f(x1,   y2,   z1);
-    xgl.TexCoord2fv(@NullTexPoint); GL.Vertex3f(x1d,  y2,   z2d);
-    xgl.TexCoord2fv(@XTexPoint);    GL.Vertex3f(x2,   y2,   z2);
-    xgl.TexCoord2fv(@XYTexPoint);   GL.Vertex3f(x2d,  y2,   z1d);
+    xgl.TexCoord2fv(@YTexPoint);    GL.Vertex3f(v1.x,   v2.y,   v1.z);
+    xgl.TexCoord2fv(@NullTexPoint); GL.Vertex3f(v1d.x,  v2.y,   v2d.z);
+    xgl.TexCoord2fv(@XTexPoint);    GL.Vertex3fv(@v2);
+    xgl.TexCoord2fv(@XYTexPoint);   GL.Vertex3f(v2d.x,  v2.y,   v1d.z);
   end;
   if cpBottom in FParts then
   begin
@@ -2414,10 +2406,10 @@ begin
     if TanLoc > -1 then GL.VertexAttrib3f(TanLoc, -nd, 0, 0);
     if BinLoc > -1 then GL.VertexAttrib3f(BinLoc, 0, 0, nd);
 
-    xgl.TexCoord2fv(@NullTexPoint); GL.Vertex3f(x1,   y1,   z1);
-    xgl.TexCoord2fv(@XTexPoint);    GL.Vertex3f(x2d,  y1,   z1d);
-    xgl.TexCoord2fv(@XYTexPoint);   GL.Vertex3f(x2,   y1,   z2);
-    xgl.TexCoord2fv(@YTexPoint);    GL.Vertex3f(x1d,  y1,   z2d);
+    xgl.TexCoord2fv(@NullTexPoint); GL.Vertex3fv(@v1);
+    xgl.TexCoord2fv(@XTexPoint);    GL.Vertex3f(v2d.x,  v1.y,   v1d.z);
+    xgl.TexCoord2fv(@XYTexPoint);   GL.Vertex3f(v2.x,   v1.y,   v2.z);
+    xgl.TexCoord2fv(@YTexPoint);    GL.Vertex3f(v1d.x,  v1.y,   v2d.z);
   end;
   GL.End_;
 end;
@@ -2431,9 +2423,9 @@ var
 begin
   connectivity := TConnectivity.Create(True);
 
-  hw := FCubeHalfSize.X;
-  hh := FCubeHalfSize.Y;
-  hd := FCubeHalfSize.Z;
+  hw := FCubeSize.X * 0.5;
+  hh := FCubeSize.Y * 0.5;
+  hd := FCubeSize.Z * 0.5;
 
   if cpFront in FParts then
   begin
@@ -2479,16 +2471,15 @@ end;
 
 function TGLCube.GetCubeWHD(const Index: Integer): TGLFloat;
 begin
-  Result := FCubeSize.V[index];
+  Result := FCubeSize.C[index];
 end;
 
 
 procedure TGLCube.SetCubeWHD(Index: Integer; AValue: TGLFloat);
 begin
-  if AValue <> FCubeSize.V[index] then
+  if AValue <> FCubeSize.C[index] then
   begin
-    FCubeSize.V[index] := AValue;
-    FCubeHalfSize.V[index] := AValue*0.5;
+    FCubeSize.C[index] := AValue;
     StructureChanged;
   end;
 end;
@@ -2516,7 +2507,6 @@ begin
   if Assigned(Source) and (Source is TGLCube) then
   begin
     FCubeSize := TGLCube(Source).FCubeSize;
-    FCubeHalfSize := TGLCube(Source).FCubeHalfSize;
     FParts := TGLCube(Source).FParts;
     FNormalDirection := TGLCube(Source).FNormalDirection;
   end;
@@ -2543,9 +2533,9 @@ var
 begin
   rs := AbsoluteToLocal(rayStart);
   SetVector(rv, VectorNormalize(AbsoluteToLocal(rayVector)));
-  eSize.X := FCubeHalfSize.X + 0.0001;
-  eSize.Y := FCubeHalfSize.Y + 0.0001;
-  eSize.Z := FCubeHalfSize.Z + 0.0001;
+  eSize.X := FCubeSize.X*0.5 + 0.0001;
+  eSize.Y := FCubeSize.Y*0.5 + 0.0001;
+  eSize.Z := FCubeSize.Z*0.5 + 0.0001;
   p[0] := XHmgVector;
   p[1] := YHmgVector;
   p[2] := ZHmgVector;
@@ -2558,7 +2548,7 @@ begin
     begin
       t := -(p[i].X * rs.X + p[i].Y * rs.Y +
              p[i].Z * rs.Z + 0.5 *
-        FCubeSize.V[i mod 3]) / (p[i].X * rv.X +
+        FCubeSize.C[i mod 3]) / (p[i].X * rv.X +
                                  p[i].Y * rv.Y +
                                  p[i].Z * rv.Z);
       MakePoint(r, rs.X + t * rv.X, rs.Y +

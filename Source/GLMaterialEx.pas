@@ -4024,7 +4024,7 @@ end;
 
 procedure TGLTextureProperties.SetTextureMatrix(const AValue: TMatrix);
 begin
-  FTextureMatrixIsIdentity := CompareMem(@AValue.X, @IdentityHmgMatrix.X,
+  FTextureMatrixIsIdentity := CompareMem(@AValue.V[0], @IdentityHmgMatrix.V[0],
     SizeOf(TMatrix));
   FTextureMatrix := AValue;
   FTextureOverride := True;

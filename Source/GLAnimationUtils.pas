@@ -924,8 +924,8 @@ begin
   EaseFunction := GetEaseFunctionFromType(EaseType);
   for i := 0 to 2 do
   begin
-    Target.V[i] := Target.V[i]-Current.V[i];
-    Result.V[i] := EaseFunction(Time, Current.V[i], Target.V[i], Duration);
+    Target.C[i] := Target.C[i]-Current.C[i];
+    Result.C[i] := EaseFunction(Time, Current.C[i], Target.C[i], Duration);
   end;
 end;
 
@@ -940,8 +940,8 @@ begin
   EaseFunction := GetEaseFunctionFromType(EaseType);
   for i := 0 to 3 do
   begin
-    Target.V[i] := Target.V[i]-Current.V[i];
-    Result.V[i] := EaseFunction(Time, Current.V[i], Target.V[i], Duration);
+    Target.C[i] := Target.C[i]-Current.C[i];
+    Result.C[i] := EaseFunction(Time, Current.C[i], Target.C[i], Duration);
   end;
 end;
 
@@ -956,8 +956,8 @@ begin
   EaseFunction := GetEaseFunctionFromType(EaseType);
   for i := 0 to 1 do
   begin
-    Target.V[i] := Target.V[i]-Current.V[i];
-    Result.V[i] := EaseFunction(Time, Current.V[i], Target.V[i], Duration);
+    Target.C[i] := Target.C[i]-Current.C[i];
+    Result.C[i] := EaseFunction(Time, Current.C[i], Target.C[i], Duration);
   end;
 end;
 

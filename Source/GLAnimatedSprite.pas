@@ -930,12 +930,12 @@ begin
         end;
 
         GL.GetFloatv(GL_MODELVIEW_MATRIX, @mat);
-        vx.X := mat.X.X;
-        vy.X := mat.X.Y;
-        vx.Y := mat.Y.X;
-        vy.Y := mat.Y.Y;
-        vx.Z := mat.Z.X;
-        vy.Z := mat.Z.Y;
+        vx.X := mat.V[0].X;
+        vy.X := mat.V[0].Y;
+        vx.Y := mat.V[1].X;
+        vy.Y := mat.V[1].Y;
+        vx.Z := mat.V[2].X;
+        vy.Z := mat.V[2].Y;
         ScaleVector(vx, w * VectorLength(vx));
         ScaleVector(vy, h * VectorLength(vy));
 
@@ -959,7 +959,7 @@ begin
         begin
           GL.MatrixMode(GL_MODELVIEW);
           GL.PushMatrix;
-          GL.Rotatef(FRotation, mat.X.Z, mat.Y.Z, mat.Z.Z);
+          GL.Rotatef(FRotation, mat.V[0].Z, mat.V[1].Z, mat.V[2].Z);
         end;
         GL.Begin_(GL_QUADS);
         GL.TexCoord2f(u1, v1);

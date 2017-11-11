@@ -137,7 +137,6 @@ type
 
   published
     
-
     {List of texture emitters. }
     property Emitters: TGLTextureEmitters read FEmitters write FEmitters;
 
@@ -145,14 +144,12 @@ type
     property Style: TGLProjectedTexturesStyle read FStyle write FStyle;
   end;
 
-  //-------------------------------------------------------------
-  //-------------------------------------------------------------
-  //-------------------------------------------------------------
-implementation
-//-------------------------------------------------------------
-//-------------------------------------------------------------
-//-------------------------------------------------------------
-uses
+ implementation
+
+ uses
+ {$IFDEF GLS_FASTMATH}
+  Neslib.FastMath,
+{$ENDIF}
   GLContext,
   GLPersistentClasses,
   GLVectorTypes,

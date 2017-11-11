@@ -428,7 +428,7 @@ end;
 procedure TGLCustomCoordinates.SetDirectCoordinate(const Index: Integer;
   const AValue: TGLFloat);
 begin
-  FCoords.V[index] := AValue;
+  FCoords.C[index] := AValue;
 end;
 
 procedure TGLCustomCoordinates.SetDirectVector(const V: TVector);
@@ -569,19 +569,19 @@ end;
 procedure TGLCustomCoordinates.SetCoordinate(const AIndex: Integer;
   const AValue: TGLFloat);
 begin
-  FCoords.V[AIndex] := AValue;
+  FCoords.C[AIndex] := AValue;
   NotifyChange(Self);
 end;
 
 function TGLCustomCoordinates.GetCoordinate(const AIndex: Integer): TGLFloat;
 begin
-  Result := FCoords.V[AIndex];
+  Result := FCoords.C[AIndex];
 end;
 
 function TGLCustomCoordinates.GetDirectCoordinate(
   const Index: Integer): TGLFloat;
 begin
-  Result := FCoords.V[index]
+  Result := FCoords.C[index]
 end;
 
 function TGLCustomCoordinates.GetAsString: String;

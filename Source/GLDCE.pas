@@ -272,7 +272,7 @@ function RotateVectorByObject(Obj: TGLBaseSceneObject; const v: TAffineVector): 
 var v2: TVector;
 begin
   SetVector(v2,v);
-  SetVector(result,VectorTransform(v2, Obj.Matrix));
+  SetVector(result,VectorTransform(v2, Obj.Matrix^));
 end;
 
 constructor TGLDCEManager.Create(AOwner: TComponent);

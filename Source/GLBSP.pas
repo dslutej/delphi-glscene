@@ -357,7 +357,7 @@ var
     local.position := Owner.Owner.AbsoluteToLocal(absPos);
     SetVector(v, absRadius, absRadius, absRadius, 0);
     v := Owner.Owner.AbsoluteToLocal(v);
-    local.radius := MaxFloat(v.V);
+    local.radius := MaxFloat(v.X, v.Y, v.Z);
   end;
 
 begin
@@ -1159,10 +1159,10 @@ procedure TFGBSPNode.FixTJunctions(const tJunctionsCandidates: TIntegerList);
     // compute extent and its inversion
     vector := VectorSubtract(vB^, vA^);
     for i := 0 to 2 do
-      if vector.V[i] <> 0 then
-        invVector.V[i] := 1 / vector.V[i]
+      if vector.C[i] <> 0 then
+        invVector.C[i] := 1 / vector.C[i]
       else
-        invVector.V[i] := 0;
+        invVector.C[i] := 0;
     // lookup all candidates
     for i := 0 to candidatesList.Count - 1 do
     begin

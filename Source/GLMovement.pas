@@ -56,16 +56,16 @@ type
 
     function GetPositionCoordinate(const Index: Integer): TGLFloat;
     procedure SetPositionCoordinate(const Index: integer; const AValue: TGLFloat);
-    function GetRotationCoordinate(const Index: Integer): TGLFloat;
+    function GetRotationCoordinate(const Index: Integer): TGLFloat; inline;
     procedure SetRotationCoordinate(const Index: integer; const AValue: TGLFloat);
-    function GetScaleCoordinate(const Index: Integer): TGLFloat;
+    function GetScaleCoordinate(const Index: Integer): TGLFloat; inline;
     procedure SetScaleCoordinate(const Index: integer; const AValue: TGLFloat);
 
     procedure SetSpeed(const Value: single);
 
-    function GetDirectionCoordinate(const Index: Integer): TGLFloat;
+    function GetDirectionCoordinate(const Index: Integer): TGLFloat; inline;
     procedure SetDirectionCoordinate(const Index: integer; const AValue: TGLFloat);
-    function GetUpCoordinate(const Index: Integer): TGLFloat;
+    function GetUpCoordinate(const Index: Integer): TGLFloat; inline;
     procedure SetUpCoordinate(const Index: integer; const AValue: TGLFloat);
   protected
     function GetDisplayName: string; override;
@@ -515,63 +515,61 @@ end;
 
 function TGLPathNode.GetPositionCoordinate(const Index: Integer): TGLFloat;
 begin
-  result := FPosition.V[Index];
+  result := FPosition.C[Index];
 end;
 
 procedure TGLPathNode.SetPositionCoordinate(const Index: integer; const AValue: TGLFloat);
 begin
-  FPosition.V[Index] := AValue;
+  FPosition.C[Index] := AValue;
   if Collection <> nil then
     (Collection as TGLPathNodes).NotifyChange;
 end;
 
 function TGLPathNode.GetRotationCoordinate(const Index: Integer): TGLFloat;
 begin
-  result := FRotation.V[Index];
+  result := FRotation.C[Index];
 end;
 
 procedure TGLPathNode.SetRotationCoordinate(const Index: integer; const AValue: TGLFloat);
 begin
-  FRotation.V[Index] := AValue;
+  FRotation.C[Index] := AValue;
   if Collection <> nil then
     (Collection as TGLPathNodes).NotifyChange;
 end;
 
 function TGLPathNode.GetScaleCoordinate(const Index: Integer): TGLFloat;
 begin
-  result := FScale.V[Index];
+  result := FScale.C[Index];
 end;
 
 procedure TGLPathNode.SetScaleCoordinate(const Index: integer; const AValue: TGLFloat);
 begin
-  FScale.V[Index] := AValue;
+  FScale.C[Index] := AValue;
   if Collection <> nil then
     (Collection as TGLPathNodes).NotifyChange;
 end;
 
-
 function TGLPathNode.GetDirectionCoordinate(const Index: Integer): TGLFloat;
 begin
-  result := FDirection.V[Index];
+  result := FDirection.C[Index];
 end;
-
 
 procedure TGLPathNode.SetDirectionCoordinate(const Index: integer;
   const AValue: TGLFloat);
 begin
-  FDirection.V[Index] := AValue;
+  FDirection.C[Index] := AValue;
   if Collection <> nil then
     (Collection as TGLPathNodes).NotifyChange;
 end;
 
 function TGLPathNode.GetUpCoordinate(const Index: Integer): TGLFloat;
 begin
-  result := FUp.V[Index];
+  result := FUp.C[Index];
 end;
 
 procedure TGLPathNode.SetUpCoordinate(const Index: integer; const AValue: TGLFloat);
 begin
-  FUp.V[Index] := AValue;
+  FUp.C[Index] := AValue;
   if Collection <> nil then
     (Collection as TGLPathNodes).NotifyChange;
 end;

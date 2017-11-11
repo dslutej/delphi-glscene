@@ -221,8 +221,7 @@ type
     procedure SetIndex(aValue: Integer);
     procedure SetDirection(AVector: TGLCoordinates);
     procedure SetUp(AVector: TGLCoordinates);
-    function GetMatrix: TMatrix; inline;
-    procedure SetMatrix(const aValue: TMatrix);
+    function GetMatrix: PMatrix; inline;
     procedure SetPosition(APosition: TGLCoordinates);
     procedure SetPitchAngle(AValue: Single);
     procedure SetRollAngle(AValue: Single);
@@ -247,7 +246,7 @@ type
     procedure SetAbsoluteMatrix(const Value: TMatrix);
     procedure SetBBChanges(const Value: TObjectBBChanges);
     function GetDirectAbsoluteMatrix: PMatrix;
-    function GetLocalMatrix: PMatrix;
+    function GetLocalMatrix: PMatrix; inline;
   protected
     FListHandle: TGLListHandle;
     procedure Loaded; override;
@@ -309,9 +308,8 @@ type
     {The local transformation (relative to parent).
        If you're *sure* the local matrix is up-to-date, you may use LocalMatrix
        for quicker access. }
-    property Matrix: TMatrix read GetMatrix write SetMatrix;
-    {See Matrix. }
-    function MatrixAsAddress: PMatrix; inline;
+    procedure SetMatrix(const aValue: TMatrix); inline;
+    property Matrix: PMatrix read GetMatrix;
     {Holds the local transformation (relative to parent).
        If you're not *sure* the local matrix is up-to-date, use Matrix property. }
     property LocalMatrix: PMatrix read GetLocalMatrix;
@@ -2350,10 +2348,10 @@ procedure TGLBaseSceneObject.RebuildMatrix;
 begin
   if ocTransformation in Changes then
   begin
-    VectorScale(LeftVector, Scale.X, FLocalMatrix.X);
-    VectorScale(FUp.AsVector, Scale.Y, FLocalMatrix.Y);
-    VectorScale(FDirection.AsVector, Scale.Z, FLocalMatrix.Z);
-    SetVector(FLocalMatrix.W, FPosition.AsVector);
+    VectorScale(LeftVector, Scale.X, FLocalMatrix.V[0]);
+    VectorScale(FUp.AsVector, Scale.Y, FLocalMatrix.V[1]);
+    VectorScale(FDirection.AsVector, Scale.Z, FLocalMatrix.V[2]);
+    SetVector(FLocalMatrix.V[3], FPosition.AsVector);
     Exclude(FChanges, ocTransformation);
     Include(FChanges, ocAbsoluteMatrix);
     Include(FChanges, ocInvAbsoluteMatrix);
@@ -2436,7 +2434,7 @@ end;
 
 function TGLBaseSceneObject.GetAbsoluteDirection: TVector;
 begin
-  Result := VectorNormalize(AbsoluteMatrixAsAddress^.Z);
+  Result := VectorNormalize(AbsoluteMatrixAsAddress^.V[2]);
 end;
 
 procedure TGLBaseSceneObject.SetAbsoluteDirection(const v: TVector);
@@ -2449,9 +2447,9 @@ end;
 
 function TGLBaseSceneObject.GetAbsoluteScale: TVector;
 begin
-  Result.X := AbsoluteMatrixAsAddress^.X.X;
-  Result.Y := AbsoluteMatrixAsAddress^.Y.Y;
-  Result.Z := AbsoluteMatrixAsAddress^.Z.Z;
+  Result.X := AbsoluteMatrixAsAddress^.V[0].X;
+  Result.Y := AbsoluteMatrixAsAddress^.V[1].Y;
+  Result.Z := AbsoluteMatrixAsAddress^.V[2].Z;
 
   Result.W := 0;
 end;
@@ -2466,7 +2464,7 @@ end;
 
 function TGLBaseSceneObject.GetAbsoluteUp: TVector;
 begin
-  Result := VectorNormalize(AbsoluteMatrixAsAddress^.Y);
+  Result := VectorNormalize(AbsoluteMatrixAsAddress^.V[1]);
 end;
 
 procedure TGLBaseSceneObject.SetAbsoluteUp(const v: TVector);
@@ -2479,7 +2477,7 @@ end;
 
 function TGLBaseSceneObject.AbsoluteRight: TVector;
 begin
-  Result := VectorNormalize(AbsoluteMatrixAsAddress^.X);
+  Result := VectorNormalize(AbsoluteMatrixAsAddress^.V[0]);
 end;
 
 function TGLBaseSceneObject.AbsoluteLeft: TVector;
@@ -2489,7 +2487,7 @@ end;
 
 function TGLBaseSceneObject.GetAbsolutePosition: TVector;
 begin
-  Result := AbsoluteMatrixAsAddress^.W;
+  Result := AbsoluteMatrixAsAddress^.V[3];
 end;
 
 procedure TGLBaseSceneObject.SetAbsolutePosition(const v: TVector);
@@ -2502,25 +2500,25 @@ end;
 
 function TGLBaseSceneObject.AbsolutePositionAsAddress: PVector;
 begin
-  Result := @AbsoluteMatrixAsAddress^.W;
+  Result := @AbsoluteMatrixAsAddress^.V[3];
 end;
 
 function TGLBaseSceneObject.AbsoluteXVector: TVector;
 begin
   AbsoluteMatrixAsAddress;
-  SetVector(Result, PAffineVector(@FAbsoluteMatrix.X)^);
+  SetVector(Result, PAffineVector(@FAbsoluteMatrix.V[0])^);
 end;
 
 function TGLBaseSceneObject.AbsoluteYVector: TVector;
 begin
   AbsoluteMatrixAsAddress;
-  SetVector(Result, PAffineVector(@FAbsoluteMatrix.Y)^);
+  SetVector(Result, PAffineVector(@FAbsoluteMatrix.V[1])^);
 end;
 
 function TGLBaseSceneObject.AbsoluteZVector: TVector;
 begin
   AbsoluteMatrixAsAddress;
-  SetVector(Result, PAffineVector(@FAbsoluteMatrix.Z)^);
+  SetVector(Result, PAffineVector(@FAbsoluteMatrix.V[2])^);
 end;
 
 function TGLBaseSceneObject.AbsoluteToLocal(const v: TVector): TVector;
@@ -2623,7 +2621,7 @@ begin
     begin
       child := TGLBaseSceneObject(FChildren.List^[i]);
       aabb := child.AxisAlignedBoundingBoxUnscaled(AIncludeChilden);
-      AABBTransform(aabb, child.Matrix);
+      AABBTransform(aabb, child.Matrix^);
       AddAABB(Result, aabb);
     end;
   end;
@@ -2644,7 +2642,7 @@ begin
     begin
       aabb :=
         TGLBaseSceneObject(FChildren.List^[i]).AxisAlignedBoundingBoxUnscaled(AIncludeChilden);
-      AABBTransform(aabb, TGLBaseSceneObject(FChildren.List^[i]).Matrix);
+      AABBTransform(aabb, TGLBaseSceneObject(FChildren.List^[i]).Matrix^);
       AddAABB(Result, aabb);
     end;
   end;
@@ -2780,7 +2778,7 @@ begin
       if not BoundingBoxesAreEqual(@pBB, @NullBoundingBox) then
       begin
         // transformation with local matrix
-        BBTransform(pbb, TGLBaseSceneObject(FChildren.List^[i]).Matrix);
+        BBTransform(pbb, TGLBaseSceneObject(FChildren.List^[i]).Matrix^);
         if BoundingBoxesAreEqual(@FBoundingBoxOfChildren, @NullBoundingBox) then
           FBoundingBoxOfChildren := pBB
         else
@@ -2964,10 +2962,10 @@ end;
 procedure TGLBaseSceneObject.ResetRotations;
 begin
   FillChar(FLocalMatrix, SizeOf(TMatrix), 0);
-  FLocalMatrix.X.X := Scale.DirectX;
-  FLocalMatrix.Y.Y := Scale.DirectY;
-  FLocalMatrix.Z.Z := Scale.DirectZ;
-  SetVector(FLocalMatrix.W, Position.DirectVector);
+  FLocalMatrix.V[0].X := Scale.DirectX;
+  FLocalMatrix.V[1].Y := Scale.DirectY;
+  FLocalMatrix.V[2].Z := Scale.DirectZ;
+  SetVector(FLocalMatrix.V[3], Position.DirectVector);
   FRotation.DirectVector := NullHmgPoint;
   FDirection.DirectVector := ZHmgVector;
   FUp.DirectVector := YHmgVector;
@@ -3018,7 +3016,7 @@ var
   resMat: TMatrix;
   v: TAffineVector;
 begin
-  resMat := Matrix;
+  resMat := Matrix^;
   // No we build rotation matrices and use them to rotate the obj
   if rx <> 0 then
   begin
@@ -3035,7 +3033,7 @@ begin
     SetVector(v, AbsoluteToLocal(ZVector));
     resMat := MatrixMultiply(CreateRotationMatrix(v, -DegToRadian(rz)), resMat);
   end;
-  Matrix := resMat;
+  SetMatrix(resMat);
 end;
 
 procedure TGLBaseSceneObject.RotateAbsolute(const axis: TAffineVector; angle:
@@ -3046,7 +3044,7 @@ begin
   if angle <> 0 then
   begin
     SetVector(v, AbsoluteToLocal(axis));
-    Matrix := MatrixMultiply(CreateRotationMatrix(v, DegToRadian(angle)), Matrix);
+    SetMatrix(MatrixMultiply(CreateRotationMatrix(v, DegToRadian(angle)), Matrix^));
   end;
 end;
 
@@ -3985,13 +3983,7 @@ begin
     FScene.NotifyChange(Self);
 end;
 
-function TGLBaseSceneObject.GetMatrix: TMatrix;
-begin
-  RebuildMatrix;
-  Result := FLocalMatrix;
-end;
-
-function TGLBaseSceneObject.MatrixAsAddress: PMatrix;
+function TGLBaseSceneObject.GetMatrix: PMatrix;
 begin
   RebuildMatrix;
   Result := @FLocalMatrix;
@@ -4000,12 +3992,12 @@ end;
 procedure TGLBaseSceneObject.SetMatrix(const aValue: TMatrix);
 begin
   FLocalMatrix := aValue;
-  FDirection.DirectVector := VectorNormalize(FLocalMatrix.Z);
-  FUp.DirectVector := VectorNormalize(FLocalMatrix.Y);
-  Scale.SetVector(VectorLength(FLocalMatrix.X),
-    VectorLength(FLocalMatrix.Y),
-    VectorLength(FLocalMatrix.Z), 0);
-  FPosition.DirectVector := FLocalMatrix.W;
+  FDirection.DirectVector := VectorNormalize(FLocalMatrix.V[2]);
+  FUp.DirectVector := VectorNormalize(FLocalMatrix.V[1]);
+  Scale.SetVector(VectorLength(FLocalMatrix.V[0]),
+    VectorLength(FLocalMatrix.V[1]),
+    VectorLength(FLocalMatrix.V[2]), 0);
+  FPosition.DirectVector := FLocalMatrix.V[3];
   TransformationChanged;
 end;
 
@@ -4752,14 +4744,14 @@ begin
       csInfinitePerspective:
         begin
           mat := IdentityHmgMatrix;
-          mat.X.X := 2 * FNearPlane / (vRight - vLeft);
-          mat.Y.Y := 2 * FNearPlane / (vTop - vBottom);
-          mat.Z.X := (vRight + vLeft) / (vRight - vLeft);
-          mat.Z.Y := (vTop + vBottom) / (vTop - vBottom);
-          mat.Z.Z := cEpsilon - 1;
-          mat.Z.W := -1;
-          mat.W.Z := FNearPlane * (cEpsilon - 2);
-          mat.W.W := 0;
+          mat.V[0].X := 2 * FNearPlane / (vRight - vLeft);
+          mat.V[1].Y := 2 * FNearPlane / (vTop - vBottom);
+          mat.V[2].X := (vRight + vLeft) / (vRight - vLeft);
+          mat.V[2].Y := (vTop + vBottom) / (vTop - vBottom);
+          mat.V[2].Z := cEpsilon - 1;
+          mat.V[2].W := -1;
+          mat.V[3].Z := FNearPlane * (cEpsilon - 2);
+          mat.V[3].W := 0;
         end;
       csOrthogonal:
         begin
@@ -4885,7 +4877,7 @@ begin
   //save scale & position info
   Scale1 := obj.Scale.AsVector;
   position1 := obj.Position.asVector;
-  resMat := obj.Matrix;
+  resMat := obj.Matrix^;
   //get rid of scaling & location info
   NormalizeMatrix(resMat);
   // Now we build rotation matrices and use them to rotate the obj
@@ -4907,7 +4899,7 @@ begin
     resMat := MatrixMultiply(CreateRotationMatrix(v, DegToRadian(pitchDelta)),
       resMat);
   end;
-  obj.Matrix := resMat;
+  obj.SetMatrix(resMat);
   //restore scaling & rotation info
   obj.Scale.AsVector := Scale1;
   obj.Position.AsVector := Position1;
@@ -5477,7 +5469,7 @@ begin
         ARci.proxySubObject := True;
         if pooTransformation in FProxyOptions then
           with ARci.PipelineTransformation do
-            SetModelMatrix(MatrixMultiply(FMasterObject.Matrix, ModelMatrix^));
+            SetModelMatrix(MatrixMultiply(FMasterObject.Matrix^, ModelMatrix^));
         FMasterObject.DoRender(ARci, ARenderSelf, (FMasterObject.Count > 0));
         ARci.proxySubObject := oldProxySubObject;
       end;
@@ -7964,6 +7956,7 @@ end;
 
 procedure TGLNonVisualViewer.SetupCubeMapCamera(Sender: TObject);
 
+{
 const
   cFaceMat: array[0..5] of TMatrix =
   (
@@ -7992,6 +7985,7 @@ const
      Z:(X:-1.2167964414e-08; Y:0; Z:1; W:0);
      W:(X:0; Y:0; Z:0; W:1))
   );
+}
 
 var
   TM: TMatrix;
@@ -8001,7 +7995,7 @@ begin
   begin
     SetProjectionMatrix(CreatePerspectiveMatrix(90, 1, FCubeMapZNear, FCubeMapZFar));
     TM := CreateTranslationMatrix(FCubeMapTranslation);
-    SetViewMatrix(MatrixMultiply(cFaceMat[FCubeMapRotIdx], TM));
+ {   SetViewMatrix(MatrixMultiply(cFaceMat[FCubeMapRotIdx], TM));}
   end;
 end;
 

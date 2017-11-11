@@ -663,6 +663,9 @@ function UnpressGroup(CurrentObject: TGLBaseSceneObject; AGroupID: Integer):
 implementation
 
 uses
+{$IFDEF GLS_FASTMATH}
+  Neslib.FastMath,
+{$ENDIF}
   GLCoordinates,
   GLPersistentClasses,
   GLStrings,
@@ -1834,7 +1837,7 @@ function TGLBaseFontControl.GetFontHeight: Integer;
 begin
   if Assigned(BitmapFont) then
     if BitmapFont is TGLWindowsBitmapFont then
-      Result := Abs((BitmapFont as TGLWindowsBitmapFont).Font.Height)
+      Result := System.Abs((BitmapFont as TGLWindowsBitmapFont).Font.Height)
     else
       Result := BitmapFont.CharHeight
   else

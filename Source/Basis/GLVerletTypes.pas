@@ -2007,13 +2007,13 @@ begin
       FNodeParams[i].Z:=FNodeCoords[i].Z*d;
    end;
 
-   ComputeNaturals(barycenter, FNatMatrix.X, FNatMatrix.Y, FNatMatrix.Z);
+   ComputeNaturals(barycenter, FNatMatrix.V[0], FNatMatrix.V[1], FNatMatrix.V[2]);
 
-   FNatMatrix.Z:=VectorCrossProduct(FNatMatrix.X, FNatMatrix.Y);
-   FNatMatrix.Y:=VectorCrossProduct(FNatMatrix.Z, FNatMatrix.X);
-   NormalizeVector(FNatMatrix.X);
-   NormalizeVector(FNatMatrix.Y);
-   NormalizeVector(FNatMatrix.Z);
+   FNatMatrix.V[2]:=VectorCrossProduct(FNatMatrix.V[0], FNatMatrix.V[1]);
+   FNatMatrix.V[1]:=VectorCrossProduct(FNatMatrix.V[2], FNatMatrix.V[0]);
+   NormalizeVector(FNatMatrix.V[0]);
+   NormalizeVector(FNatMatrix.V[1]);
+   NormalizeVector(FNatMatrix.V[2]);
 
    FInvNatMatrix:=FNatMatrix;
 //   TransposeMatrix(FInvNatMatrix);
@@ -2424,16 +2424,16 @@ begin
    contactNormal:=NullVector;
 
    // Only move along the "shortest" axis
-   if PInteger(@p.V[smallestSide])^>=0 then begin
-      dp:=absP.V[smallestSide];
-      contactNormal.V[smallestSide]:=1;
+   if PInteger(@p.C[smallestSide])^>=0 then begin
+      dp:=absP.C[smallestSide];
+      contactNormal.C[smallestSide]:=1;
       aNode.ApplyFriction(FFrictionRatio, dp, contactNormal);
-      aNode.FLocation.V[smallestSide]:=aNode.FLocation.V[smallestSide]+dp;
+      aNode.FLocation.C[smallestSide]:=aNode.FLocation.C[smallestSide]+dp;
    end else begin
-      dp:=absP.V[smallestSide];
-      contactNormal.V[smallestSide]:=-1;
+      dp:=absP.C[smallestSide];
+      contactNormal.C[smallestSide]:=-1;
       aNode.ApplyFriction(FFrictionRatio, dp, contactNormal);
-      aNode.FLocation.V[smallestSide]:=aNode.FLocation.V[smallestSide]-dp;
+      aNode.FLocation.C[smallestSide]:=aNode.FLocation.C[smallestSide]-dp;
    end;
 
    aNode.FChangedOnStep:=Owner.CurrentStepCount;

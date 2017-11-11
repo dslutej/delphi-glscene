@@ -266,7 +266,7 @@ begin
               if currentLibMaterial3.TextureMatrixIsIdentity then
                 ApplyAsTextureN(3, rci)
               else
-                ApplyAsTextureN(3, rci, @currentLibMaterial3.TextureMatrix.X.X);
+                ApplyAsTextureN(3, rci, @currentLibMaterial3.TextureMatrix.V[0].X);
               //                     ApplyAsTextureN(3, rci, currentLibMaterial3);
               Inc(units, 4);
               FApplied3 := True;
@@ -282,7 +282,7 @@ begin
               if currentLibMaterial4.TextureMatrixIsIdentity then
                 ApplyAsTextureN(4, rci)
               else
-                ApplyAsTextureN(4, rci, @currentLibMaterial4.TextureMatrix.X.X);
+                ApplyAsTextureN(4, rci, @currentLibMaterial4.TextureMatrix.V[0].X);
               //                     ApplyAsTextureN(4, rci, currentLibMaterial4);
               Inc(units, 8);
               FApplied4 := True;

@@ -160,8 +160,8 @@ begin
    inherited;
    GL.GetFloatv(GL_MODELVIEW_MATRIX, @matrix);
    for i:=0 to 2 do begin
-      Fvx.V[i]:=matrix.V[i].X;
-      Fvy.V[i]:=matrix.V[i].Y;
+      Fvx.C[i]:=matrix.V[i].X;
+      Fvy.C[i]:=matrix.V[i].Y;
    end;
    FNvx:=VectorNormalize(Fvx);
    FNvy:=VectorNormalize(Fvy);

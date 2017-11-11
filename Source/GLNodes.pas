@@ -156,10 +156,10 @@ type
 implementation
 
 uses
-  System.Math,
 {$IFDEF GLS_FASTMATH}
-  Neslib.FastMath;
+  Neslib.FastMath,
 {$ENDIF}
+  System.Math;
 
 // ------------------
 // ------------------ TGLNode ------------------
@@ -237,7 +237,7 @@ end;
 
 function TGLNode.GetCoordinate(const Index: Integer): TGLFloat;
 begin
-  Result := FCoords.V[Index];
+  Result := FCoords.C[Index];
 end;
 
 // SetCoordinate
@@ -245,7 +245,7 @@ end;
 
 procedure TGLNode.SetCoordinate(AIndex: Integer; AValue: TGLFloat);
 begin
-  FCoords.V[AIndex] := AValue;
+  FCoords.C[AIndex] := AValue;
   (Collection as TGLNodes).NotifyChange;
 end;
 
@@ -254,7 +254,7 @@ end;
 
 function TGLNode.StoreCoordinate(AIndex: Integer): Boolean;
 begin
-  Result := (FCoords.V[AIndex] <> 0);
+  Result := (FCoords.C[AIndex] <> 0);
 end;
 
 // ------------------
@@ -547,11 +547,11 @@ begin
   begin
     for K := 0 to 2 do
     begin
-      F := PAffineVector(Items[I].AsAddress)^.V[K];
-      if F < Min.V[K] then
-        Min.V[K] := F;
-      if F > Max.V[K] then
-        Max.V[K] := F;
+      F := PAffineVector(Items[I].AsAddress)^.C[K];
+      if F < Min.C[K] then
+        Min.C[K] := F;
+      if F > Max.C[K] then
+        Max.C[K] := F;
     end;
   end;
 end;

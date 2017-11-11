@@ -23,6 +23,13 @@ unit GLVectorTypes;
 
 interface
 
+{$I GLScene.inc}
+
+{$IFDEF GLS_FASTMATH}
+uses
+  Neslib.FastMath;
+{$ENDIF}
+
 type
   //2
   TVector2d = record
@@ -31,11 +38,16 @@ type
       1 : (X: Double;
            Y: Double);
   end;
+{$IFDEF GLS_FASTMATH}
+  TVector2f = Neslib.FastMath.TVector2;
+{$ELSE}
   TVector2f = record
     case Integer of
       0 : (V: array[0..1] of Single);
       1 : (X,Y: Single);
+      2 : (C: array[0..1] of Single);
   end;
+{$ENDIF}
   TVector2h = record
     case Integer of
       0 : (V: array[0..1] of Word);
@@ -88,12 +100,16 @@ type
       0 : (V: array[0..2] of Double);
       1 : (X,Y,Z: Double);
   end;
+{$IFDEF GLS_FASTMATH}
+  TVector3f = Neslib.FastMath.TVector3;
+{$ELSE}
   TVector3f = record
     case Integer of
       0 : (V: array[0..2] of Single);
       1 : (X,Y,Z: Single);
-      2 : (_1,_2,_3: UInt32);
+      2 : (C: array[0..2] of Single);
   end;
+{$ENDIF}
   TVector3h = record
     case Integer of
       0 : (V: array[0..2] of Word);
@@ -146,13 +162,16 @@ type
       0 : (V: array[0..3] of Double);
       1 : (X,Y,Z,W: Double);
   end;
+{$IFDEF GLS_FASTMATH}
+  TVector4f = Neslib.FastMath.TVector4;
+{$ELSE}
   TVector4f = record
     case Integer of
       0 : (V: array[0..3] of Single);
       1 : (X,Y,Z,W: Single);
-      2 : (_1,_2,_3,_4: UInt32);
-      3 : (_12, _34: UInt64);
+      2 : (C: array[0..3] of Single);
   end;
+{$ENDIF}
   TVector4h = record
     case Integer of
       0 : (V: array[0..3] of Word);
@@ -245,11 +264,16 @@ type
       0 : (V: array[0..2] of TVector3d);
       1 : (X,Y,Z: TVector3d);
   end;
+
+{$IFDEF GLS_FASTMATH}
+  TMatrix3f = Neslib.FastMath.TMatrix3;
+{$ELSE}
   TMatrix3f = record
     case Integer of
       0 : (V: array[0..2] of TVector3f);
       1 : (X,Y,Z: TVector3f);
   end;
+{$ENDIF}
   TMatrix3i = record
     case Integer of
       0 : (V: array[0..2] of TVector3i);
@@ -286,11 +310,15 @@ type
       0 : (V: array[0..3] of TVector4d);
       1 : (X,Y,Z,W: TVector4d);
   end;
+{$IFDEF GLS_FASTMATH}
+  TMatrix4f = Neslib.FastMath.TMatrix4;
+{$ELSE}
   TMatrix4f = record
     case Integer of
       0 : (V: array[0..3] of TVector4f);
       1 : (X,Y,Z,W: TVector4f);
   end;
+{$ENDIF}
   TMatrix4i = record
     case Integer of
       0 : (V: array[0..3] of TVector4i);

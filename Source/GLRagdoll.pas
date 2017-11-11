@@ -234,7 +234,7 @@ begin
   FReferenceMatrix := FBoneMatrix;
   mat := MatrixMultiply(bone.GlobalMatrix,FRagdoll.Owner.AbsoluteMatrix);
   //Set Joint position
-  SetAnchor(AffineVectorMake(mat.W));
+  SetAnchor(AffineVectorMake(mat.V[3]));
 
   BoneVertices.Free; // NEW1
 end;
@@ -268,22 +268,22 @@ begin
 
   if (noBounds) then
   begin
-    FOrigin := AffineVectorMake(mat.W);
-    FSize := AffineVectorMake(0.1,0.1,0.1);
+    FOrigin := AffineVectorMake(mat.V[3]);
+    FSize := AffineVectorMake(0.1, 0.1, 0.1);
   end else begin
     //Set Origin
     posMat := mat;
-    posMat.W := NullHmgVector;
+    posMat.V[3] := NullHmgVector;
     o := VectorTransform(FBoundBoneDelta, posMat);
-    FOrigin := VectorAdd(AffineVectorMake(mat.W), o);
+    FOrigin := VectorAdd(AffineVectorMake(mat.V[3]), o);
     //Set Size
     FSize := VectorScale(VectorSubtract(FBoundMax, FBoundMin),0.9);
-    FSize.X := FSize.X*VectorLength(mat.X);
-    FSize.Y := FSize.Y*VectorLength(mat.Y);
-    FSize.Z := FSize.Z*VectorLength(mat.Z);
+    FSize.X := FSize.X*VectorLength(mat.V[0]);
+    FSize.Y := FSize.Y*VectorLength(mat.V[1]);
+    FSize.Z := FSize.Z*VectorLength(mat.V[2]);
   end;
   //Put the origin in the BoneMatrix
-  FBoneMatrix.W := VectorMake(FOrigin,1);
+  FBoneMatrix.V[3] := VectorMake(FOrigin,1);
 end;
 
 function TGLRagdolBone.GetRagdollBone(Index: Integer): TGLRagdolBone;

@@ -3472,7 +3472,7 @@ begin
   begin
     child := TGLBaseSceneObject(Children[i]);
     aabb := child.AxisAlignedBoundingBoxUnscaled;
-    AABBTransform(aabb, child.Matrix);
+    AABBTransform(aabb, child.Matrix^);
     AddAABB(Result, aabb);
   end;
 end;

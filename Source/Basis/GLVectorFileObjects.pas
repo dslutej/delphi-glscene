@@ -1932,9 +1932,9 @@ begin
               rmat := CreateRotationMatrixZ(s, c);
               mat := MatrixMultiply(mat, rmat);
             end;
-            mat.W.X := Position[i].X;
-            mat.W.Y := Position[i].Y;
-            mat.W.Z := Position[i].Z;
+            mat.V[3].X := Position[i].X;
+            mat.V[3].Y := Position[i].Y;
+            mat.V[3].Z := Position[i].Z;
             FLocalMatrixList^[i] := mat;
           end;
         end;
@@ -1945,10 +1945,10 @@ begin
           begin
             quat := Quaternion[i];
             mat := QuaternionToMatrix(quat);
-            mat.W.X := Position[i].X;
-            mat.W.Y := Position[i].Y;
-            mat.W.Z := Position[i].Z;
-            mat.W.W := 1;
+            mat.V[3].X := Position[i].X;
+            mat.V[3].Y := Position[i].Y;
+            mat.V[3].Z := Position[i].Z;
+            mat.V[3].W := 1;
             FLocalMatrixList^[i] := mat;
           end;
         end;
@@ -2303,14 +2303,14 @@ begin
   mrci.GLStates.PointSize := 5;
   GL.Begin_(GL_POINTS);
   IssueColor(Color);
-  GL.Vertex3fv(@GlobalMatrix.W.X);
+  GL.Vertex3fv(@GlobalMatrix.V[3].X);
   GL.End_;
   // parent-self bone line
   if Owner is TGLSkeletonBone then
   begin
     GL.Begin_(GL_LINES);
-    GL.Vertex3fv(@TGLSkeletonBone(Owner).GlobalMatrix.W.X);
-    GL.Vertex3fv(@GlobalMatrix.W.X);
+    GL.Vertex3fv(@TGLSkeletonBone(Owner).GlobalMatrix.V[3].X);
+    GL.Vertex3fv(@GlobalMatrix.V[3].X);
     GL.End_;
   end;
   // render sub-bones
@@ -3624,7 +3624,7 @@ var
 
   procedure SortVertexData(sortidx: Integer);
   begin
-    if t[0].V[sortidx] < t[1].V[sortidx] then
+    if t[0].C[sortidx] < t[1].C[sortidx] then
     begin
       vt := v[0];
       tt := t[0];
@@ -3633,7 +3633,7 @@ var
       v[1] := vt;
       t[1] := tt;
     end;
-    if t[0].V[sortidx] < t[2].V[sortidx] then
+    if t[0].C[sortidx] < t[2].C[sortidx] then
     begin
       vt := v[0];
       tt := t[0];
@@ -3642,7 +3642,7 @@ var
       v[2] := vt;
       t[2] := tt;
     end;
-    if t[1].V[sortidx] < t[2].V[sortidx] then
+    if t[1].C[sortidx] < t[2].C[sortidx] then
     begin
       vt := v[1];
       tt := t[1];
@@ -4367,10 +4367,10 @@ begin
     GetMeshObject(i).GetExtents(lMin, lMax);
     for k := 0 to 2 do
     begin
-      if lMin.V[k] < min.V[k] then
-        min.V[k] := lMin.V[k];
-      if lMax.V[k] > max.V[k] then
-        max.V[k] := lMax.V[k];
+      if lMin.C[k] < min.C[k] then
+        min.C[k] := lMin.C[k];
+      if lMax.C[k] > max.C[k] then
+        max.C[k] := lMax.C[k];
     end;
   end;
 end;
@@ -5023,7 +5023,7 @@ begin
       // transform normal
       SetVector(p, Normals[i]);
       invMat := bone.GlobalMatrix;
-      invMat.W := NullHmgPoint;
+      invMat.V[3] := NullHmgPoint;
       InvertMatrix(invMat);
       p := VectorTransform(p, invMat);
       invMesh.Normals[i] := PAffineVector(@p)^;
@@ -5503,10 +5503,10 @@ begin
     for k := 0 to 2 do
     begin
       f := ref^[k];
-      if f < min.V[k] then
-        min.V[k] := f;
-      if f > max.V[k] then
-        max.V[k] := f;
+      if f < min.C[k] then
+        min.C[k] := f;
+      if f > max.C[k] then
+        max.C[k] := f;
     end;
   end;
 end;
@@ -6201,10 +6201,10 @@ begin
     TMeshObject(MeshObjects[i]).GetExtents(lMin, lMax);
     for k := 0 to 2 do
     begin
-      if lMin.V[k] < min.V[k] then
-        min.V[k] := lMin.V[k];
-      if lMax.V[k] > max.V[k] then
-        max.V[k] := lMax.V[k];
+      if lMin.C[k] < min.C[k] then
+        min.C[k] := lMin.C[k];
+      if lMax.C[k] > max.C[k] then
+        max.C[k] := lMax.C[k];
     end;
   end;
 end;

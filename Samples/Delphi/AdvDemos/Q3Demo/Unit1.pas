@@ -230,7 +230,7 @@ begin
   //
   WeaponTags := TMD3TagList.Create;
   WeaponTags.LoadFromFile('.\model\plasma.md3');
-  GunSmoke.Matrix := WeaponTags.GetTransform('tag_flash', 0);
+  GunSmoke.SetMatrix(WeaponTags.GetTransform('tag_flash', 0));
 
   // Apply textures to preloaded materials
   // The md3 file loader puts a material into the actors
@@ -276,7 +276,7 @@ begin
   //
   for j := 0 to 3 do
     for i := 0 to 3 do
-      Result.V[i].V[j] := m1.V[i].V[j] + (m2.V[i].V[j] - m1.V[i].V[j]) * delta;
+      Result.V[i].C[j] := m1.V[i].C[j] + (m2.V[i].C[j] - m1.V[i].C[j]) * delta;
 end;
 
 procedure TForm1.GLCadencer1Progress(Sender: TObject;
@@ -287,21 +287,21 @@ begin
   // Set the transform for the torso
   m1 := LegsTags.GetTransform('tag_torso', Legs.CurrentFrame);
   m2 := LegsTags.GetTransform('tag_torso', Legs.NextFrameIndex);
-  Torso.Matrix := InterpolateMatrix(m1, m2, Legs.CurrentFrameDelta);
+  Torso.SetMatrix(InterpolateMatrix(m1, m2, Legs.CurrentFrameDelta));
   Torso.Roll(-TrackBar1.Position);
   Torso.Turn(-TrackBar2.Position);
 
   // Set the transform for the head
   m1 := TorsoTags.GetTransform('tag_head', Torso.CurrentFrame);
   m2 := TorsoTags.GetTransform('tag_head', Torso.NextFrameIndex);
-  Head.Matrix := InterpolateMatrix(m1, m2, Torso.CurrentFrameDelta);
+  Head.SetMatrix(InterpolateMatrix(m1, m2, Torso.CurrentFrameDelta));
   Head.Roll(-TrackBar3.Position);
   Head.Turn(-TrackBar4.Position);
 
   // Set the transform for the weapon
   m1 := TorsoTags.GetTransform('tag_weapon', Torso.CurrentFrame);
   m2 := TorsoTags.GetTransform('tag_weapon', Torso.NextFrameIndex);
-  Weapon.Matrix := InterpolateMatrix(m1, m2, Torso.CurrentFrameDelta);
+  Weapon.SetMatrix(InterpolateMatrix(m1, m2, Torso.CurrentFrameDelta));
 
   GLSceneViewer1.Invalidate;
 end;

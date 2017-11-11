@@ -359,11 +359,11 @@ begin
   radius := Owner.LeafSize;
   Inc(FCount);
 
-  pos := matrix.W;
-  matrix.W := NullHMGPoint;
+  pos := matrix.V[3];
+  matrix.V[3] := NullHMGPoint;
   matrix := Roll(matrix, FCount / 10);
   NormalizeMatrix(matrix);
-  matrix.W := pos;
+  matrix.V[3] := pos;
 
   FVertices.Add(VectorTransform(PointMake(0, -radius, 0), matrix));
   FVertices.Add(VectorTransform(PointMake(0, radius, 0), matrix));
@@ -967,7 +967,7 @@ procedure TGLTree.BuildMesh(GLBaseMesh: TGLBaseMesh);
     if MatrixDecompose(mat, trans) then
     begin
       SetVector(rot, trans[ttRotateX], trans[ttRotateY], trans[ttRotateZ]);
-      SetVector(pos, mat.W);
+      SetVector(pos, mat.V[3]);
     end
     else
     begin

@@ -1896,7 +1896,7 @@ begin
 
     if not libMatTexture2.FTextureMatrixIsIdentity then
       libMatTexture2.Material.Texture.ApplyAsTexture2(ARci,
-        @libMatTexture2.FTextureMatrix.X.X)
+        @libMatTexture2.FTextureMatrix.V[0].X)
     else
       libMatTexture2.Material.Texture.ApplyAsTexture2(ARci);
 
@@ -2015,7 +2015,7 @@ end;
 
 procedure TGLLibMaterial.SetTextureMatrix(const Value: TMatrix);
 begin
-  FTextureMatrixIsIdentity := CompareMem(@Value.X, @IdentityHmgMatrix.X, SizeOf(TMatrix));
+  FTextureMatrixIsIdentity := CompareMem(@Value.V[0], @IdentityHmgMatrix.V[0], SizeOf(TMatrix));
   FTextureMatrix := Value;
   FTextureOverride := True;
   NotifyUsers;

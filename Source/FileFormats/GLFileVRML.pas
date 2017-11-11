@@ -76,9 +76,9 @@ procedure TessellatePolygon(PolyVerts: TAffineVectorList;
   var
     mat: TAffineMatrix;
   begin
-    mat.X := v0;
-    mat.Y := v1;
-    mat.Z := v2;
+    mat.V[0] := v0;
+    mat.V[1] := v1;
+    mat.V[2] := v2;
     Result := (MatrixDeterminant(mat) < 0);
   end;
 
@@ -115,17 +115,17 @@ begin
           prev := temp.Count - 1;
         if next > temp.Count - 1 then
           next := 0;
-        V.X := PolyVerts[temp[prev]];
-        V.Y := PolyVerts[temp[i]];
-        V.Z := PolyVerts[temp[next]];
-        if IsTriClockWise(V.X, V.Y, V.Z) = PolyCW then
+        V.V[0] := PolyVerts[temp[prev]];
+        V.V[1] := PolyVerts[temp[i]];
+        V.V[2]:= PolyVerts[temp[next]];
+        if IsTriClockWise(V.V[0], V.V[1], V.V[2]) = PolyCW then
         begin
           NoPointsInTriangle := True;
           for j := 0 to temp.Count - 1 do
           begin
             if (j <> i) and (j <> prev) and (j <> next) then
             begin
-              if PointInTriangle(PolyVerts[temp[j]], V.X, V.Y, V.Z, PolyCW) then
+              if PointInTriangle(PolyVerts[temp[j]], V.V[0], V.V[1], V.V[2], PolyCW) then
               begin
                 NoPointsInTriangle := False;
                 Break;
@@ -133,11 +133,11 @@ begin
             end;
           end;
 
-          area := TriangleArea(V.X, V.Y, V.Z);
+          area := TriangleArea(V.V[0], V.V[1], V.V[2]);
 
           if NoPointsInTriangle and (area > 0) then
           begin
-            d := VectorDistance2(V.X, V.Z);
+            d := VectorDistance2(V.V[0], V.V[2]);
             if d < min_dist then
             begin
               min_dist := d;
@@ -482,9 +482,8 @@ var
         else
           mat := IdentityHMGMatrix;
         for j := 0 to 2 do
-          mat.V[j] := VectorScale(mat.V[j], TVRMLTransform(node[i])
-            .ScaleFactor.V[j]);
-        mat.W := PointMake(TVRMLTransform(node[i]).Center);
+          mat.V[j] := VectorScale(mat.V[j], TVRMLTransform(node[i]).ScaleFactor.C[j]);
+        mat.V[3] := PointMake(TVRMLTransform(node[i]).Center);
         currentTransform := MatrixMultiply(mat, currentTransform);
       end
       else if node[i] is TVRMLMaterial then

@@ -1599,10 +1599,10 @@ begin
       ASCII_INHERIT_POS_I:  aMesh.FInheritedPosition := GetValue3D(Data);
       ASCII_INHERIT_ROT_I:  aMesh.FInheritedRotation := GetValue3D(Data);
       ASCII_INHERIT_SCL_I:  aMesh.FInheritedScale := GetValue3D(Data);
-      ASCII_ROW_I:          aMesh.FMatrix.X := VectorMake(GetValue3D(Data));
-      ASCII_ROW1_I:         aMesh.FMatrix.Y := VectorMake(GetValue3D(Data));
-      ASCII_ROW2_I:         aMesh.FMatrix.Z := VectorMake(GetValue3D(Data));
-      ASCII_ROW3_I:         aMesh.FMatrix.W := PointMake(GetValue3D(Data));
+      ASCII_ROW_I:          aMesh.FMatrix.V[0] := VectorMake(GetValue3D(Data));
+      ASCII_ROW1_I:         aMesh.FMatrix.V[1] := VectorMake(GetValue3D(Data));
+      ASCII_ROW2_I:         aMesh.FMatrix.V[2] := VectorMake(GetValue3D(Data));
+      ASCII_ROW3_I:         aMesh.FMatrix.V[3] := PointMake(GetValue3D(Data));
       ASCII_POS_I:          aMesh.FPosition := PointMake(GetValue3D(Data));
       ASCII_ROTAXIS_I:      aMesh.FRotationAxis := GetValue3D(Data);
       ASCII_ROTANGLE_I:     aMesh.FRotationAngle := GetDoubleValue(Data);

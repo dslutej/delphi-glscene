@@ -80,20 +80,20 @@ var
 
   procedure SortVertexData(sortidx : Integer);
   begin
-    if t.X.V[sortidx]<t.Y.V[sortidx] then begin
-      vt:=v.X;   tt:=t.X;
-      v.X:=v.Y; t.X:=t.Y;
-      v.Y:=vt;   t.Y:=tt;
+    if t.V[0].C[sortidx]<t.V[1].C[sortidx] then begin
+      vt:=v.V[0];     tt:=t.V[0];
+      v.V[0]:=v.V[1]; t.V[0]:=t.V[1];
+      v.V[1]:=vt;     t.V[1]:=tt;
     end;
-    if t.X.V[sortidx]<t.Z.V[sortidx] then begin
-      vt:=v.X;   tt:=t.X;
-      v.X:=v.Z; t.X:=t.Z;
-      v.Z:=vt;   t.Z:=tt;
+    if t.V[0].C[sortidx]<t.V[2].C[sortidx] then begin
+      vt:=v.V[0];     tt:=t.V[0];
+      v.V[0]:=v.V[2]; t.V[0]:=t.V[2];
+      v.V[2]:=vt;     t.V[2]:=tt;
     end;
-    if t.Y.V[sortidx]<t.Z.V[sortidx] then begin
-      vt:=v.Y;   tt:=t.Y;
-      v.Y:=v.Z; t.Y:=t.Z;
-      v.Z:=vt;   t.Z:=tt;
+    if t.V[1].C[sortidx]<t.V[2].C[sortidx] then begin
+      vt:=v.V[1];     tt:=t.V[1];
+      v.V[1]:=v.V[2]; t.V[1]:=t.V[2];
+      v.V[2]:=vt;     t.V[2]:=tt;
     end;
   end;
 
@@ -110,13 +110,13 @@ begin
       // Compute tangent
       SortVertexData(1);
 
-      if (t.Z.Y-t.X.Y) = 0 then interp:=1
-      else interp:=(t.Y.Y-t.X.Y)/(t.Z.Y-t.X.Y);
+      if (t.V[2].Y-t.V[0].Y) = 0 then interp:=1
+      else interp:=(t.V[1].Y-t.V[0].Y)/(t.V[2].Y-t.V[0].Y);
 
-      vt:=VectorLerp(v.X,v.Z,interp);
-      interp:=t.X.X+(t.Z.X-t.X.X)*interp;
-      vt:=VectorSubtract(vt,v.Y);
-      if t.Y.X<interp then vt:=VectorNegate(vt);
+      vt:=VectorLerp(v.V[0], v.V[2], interp);
+      interp:=t.V[0].X+(t.V[2].X-t.V[0].X)*interp;
+      vt:=VectorSubtract(vt,v.V[1]);
+      if t.V[1].X<interp then vt:=VectorNegate(vt);
       dot:=VectorDotProduct(vt,n.V[j]);
       vt.X:=vt.X-n.V[j].X*dot;
       vt.Y:=vt.Y-n.V[j].Y*dot;
@@ -126,13 +126,13 @@ begin
       // Compute Bi-Normal
       SortVertexData(0);
 
-      if (t.Z.X-t.X.X) = 0 then interp:=1
-      else interp:=(t.Y.X-t.X.X)/(t.Z.X-t.X.X);
+      if (t.V[2].X-t.V[0].X) = 0 then interp:=1
+      else interp:=(t.V[1].X-t.V[0].X)/(t.V[2].X-t.V[0].X);
 
-      vt:=VectorLerp(v.X,v.Z,interp);
-      interp:=t.X.Y+(t.Z.Y-t.X.Y)*interp;
-      vt:=VectorSubtract(vt,v.Y);
-      if t.Y.Y<interp then vt:=VectorNegate(vt);
+      vt:=VectorLerp(v.V[0], v.V[2], interp);
+      interp:=t.V[0].Y+(t.V[2].Y-t.V[0].Y)*interp;
+      vt:=VectorSubtract(vt,v.V[1]);
+      if t.V[1].Y<interp then vt:=VectorNegate(vt);
       dot:=VectorDotProduct(vt,n.V[j]);
       vt.X:=vt.X-n.V[j].X*dot;
       vt.Y:=vt.Y-n.V[j].Y*dot;
@@ -155,9 +155,9 @@ var
 begin
   Colors.Count:=Vertices.Count;
   for i:=0 to Vertices.Count-1 do begin
-    mat.X:=Tangents[i];
-    mat.Y:=BiNormals[i];
-    mat.Z:=Normals[i];
+    mat.V[0]:=Tangents[i];
+    mat.V[1]:=BiNormals[i];
+    mat.V[2]:=Normals[i];
     TransposeMatrix(mat);
     vec:=VectorNormalize(VectorTransform(VectorSubtract(Light,Vertices[i]),mat));
     vec.X:=-vec.X;
@@ -396,9 +396,9 @@ begin
     x3:=Round(LoTexCoords[3*i+2].X*(Width-1));
     y3:=Round((1-LoTexCoords[3*i+2].Y)*(Height-1));
 
-    m1.X:=Tangents[3*i];   m1.Y:=BiNormals[3*i];   m1.Z:=LoNormals[3*i];
-    m2.X:=Tangents[3*i+1]; m2.Y:=BiNormals[3*i+1]; m2.Z:=LoNormals[3*i+1];
-    m3.X:=Tangents[3*i+2]; m3.Y:=BiNormals[3*i+2]; m3.Z:=LoNormals[3*i+2];
+    m1.V[0]:=Tangents[3*i];   m1.V[1]:=BiNormals[3*i];   m1.V[2]:=LoNormals[3*i];
+    m2.V[0]:=Tangents[3*i+1]; m2.V[1]:=BiNormals[3*i+1]; m2.V[2]:=LoNormals[3*i+1];
+    m3.V[0]:=Tangents[3*i+2]; m3.V[1]:=BiNormals[3*i+2]; m3.V[2]:=LoNormals[3*i+2];
     TransposeMatrix(m1);
     TransposeMatrix(m2);
     TransposeMatrix(m3);

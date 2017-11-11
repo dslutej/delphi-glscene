@@ -148,7 +148,7 @@ begin
   Mat :=  CreatePerspectiveMatrix(GLCamera1.GetFieldOfView(Width)/4,
     Width / Height, GLCamera1.NearPlaneBias, GLCamera1.DepthOfView);
   Mat := MatrixMultiply(Mat, CreateRotationMatrixZ(a));
-  CurrentGLContext.PipelineTransformation.ProjectionMatrix := Mat;
+  CurrentGLContext.PipelineTransformation.SetProjectionMatrix(Mat);
 end;
 
 end.

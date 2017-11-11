@@ -2230,6 +2230,7 @@ procedure TGLGizmoEx.InternalRender(Sender: TObject; var rci: TGLRenderContextIn
   begin
     if not Assigned(FLabelFont) and (Text = '') then
       Exit;
+
     rci.GLStates.Enable(stDepthTest);
     FLayout := GLCrossPlatform.tlCenter;
     FAlignment := taCenter;
@@ -2242,16 +2243,14 @@ procedure TGLGizmoEx.InternalRender(Sender: TObject; var rci: TGLRenderContextIn
 
     for I := 0 to 2 do
       for J := 0 to 2 do
-        if I = J then
-          wm.V[I].V[J] := 1
-        else
-          wm.V[I].V[J] := 0;
+        if I = J then wm.V[I].C[J] := 1
+        else          wm.V[I].C[J] := 0;
+
     GL.LoadMatrixf(@wm);
 
     rci.GLStates.PolygonMode := pmFill;
     GL.Scalef(Scale.X, Scale.Y, Scale.Z);
     GL.Translatef(Position.X, Position.Y, Position.Z);
-
 
     if Color.W <> 1 then
     begin
@@ -3569,8 +3568,8 @@ var
       Exit;
     for I := 0 to 3 do
     begin
-      quantizedMousePos.V[I] := (Round(mousePos.V[I] / MoveCoef)) * MoveCoef;
-      quantizedMousePos2.V[I] := (Round(lastMousePos.V[I] / MoveCoef)) * MoveCoef;
+      quantizedMousePos.C[I] := (Round(mousePos.C[I] / MoveCoef)) * MoveCoef;
+      quantizedMousePos2.C[I] := (Round(lastMousePos.C[I] / MoveCoef)) * MoveCoef;
     end;
 
     case SelAxis of
@@ -3699,7 +3698,7 @@ var
           IncludeCh := FindParent(TGLBaseSceneObject(Hit[I]).parent);
 
         pmat := TGLBaseSceneObject(Hit[I]).parent.InvAbsoluteMatrix;
-        SetVector(pmat.W, NullHmgPoint);
+        SetVector(pmat.V[3], NullHmgPoint);
 
         if IncludeCh then
           case SelAxis of
@@ -3755,8 +3754,8 @@ var
 
     for t := 0 to 3 do
     begin
-      quantizedMousePos.V[t] := (Round(mousePos.V[t] / ScaleCoef)) * FScaleCoef;
-      quantizedMousePos2.V[t] := (Round(lastMousePos.V[t] / FScaleCoef)) * FScaleCoef;
+      quantizedMousePos.C[t] := (Round(mousePos.C[t] / ScaleCoef)) * FScaleCoef;
+      quantizedMousePos2.C[t] := (Round(lastMousePos.C[t] / FScaleCoef)) * FScaleCoef;
     end;
 
     case SelAxis of
@@ -4327,7 +4326,7 @@ begin
   if not AssignAndRemoveObj then
   begin
     EffectedObject := AObject;
-    SetOldMatrix(AObject.Matrix);
+    SetOldMatrix(AObject.Matrix^);
     if AObject is TGLFreeForm then
       FOldAutoScaling := TGLFreeForm(AObject).AutoScaling.AsVector;
   end
@@ -4376,7 +4375,7 @@ begin
 
   if not FReturnObject then
   begin
-    FEffectedObject.Matrix := FOldMatrix;
+    FEffectedObject.SetMatrix(FOldMatrix);
     if FEffectedObject is TGLFreeForm then
       TGLFreeForm(FEffectedObject).AutoScaling.AsVector := FOldAutoScaling;
   end

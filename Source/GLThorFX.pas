@@ -417,12 +417,12 @@ begin
   fracScale := (right - left) / Maxpoints;
   midh := (lh + rh) / 2 + (fracScale * FWildness * random) -
     (fracScale * FWildness) / 2;
-  FThorpoints^[mid].Position.V[xyz] := midh +
+  FThorpoints^[mid].Position.C[xyz] := midh +
     (FVibrate * random - (FVibrate / 2));
   // if res=1 then FThorpoints[right-1].Position[xyz]:=
   // (FThorpoints[right].Position[xyz]+midh)/(right-mid)*(right-mid-1);
   if res = 1 then
-    FThorpoints^[right - 1].Position.V[xyz] := FThorpoints^[right].Position.V[xyz];
+    FThorpoints^[right - 1].Position.C[xyz] := FThorpoints^[right].Position.C[xyz];
   if (mid - left) > 1 then
     CalcFrac(left, mid, lh, midh, xyz);
   if (right - mid) > 1 then
@@ -596,8 +596,8 @@ begin
     mat := rci.PipelineTransformation.ModelViewMatrix^;
     for m := 0 to 2 do
     begin
-      vx.V[m] := mat.V[m].X * Manager.GlowSize;
-      vy.V[m] := mat.V[m].Y * Manager.GlowSize;
+      vx.C[m] := mat.V[m].X * Manager.GlowSize;
+      vy.C[m] := mat.V[m].Y * Manager.GlowSize;
     end;
 
     SetVector(InnerColor, Manager.FInnerColor.color);

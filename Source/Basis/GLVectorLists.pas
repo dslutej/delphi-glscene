@@ -617,7 +617,7 @@ begin
   end;
 end;
 
-procedure FastInsertionSortLists(startIndex, endIndex: Integer; const ppl: PIntegerArray; const oppl: PPointerArray);
+procedure FastInsertionSortLists(startIndex, endIndex: Integer; const ppl: PIntegerArray; const oppl: PPointerArray); inline;
 var
   oTemp:  Pointer;
   I, J:   Integer;

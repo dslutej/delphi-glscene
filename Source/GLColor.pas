@@ -533,9 +533,9 @@ end;
 
 procedure TGLColor.SetColorComponent(index: Integer; value: Single);
 begin
-  if FColor.V[index] <> value then
+  if FColor.C[index] <> value then
   begin
-    FColor.V[index] := value;
+    FColor.C[index] := value;
     NotifyChange(Self);
   end;
 end;
@@ -553,7 +553,7 @@ end;
 
 function TGLColor.GetColorComponent(const index: Integer): Single;
 begin
-  Result := FColor.V[Index];
+  Result := FColor.C[Index];
 end;
 
 procedure TGLColor.Assign(Source: TPersistent);
@@ -628,29 +628,29 @@ const
   V = 2;
 begin
   min := MinFloat(PFloatVector(@FColor), 3);
-  Result.V[V] := MaxFloat(PFloatVector(@FColor), 3);
-  delta := Result.V[V] - min;
+  Result.C[V] := MaxFloat(PFloatVector(@FColor), 3);
+  delta := Result.C[V] - min;
 
   // saturation is zero if R, G & B are zero
   // hue undefined (zero) if saturation is zero or color is gray (delta=zero)
-  if (Result.V[V] = 0) or (delta = 0) then
+  if (Result.C[V] = 0) or (delta = 0) then
   begin
-    Result.V[S] := 0;
-    Result.V[H] := 0;
+    Result.C[S] := 0;
+    Result.C[H] := 0;
   end
   else
   begin
-    Result.V[S] := delta / Result.V[V];
-    if red = Result.V[V] then
+    Result.C[S] := delta / Result.C[V];
+    if red = Result.C[V] then
       // between yellow and magenta
-      Result.V[H] := 60 * (green - blue) / delta
-    else if green = Result.V[V] then
+      Result.C[H] := 60 * (green - blue) / delta
+    else if green = Result.C[V] then
       // between cyan and yellow
-      Result.V[H] := 120 + 60 * (blue - red) / delta
+      Result.C[H] := 120 + 60 * (blue - red) / delta
     else // between magenta and cyan
-      Result.V[H] := 240 + 60 * (red - green) / delta;
-    if Result.V[H] < 0 then // normalize H
-      Result.V[H] := Result.V[H] + 360;
+      Result.C[H] := 240 + 60 * (red - green) / delta;
+    if Result.C[H] < 0 then // normalize H
+      Result.C[H] := Result.C[H] + 360;
   end;
   Result.W := alpha;
 end;
@@ -663,56 +663,56 @@ const
   S = 1;
   V = 2;
 begin
-  if hsva.V[S] = 0 then
+  if hsva.C[S] = 0 then
   begin
     // gray (ignore hue)
-    FColor.X := hsva.V[V];
-    FColor.Y := hsva.V[V];
-    FColor.Z := hsva.V[V];
+    FColor.X := hsva.C[V];
+    FColor.Y := hsva.C[V];
+    FColor.Z := hsva.C[V];
   end
   else
   begin
-    hTemp := hsva.V[H] * (1 / 60);
+    hTemp := hsva.C[H] * (1 / 60);
     f := Frac(hTemp);
 
-    p := hsva.V[V] * (1 - hsva.V[S]);
-    q := hsva.V[V] * (1 - (hsva.V[S] * f));
-    t := hsva.V[V] * (1 - (hsva.V[S] * (1 - f)));
+    p := hsva.C[V] * (1 - hsva.C[S]);
+    q := hsva.C[V] * (1 - (hsva.C[S] * f));
+    t := hsva.C[V] * (1 - (hsva.C[S] * (1 - f)));
 
     case Trunc(hTemp) mod 6 of
       0:
         begin
-          FColor.X := hsva.V[V];
+          FColor.X := hsva.C[V];
           FColor.Y := t;
           FColor.Z := p;
         end;
       1:
         begin
           FColor.X := q;
-          FColor.Y := hsva.V[V];
+          FColor.Y := hsva.C[V];
           FColor.Z := p;
         end;
       2:
         begin
           FColor.X := p;
-          FColor.Y := hsva.V[V];
+          FColor.Y := hsva.C[V];
           FColor.Z := t;
         end;
       3:
         begin
           FColor.X := p;
           FColor.Y := q;
-          FColor.Z := hsva.V[V];
+          FColor.Z := hsva.C[V];
         end;
       4:
         begin
           FColor.X := t;
           FColor.Y := p;
-          FColor.Z := hsva.V[V];
+          FColor.Z := hsva.C[V];
         end;
       5:
         begin
-          FColor.X := hsva.V[V];
+          FColor.X := hsva.C[V];
           FColor.Y := p;
           FColor.Z := q;
         end;

@@ -126,12 +126,12 @@ procedure TGLMD5VectorFile.LoadFromStream(aStream : TStream);
     rr : Single;
   begin
     with Result do begin
-      ImagPart.X:=ix;
-      ImagPart.Y:=iy;
-      ImagPart.Z:=iz;
+      X:=ix;
+      Y:=iy;
+      Z:=iz;
       rr:=1-(ix*ix)-(iy*iy)-(iz*iz);
-      if rr<0 then RealPart:=0
-      else RealPart:=sqrt(rr);
+      if rr<0 then W:=0
+      else W:=sqrt(rr);
     end;
   end;
 
@@ -169,13 +169,13 @@ procedure TGLMD5VectorFile.LoadFromStream(aStream : TStream);
         bone:=TGLSkeletonBone.CreateOwned(parentBone);
 
         mat:=QuaternionToMatrix(quat);
-        mat.W:=PointMake(pos);
+        mat.V[3]:=PointMake(pos);
         rmat:=QuaternionToMatrix(FFrameQuaternions[ParentBoneID]);
-        rmat.W:=PointMake(FFramePositions[ParentBoneID]);
+        rmat.V[3]:=PointMake(FFramePositions[ParentBoneID]);
         InvertMatrix(rmat);
         mat:=MatrixMultiply(mat, rmat);
 
-        pos:=AffineVectorMake(mat.W);
+        pos:=AffineVectorMake(mat.V[3]);
         quat:=QuaternionFromMatrix(mat);
       end;
       with bone do begin
@@ -398,19 +398,19 @@ procedure TGLMD5VectorFile.LoadFromStream(aStream : TStream);
         end;
 
         if FJointFlags[i] and 8 > 0 then begin
-          quat.ImagPart.X:=GLUtils.StrToFloatDef(FTempString[j]);
+          quat.X:=GLUtils.StrToFloatDef(FTempString[j]);
           Inc(j);
         end;
         if FJointFlags[i] and 16 > 0 then begin
-          quat.ImagPart.Y:=GLUtils.StrToFloatDef(FTempString[j]);
+          quat.Y:=GLUtils.StrToFloatDef(FTempString[j]);
           Inc(j);
         end;
         if FJointFlags[i] and 32 > 0 then
-          quat.ImagPart.Z:=GLUtils.StrToFloatDef(FTempString[j]);
+          quat.Z:=GLUtils.StrToFloatDef(FTempString[j]);
       end;
 
       pos:=AffineVectorMake(pos.X, pos.Z, pos.Y);
-      quat:=QuaternionMakeFromImag(quat.ImagPart.X, quat.ImagPart.Z, quat.ImagPart.Y);
+      quat:=QuaternionMakeFromImag(quat.X, quat.Z, quat.Y);
 
       frame.Position[i]:=pos;
       frame.Quaternion[i]:=quat;

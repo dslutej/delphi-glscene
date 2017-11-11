@@ -424,7 +424,7 @@ begin
   begin
     particle := TGLParticle(nearTrees[i]);
     TreeModelMatrix := MatrixMultiply(CreateTranslationMatrix(particle.Position),
-      rci.PipelineTransformation.ViewMatrix);
+      rci.PipelineTransformation.ViewMatrix^);
     TreeModelMatrix := MatrixMultiply(CreateScaleMatrix(VectorMake(10, 10, 10)),
       TreeModelMatrix);
     TreeModelMatrix := MatrixMultiply(CreateRotationMatrixY(DegToRad(-particle.Tag)),
@@ -522,8 +522,7 @@ begin
 
   // Mirror coordinates
   refMat := MakeReflectionMatrix(NullVector, YVector);
-  rci.PipelineTransformation.ViewMatrix :=
-    MatrixMultiply(refMat, rci.PipelineTransformation.ViewMatrix);
+  rci.PipelineTransformation.SetViewMatrix(MatrixMultiply(refMat, rci.PipelineTransformation.ViewMatrix^));
 
   rci.GLStates.FrontFace := fwClockWise;
 
@@ -546,13 +545,12 @@ begin
     pFar := VectorTransform(pFar, refMat);
   end;
 
-  rci.PipelineTransformation.ViewMatrix := IdentityHmgMatrix;
+  rci.PipelineTransformation.SetViewMatrix(IdentityHmgMatrix);
   Camera.Apply;
-  rci.PipelineTransformation.ViewMatrix :=
-    MatrixMultiply(refMat, rci.PipelineTransformation.ViewMatrix);
+  rci.PipelineTransformation.SetViewMatrix(MatrixMultiply(refMat, rci.PipelineTransformation.ViewMatrix^));
 
   EarthSkyDome.DoRender(rci, True, False);
-  rci.PipelineTransformation.ModelMatrix := Terrain.AbsoluteMatrix;
+  rci.PipelineTransformation.SetModelMatrix(Terrain.AbsoluteMatrix);
   Terrain.DoRender(rci, True, False);
 
   rci.cameraPosition := cameraPosBackup;
@@ -622,10 +620,10 @@ begin
   rci.GLStates.ActiveTextureEnabled[ttTexture2D] := True;
 
   tex0Matrix := IdentityHmgMatrix;
-  tex0Matrix.X.X := 3 * cWaveScale;
-  tex0Matrix.Y.Y := 4 * cWaveScale;
-  tex0Matrix.W.X := tWave * 1.1;
-  tex0Matrix.W.Y := tWave * 1.06;
+  tex0Matrix.V[0].X := 3 * cWaveScale;
+  tex0Matrix.V[1].Y := 4 * cWaveScale;
+  tex0Matrix.V[3].X := tWave * 1.1;
+  tex0Matrix.V[3].Y := tWave * 1.06;
   rci.GLStates.SetGLTextureMatrix(tex0Matrix);
 
   rci.GLStates.ActiveTexture := 1;
@@ -633,10 +631,10 @@ begin
   rci.GLStates.ActiveTextureEnabled[ttTexture2D] := True;
 
   tex1Matrix := IdentityHmgMatrix;
-  tex1Matrix.X.X := cWaveScale;
-  tex1Matrix.Y.Y := cWaveScale;
-  tex1Matrix.W.X := tWave * 0.83;
-  tex1Matrix.W.Y := tWave * 0.79;
+  tex1Matrix.V[0].X := cWaveScale;
+  tex1Matrix.V[1].Y := cWaveScale;
+  tex1Matrix.V[3].X := tWave * 0.83;
+  tex1Matrix.V[3].Y := tWave * 0.79;
   rci.GLStates.SetGLTextureMatrix(tex1Matrix);
 
   if enableTex2DReflection then
@@ -767,7 +765,7 @@ begin
   Result := CreateTranslationMatrix(VectorMake(w, h, 0));
   Result := MatrixMultiply(CreateScaleMatrix(VectorMake(w, h, 0)), Result);
   with CurrentGLContext.PipelineTransformation do
-    Result := MatrixMultiply(ViewProjectionMatrix, Result);
+    Result := MatrixMultiply(ViewProjectionMatrix^, Result);
 //  Camera.ApplyPerspective(SceneViewer.Buffer.ViewPort, SceneViewer.Width, SceneViewer.Height, 96);
 //  Camera.Apply;
   Result := MatrixMultiply(CreateScaleMatrix(VectorMake(1, -1, 1)), Result);

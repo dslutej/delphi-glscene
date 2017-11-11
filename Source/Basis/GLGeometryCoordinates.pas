@@ -104,8 +104,8 @@ implementation
 uses
 {$IFDEF GLS_FASTMATH}
   Neslib.FastMath,
-  System.Math,
 {$ENDIF}
+  System.Math,
   GLVectorTypes;
 
 // ----- Cylindrical_Cartesian ---------------------------------------------

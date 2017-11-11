@@ -415,26 +415,26 @@ function DoCubesIntersectPrim(obj1, obj2 : TGLBaseSceneObject) : Boolean;
     result := true;
     VectorSubtract(p1, p0, d);    // d: direction p0 -> p1
     for i:=0 to 2 do begin
-      if d.V[i]=0 then begin       // wire is parallel to plane
+      if d.C[i]=0 then begin       // wire is parallel to plane
         // this case will be handled by the other planes
       end else begin
         j := (i+1) mod 3;
         k := (j+1) mod 3;
-        t := (pl.V[i]-p0.V[i])/d.V[i];   // t: line parameter of intersection
+        t := (pl.C[i]-p0.C[i])/d.C[i];   // t: line parameter of intersection
         if IsInRange(t, 0, 1) then begin
           s := p0;
           CombineVector(s,d,t);    // calculate intersection
           // if the other two coordinates lie within the ranges, collision
-          if IsInRange(s.V[j],-pl.V[j],pl.V[j]) and
-             IsInRange(s.V[k],-pl.V[k],pl.V[k]) then Exit;
+          if IsInRange(s.C[j],-pl.C[j],pl.C[j]) and
+             IsInRange(s.C[k],-pl.C[k],pl.C[k]) then Exit;
         end;
-        t := (-pl.V[i]-p0.V[i])/d.V[i];   // t: parameter of intersection
+        t := (-pl.C[i]-p0.C[i])/d.C[i];   // t: parameter of intersection
         if IsInRange(t,0,1) then begin
           s := p0;
           CombineVector(s,d,t);    // calculate intersection
           // if the other two coordinates lie within the ranges, collision
-          if IsInRange(s.V[j],-pl.V[j],pl.V[j]) and
-          IsInRange(s.V[k],-pl.V[k],pl.V[k]) then Exit;
+          if IsInRange(s.C[j], -pl.C[j], pl.C[j]) and
+             IsInRange(s.C[k], -pl.C[k], pl.C[k]) then Exit;
         end;
       end;
     end;

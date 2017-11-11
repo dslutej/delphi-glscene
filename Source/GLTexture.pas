@@ -2449,10 +2449,10 @@ procedure TGLTexture.Apply(var rci: TGLRenderContextInfo);
         end;
       tmmCubeMapCamera:
         begin
-          m.X := VectorCrossProduct(rci.cameraUp, rci.cameraDirection);
-          m.Y := VectorNegate(rci.cameraDirection);
-          m.Z := rci.cameraUp;
-          m.W := WHmgPoint;
+          m.V[0] := VectorCrossProduct(rci.cameraUp, rci.cameraDirection);
+          m.V[1] := VectorNegate(rci.cameraDirection);
+          m.V[2] := rci.cameraUp;
+          m.V[3] := WHmgPoint;
           mm := rci.PipelineTransformation.ViewMatrix^;
           NormalizeMatrix(mm);
           TransposeMatrix(mm);
@@ -3080,7 +3080,7 @@ begin
     if FTextureMatrixIsIdentity then
       GL.LoadIdentity
     else
-      GL.LoadMatrixf(@FTextureMatrix.X.X);
+      GL.LoadMatrixf(@FTextureMatrix.V[0].X);
     GL.MatrixMode(GL_MODELVIEW);
     rci.GLStates.ActiveTexture := 0;
     if FTextureIndex = 0 then

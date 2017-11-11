@@ -661,7 +661,7 @@ var
     while (FLine <> '') and (i < 4) do
     begin
       f := NextToken(FLine, ' ');
-      Val(f, hv.V[i], c);
+      Val(f, hv.C[i], c);
       if c <> 0 then
         Error(Format('''%s'' is not a valid floating-point constant.', [f]));
       Inc(i);
@@ -679,7 +679,7 @@ var
     while (FLine <> '') and (i < 3) do
     begin
       f := NextToken(FLine, ' ');
-      Val(f, av.V[i], c);
+      Val(f, av.C[i], c);
       if c <> 0 then
         Error(Format('''%s'' is not a valid floating-point constant.', [f]));
       inc(i);
@@ -1390,7 +1390,7 @@ begin
       Result := NullHmgVector;
       for i := 0 to 3 do
         if sl.Count > i then
-          Result.V[i] := GLUtils.StrToFloatDef(sl[i], 0)
+          Result.C[i] := GLUtils.StrToFloatDef(sl[i], 0)
         else
           Break;
     end
