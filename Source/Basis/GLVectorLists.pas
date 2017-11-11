@@ -619,16 +619,17 @@ end;
 
 procedure FastInsertionSortLists(startIndex, endIndex: Integer; const ppl: PIntegerArray; const oppl: PPointerArray);
 var
-  I, J:     Integer;
-  Temp:     Integer;
-  oTemp    : Pointer;
+  oTemp:  Pointer;
+  I, J:   Integer;
+  Temp:   Integer;
 begin
+
   for I := startIndex+1 to endIndex-1 do
   begin
     J := i-1;
     Temp := ppl^[I];
     oTemp := oppl^[I];
-    while (J>=0) and (Temp < ppl^[J]) do
+    while (J>=startIndex) and (Temp < ppl^[J]) do
     begin
       ppl^[J+1] := ppl^[J];
       oppl^[J+1] := oppl^[J];
@@ -641,11 +642,11 @@ end;
 
 procedure FastQuickSortLists(startIndex, endIndex: Integer; const refList: TSingleList; const objList: TPersistentObjectList);
 var
-  I, J:    Integer;
-  p, Temp: Integer;
-  ppl:     PIntegerArray;
-  oTemp    : Pointer;
-  oppl     : PPointerArray;
+  ppl:      PIntegerArray;
+  oTemp:    Pointer;
+  oppl:     PPointerArray;
+  I, J:     Integer;
+  p, Temp:  Integer;
 begin
 
   // All singles are >=1, so IEEE format allows comparing them as if they were integers
@@ -654,11 +655,11 @@ begin
   if endIndex > startIndex + 1 then
   begin
 
-    if (endIndex-startIndex)<32 then
+    if (endIndex-startIndex)<16 then
     begin
       FastInsertionSortLists(startIndex, endIndex, ppl, oppl);
-    end
-    else begin
+    end else
+    begin
 
       repeat
         I := startIndex;
@@ -688,9 +689,8 @@ begin
         startIndex := I;
       until I >= endIndex;
     end;
-  end
-  else
-  if endIndex > startIndex then
+
+  end else if endIndex > startIndex then
   begin
     if ppl^[endIndex] < ppl^[startIndex] then
     begin
@@ -1078,10 +1078,10 @@ begin
     for K := 0 to 2 do
     begin
       f := ref^[K];
-      if f < min.V[K] then
-        min.V[K] := f;
-      if f > max.V[K] then
-        max.V[K] := f;
+      if f < min.C[K] then
+        min.C[K] := f;
+      if f > max.C[K] then
+        max.C[K] := f;
     end;
   end;
 end;
@@ -2870,7 +2870,7 @@ end;
 
 function TQuaternionList.Add(const item: TAffineVector; w: Single): Integer;
 begin
-  Result := Add(QuaternionMake(item.V, w));
+  Result := Add(QuaternionMake([item.X, item.Y, item.Z], w));
 end;
 
 function TQuaternionList.Add(const X, Y, Z, w: Single): Integer;
@@ -2927,7 +2927,11 @@ begin
     Delete(FCount - 1);
   end
   else
+{$IFDEF GLS_FASTMATH}
+    Result := TQuaternion.Identity;
+{$ELSE}
     Result := IdentityQuaternion;
+{$ENDIF}
 end;
 
 function TQuaternionList.IndexOf(const item: TQuaternion): Integer;
@@ -2938,7 +2942,11 @@ begin
   for I := 0 to Count - 1 do
   begin
     curItem := @FList[I];
+{$IFDEF GLS_FASTMATH}
+    if (item.ToMatrix = curItem^.ToMatrix) then
+{$ELSE}
     if (item.RealPart = curItem^.RealPart) and VectorEquals(item.ImagPart, curItem^.ImagPart) then
+{$ENDIF}
     begin
       Result := I;
       Exit;
@@ -2972,7 +2980,11 @@ procedure TQuaternionList.Combine(const list2: TBaseVectorList; factor: Single);
 
   procedure CombineQuaternion(var q1: TQuaternion; const q2: TQuaternion; factor: Single);
   begin
+{$IFDEF GLS_FASTMATH}
+    q1 := QuaternionMultiply(q1, QuaternionSlerp(TQuaternion.Identity, q2, factor));
+{$ELSE}
     q1 := QuaternionMultiply(q1, QuaternionSlerp(IdentityQuaternion, q2, factor));
+{$ENDIF}
   end;
 
 var
